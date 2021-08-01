@@ -1,0 +1,11 @@
+/target
+Cargo.lock
+
+static/*.graphviz
+static/*.json
+static/*.png
+static/*.svg
+
+# Typescript stuff
+/*.ts
+typescript/generated.ts
