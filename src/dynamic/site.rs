@@ -19,8 +19,8 @@ pub struct Info {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase", rename = "SiteInternals")]
-pub struct Internals {
+#[serde(rename_all = "camelCase", rename = "SiteInners")]
+pub struct Inners {
     pub entities: Vec<SiteEntity>,
 }
 

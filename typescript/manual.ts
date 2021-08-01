@@ -23,7 +23,7 @@ export type SiteEntity =
   | ({ type: "npc" } & SiteEntityNpc)
   | ({ type: "player" } & SiteEntityPlayer);
 
-export interface SiteInternals {
+export interface SiteInners {
   readonly entities: readonly SiteEntity[];
 }
 
