@@ -1,3 +1,5 @@
+use std::collections::BTreeMap;
+
 use serde::{Deserialize, Serialize};
 
 use crate::fixed::site::Kind;
@@ -23,6 +25,8 @@ pub struct Info {
 pub struct Inners {
     pub entities: Vec<SiteEntity>,
 }
+
+pub type SitesNearPlanet = BTreeMap<u8, Vec<Info>>;
 
 #[cfg(test)]
 ts_rs::export! {
