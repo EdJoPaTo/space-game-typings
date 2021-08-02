@@ -3,8 +3,8 @@ use serde::{Deserialize, Serialize};
 use crate::fixed::facility::Service;
 
 #[derive(Debug, Serialize, Deserialize)]
-#[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", tag = "type", content = "info")]
+// #[cfg_attr(test, derive(ts_rs::TS))]
+#[serde(rename_all = "camelCase", tag = "type")]
 pub enum Instruction {
     Undock(Undock),
     Warp(Warp),
@@ -52,7 +52,7 @@ pub struct Undock {
 
 #[cfg(test)]
 ts_rs::export! {
-    Instruction => "instruction.ts",
+    // Instruction => "instruction.ts",
     ModuleUntargeted => "instruction-module-untargeted.ts",
     ModuleTargeted => "instruction-module-targeted.ts",
     UseFacility => "instruction-use-facility.ts",

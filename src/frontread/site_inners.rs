@@ -5,11 +5,11 @@ use crate::fixed::{facility, lifeless, shiplayout};
 use crate::persist::player;
 
 #[derive(Debug, Serialize, Deserialize)]
-#[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", tag = "type", content = "info")]
+// #[cfg_attr(test, derive(ts_rs::TS))]
+#[serde(rename_all = "camelCase", tag = "type")]
 pub enum SiteEntity {
-    Facility(facility::Identifier),
-    Lifeless(lifeless::Identifier),
+    Facility(Facility),
+    Lifeless(Lifeless),
     Npc(Npc),
     Player(Player),
 }
@@ -17,8 +17,12 @@ pub enum SiteEntity {
 impl From<crate::persist::site_entity::SiteEntity> for SiteEntity {
     fn from(entity: crate::persist::site_entity::SiteEntity) -> Self {
         match entity {
-            crate::persist::site_entity::SiteEntity::Facility(info) => Self::Facility(info.id),
-            crate::persist::site_entity::SiteEntity::Lifeless(info) => Self::Lifeless(info.id),
+            crate::persist::site_entity::SiteEntity::Facility(info) => {
+                Self::Facility(Facility { id: info.id })
+            }
+            crate::persist::site_entity::SiteEntity::Lifeless(info) => {
+                Self::Lifeless(Lifeless { id: info.id })
+            }
             crate::persist::site_entity::SiteEntity::Npc(info) => Self::Npc(Npc {
                 faction: info.faction,
                 shiplayout: info.shiplayout,
@@ -29,6 +33,20 @@ impl From<crate::persist::site_entity::SiteEntity> for SiteEntity {
             }),
         }
     }
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[cfg_attr(test, derive(ts_rs::TS))]
+#[serde(rename_all = "camelCase", rename = "SiteEntityFacility")]
+pub struct Facility {
+    pub id: facility::Identifier,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+#[cfg_attr(test, derive(ts_rs::TS))]
+#[serde(rename_all = "camelCase", rename = "SiteEntityLifeless")]
+pub struct Lifeless {
+    pub id: lifeless::Identifier,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -47,31 +65,28 @@ pub struct Player {
     pub shiplayout: shiplayout::Identifier,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase", rename = "SiteInners")]
-#[cfg_attr(test, derive(ts_rs::TS))]
-pub struct Inners {
-    pub entities: Vec<SiteEntity>,
-}
 #[cfg(test)]
 ts_rs::export! {
-    SiteEntity => "site-entity.ts",
+    // SiteEntity => "site-entity.ts",
+    Facility => "site-entity-facility.ts",
+    Lifeless => "site-entity-lifeless.ts",
     Npc => "site-entity-npc.ts",
     Player => "site-entity-player.ts",
-    Inners => "site-inners.ts",
 }
 
 #[test]
 fn can_parse_entity_lifeless() -> anyhow::Result<()> {
-    let origin = SiteEntity::Lifeless("lifelessAsteroid".to_string());
+    let origin = SiteEntity::Lifeless(Lifeless {
+        id: "lifelessAsteroid".to_string(),
+    });
     let json = serde_json::to_string_pretty(&origin)?;
     println!("json {}", json);
 
     let some = serde_json::from_str::<SiteEntity>(&json)?;
     println!("some {:?}", some);
 
-    if let SiteEntity::Lifeless(id) = some {
-        assert_eq!(id, "lifelessAsteroid");
+    if let SiteEntity::Lifeless(info) = some {
+        assert_eq!(info.id, "lifelessAsteroid");
         Ok(())
     } else {
         panic!();
