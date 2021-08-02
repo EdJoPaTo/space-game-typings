@@ -6,10 +6,6 @@ use crate::fixed::site::Kind;
 
 use super::site_entity::SiteEntity;
 
-// TODO: the frontend dont care for internals like fittings.
-// Split up typings and have one internal and one external?
-// For now… just share everything witht the frontend.
-
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteInfo")]
@@ -21,7 +17,7 @@ pub struct Info {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[serde(rename_all = "camelCase", rename = "SiteInners")]
+#[serde(rename_all = "camelCase")]
 pub struct Inners {
     pub entities: Vec<SiteEntity>,
 }

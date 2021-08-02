@@ -1,10 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::fixed::facility::Identifier;
-
-// TODO: the frontend dont care for internals like fittings.
-// Split up typings and have one internal and one external?
-// For now… just share everything witht the frontend.
+use crate::fixed::npc_faction::NpcFaction;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", tag = "type")]
@@ -16,41 +13,31 @@ pub enum SiteEntity {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "SiteEntityFacility")]
+#[serde(rename_all = "camelCase")]
 pub struct Facility {
     pub id: Identifier,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "SiteEntityLifeless")]
+#[serde(rename_all = "camelCase")]
 pub struct Lifeless {
     pub id: String,
     // TODO: status like hitpoints?
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "SiteEntityNpc")]
+#[serde(rename_all = "camelCase")]
 pub struct Npc {
+    pub faction: NpcFaction,
     pub shiplayout: String,
+    // TODO: status like hitpoints?
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "SiteEntityPlayer")]
+#[serde(rename_all = "camelCase")]
 pub struct Player {
     pub id: String,
     pub shiplayout: String,
-}
-
-#[cfg(test)]
-ts_rs::export! {
-    Facility => "site-entity-facility.ts",
-    Lifeless => "site-entity-lifeless.ts",
-    Npc => "site-entity-npc.ts",
-    Player => "site-entity-player.ts",
 }
 
 #[test]

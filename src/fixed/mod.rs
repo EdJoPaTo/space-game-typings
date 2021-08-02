@@ -3,6 +3,7 @@ use std::collections::HashMap;
 pub mod facility;
 pub mod lifeless;
 pub mod module;
+pub mod npc_faction;
 pub mod shiplayout;
 pub mod site;
 pub mod solarsystem;
