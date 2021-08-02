@@ -15,7 +15,7 @@ export type SolarsystemIdentifier = `system${number}`;
 export type PlayerIdentifier = `player-${string}-${number}`;
 export type PlayerTelegramIdentifier = `player-tg-${number}`;
 
-export type SitesNearPlanet = Record<number, readonly SiteInfo[]>;
+export type SitesNearPlanet = Readonly<Record<number, readonly SiteInfo[]>>;
 
 export type SiteEntity =
   | ({ type: "lifeless" } & SiteEntityLifeless)
