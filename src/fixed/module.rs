@@ -1,5 +1,9 @@
 use serde::{Deserialize, Serialize};
 
+pub type TargetedIdentifier = String;
+pub type PassiveIdentifier = String;
+pub type UntargetedIdentifier = String;
+
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "ModulePassive")]

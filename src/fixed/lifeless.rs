@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+pub type Identifier = String;
+
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]

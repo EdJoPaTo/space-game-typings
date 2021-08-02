@@ -1,14 +1,16 @@
 use serde::{Deserialize, Serialize};
 
+use crate::fixed::{module, shiplayout};
+
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "ShipFitting")]
 pub struct Fitting {
-    pub layout: String,
+    pub layout: shiplayout::Identifier,
 
-    pub slots_targeted: Vec<String>,
-    pub slots_untargeted: Vec<String>,
-    pub slots_passive: Vec<String>,
+    pub slots_targeted: Vec<module::TargetedIdentifier>,
+    pub slots_untargeted: Vec<module::UntargetedIdentifier>,
+    pub slots_passive: Vec<module::PassiveIdentifier>,
 }
 
 /// The current situation of the ship.

@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::fixed::solarsystem;
+
 use super::ship::{Fitting, Status};
 use super::site::Info;
 
@@ -16,7 +18,7 @@ pub enum PlayerLocation {
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 pub struct PlayerAtStation {
-    pub solarsystem: String,
+    pub solarsystem: solarsystem::Identifier,
     pub station: u8,
 }
 
@@ -24,7 +26,7 @@ pub struct PlayerAtStation {
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 pub struct PlayerInSpace {
-    pub solarsystem: String,
+    pub solarsystem: solarsystem::Identifier,
 
     pub ship_fitting: Fitting,
     pub ship_status: Status,
@@ -34,7 +36,7 @@ pub struct PlayerInSpace {
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 pub struct PlayerInSite {
-    pub solarsystem: String,
+    pub solarsystem: solarsystem::Identifier,
     pub site: Info,
 
     pub ship_fitting: Fitting,

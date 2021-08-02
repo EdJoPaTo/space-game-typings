@@ -1,7 +1,9 @@
 use serde::{Deserialize, Serialize};
 
-use crate::fixed::facility::Identifier;
 use crate::fixed::npc_faction::NpcFaction;
+use crate::fixed::{facility, lifeless, shiplayout};
+
+use super::player;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", tag = "type")]
@@ -15,13 +17,13 @@ pub enum SiteEntity {
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Facility {
-    pub id: Identifier,
+    pub id: facility::Identifier,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Lifeless {
-    pub id: String,
+    pub id: lifeless::Identifier,
     // TODO: status like hitpoints?
 }
 
@@ -29,15 +31,15 @@ pub struct Lifeless {
 #[serde(rename_all = "camelCase")]
 pub struct Npc {
     pub faction: NpcFaction,
-    pub shiplayout: String,
+    pub shiplayout: shiplayout::Identifier,
     // TODO: status like hitpoints?
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Player {
-    pub id: String,
-    pub shiplayout: String,
+    pub id: player::Identifer,
+    pub shiplayout: shiplayout::Identifier,
 }
 
 #[test]

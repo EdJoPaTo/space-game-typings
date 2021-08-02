@@ -1,16 +1,15 @@
 use serde::{Deserialize, Serialize};
 
-use crate::fixed::facility;
 use crate::fixed::npc_faction::NpcFaction;
-
-type LifelessIdentifier = String;
+use crate::fixed::{facility, lifeless, shiplayout};
+use crate::persist::player;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", tag = "type", content = "info")]
 pub enum SiteEntity {
     Facility(facility::Identifier),
-    Lifeless(LifelessIdentifier),
+    Lifeless(lifeless::Identifier),
     Npc(Npc),
     Player(Player),
 }
@@ -37,15 +36,15 @@ impl From<crate::persist::site_entity::SiteEntity> for SiteEntity {
 #[serde(rename_all = "camelCase", rename = "SiteEntityNpc")]
 pub struct Npc {
     pub faction: NpcFaction,
-    pub shiplayout: String,
+    pub shiplayout: shiplayout::Identifier,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityPlayer")]
 pub struct Player {
-    pub id: String,
-    pub shiplayout: String,
+    pub id: player::Identifer,
+    pub shiplayout: shiplayout::Identifier,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

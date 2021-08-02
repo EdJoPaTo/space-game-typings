@@ -12,9 +12,9 @@ pub mod solarsystem;
 mod do_data_export;
 
 pub type Facilites = HashMap<facility::Identifier, facility::Facility>;
-pub type LifelessThingies = HashMap<String, lifeless::Lifeless>;
-pub type ModulesPassive = HashMap<String, module::Passive>;
-pub type ModulesUntargeted = HashMap<String, module::Untargeted>;
-pub type ModulesTargeted = HashMap<String, module::Targeted>;
-pub type ShipLayouts = HashMap<String, shiplayout::ShipLayout>;
-pub type Solarsystems = HashMap<String, solarsystem::Solarsystem>;
+pub type LifelessThingies = HashMap<lifeless::Identifier, lifeless::Lifeless>;
+pub type ModulesPassive = HashMap<module::PassiveIdentifier, module::Passive>;
+pub type ModulesUntargeted = HashMap<module::UntargetedIdentifier, module::Untargeted>;
+pub type ModulesTargeted = HashMap<module::TargetedIdentifier, module::Targeted>;
+pub type ShipLayouts = HashMap<shiplayout::Identifier, shiplayout::ShipLayout>;
+pub type Solarsystems = HashMap<solarsystem::Identifier, solarsystem::Solarsystem>;
