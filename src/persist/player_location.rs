@@ -9,23 +9,23 @@ use super::site::Info;
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", untagged)]
 pub enum PlayerLocation {
-    Site(PlayerInSite),
-    Space(PlayerInSpace),
-    Station(PlayerAtStation),
+    Site(Site),
+    Warp(Warp),
+    Station(Station),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase")]
-pub struct PlayerAtStation {
+#[serde(rename_all = "camelCase", rename = "PlayerLocationStation")]
+pub struct Station {
     pub solarsystem: solarsystem::Identifier,
     pub station: u8,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase")]
-pub struct PlayerInSpace {
+#[serde(rename_all = "camelCase", rename = "PlayerLocationWarp")]
+pub struct Warp {
     pub solarsystem: solarsystem::Identifier,
 
     pub ship_fitting: Fitting,
@@ -34,8 +34,8 @@ pub struct PlayerInSpace {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase")]
-pub struct PlayerInSite {
+#[serde(rename_all = "camelCase", rename = "PlayerLocationSite")]
+pub struct Site {
     pub solarsystem: solarsystem::Identifier,
     pub site: Info,
 
@@ -46,9 +46,9 @@ pub struct PlayerInSite {
 #[cfg(test)]
 ts_rs::export! {
     PlayerLocation => "player-location.ts",
-    PlayerAtStation => "player-at-station.ts",
-    PlayerInSpace => "player-in-space.ts",
-    PlayerInSite => "player-in-site.ts",
+    Station => "player-location-station.ts",
+    Warp => "player-location-warp.ts",
+    Site => "player-location-site.ts",
 }
 
 #[cfg(test)]
@@ -71,8 +71,8 @@ fn dummy_status() -> Status {
 }
 
 #[test]
-fn can_identify_in_site() -> anyhow::Result<()> {
-    let data = PlayerLocation::Site(PlayerInSite {
+fn can_identify_site() -> anyhow::Result<()> {
+    let data = PlayerLocation::Site(Site {
         solarsystem: "bla".to_string(),
         site: Info {
             kind: crate::fixed::site::Kind::AsteroidField,
@@ -93,8 +93,8 @@ fn can_identify_in_site() -> anyhow::Result<()> {
 }
 
 #[test]
-fn can_identify_in_space() -> anyhow::Result<()> {
-    let data = PlayerLocation::Space(PlayerInSpace {
+fn can_identify_warp() -> anyhow::Result<()> {
+    let data = PlayerLocation::Warp(Warp {
         solarsystem: "bla".to_string(),
         ship_fitting: dummy_fitting(),
         ship_status: dummy_status(),
@@ -102,7 +102,7 @@ fn can_identify_in_space() -> anyhow::Result<()> {
     let json = serde_json::to_string_pretty(&data)?;
     println!("json {}", json);
     let some = serde_json::from_str::<PlayerLocation>(&json)?;
-    if let PlayerLocation::Space(_) = some {
+    if let PlayerLocation::Warp(_) = some {
         Ok(())
     } else {
         panic!("wrong!");
@@ -111,7 +111,7 @@ fn can_identify_in_space() -> anyhow::Result<()> {
 
 #[test]
 fn can_identify_station() -> anyhow::Result<()> {
-    let data = PlayerLocation::Station(PlayerAtStation {
+    let data = PlayerLocation::Station(Station {
         solarsystem: "bla".to_string(),
         station: 2,
     });
