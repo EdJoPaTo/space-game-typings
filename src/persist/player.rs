@@ -15,6 +15,16 @@ pub struct General {
     pub paperclips: u64,
 }
 
+impl Default for General {
+    fn default() -> Self {
+        Self {
+            home_solarsystem: "Wabinihwa".to_string(),
+            home_station: 0,
+            paperclips: 2000,
+        }
+    }
+}
+
 #[cfg(test)]
 ts_rs::export! {General => "player-general.ts"}
 

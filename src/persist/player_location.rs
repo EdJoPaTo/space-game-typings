@@ -52,16 +52,6 @@ ts_rs::export! {
 }
 
 #[cfg(test)]
-fn dummy_fitting() -> Fitting {
-    Fitting {
-        layout: "shiplayoutRookieShip".to_string(),
-        slots_targeted: vec![],
-        slots_untargeted: vec![],
-        slots_passive: vec![],
-    }
-}
-
-#[cfg(test)]
 fn dummy_status() -> Status {
     Status {
         capacitor: 42,
@@ -79,7 +69,7 @@ fn can_identify_site() -> anyhow::Result<()> {
             unique: "666".to_string(),
             name: None,
         },
-        ship_fitting: dummy_fitting(),
+        ship_fitting: Fitting::default(),
         ship_status: dummy_status(),
     });
     let json = serde_json::to_string_pretty(&data)?;
@@ -96,7 +86,7 @@ fn can_identify_site() -> anyhow::Result<()> {
 fn can_identify_warp() -> anyhow::Result<()> {
     let data = PlayerLocation::Warp(Warp {
         solarsystem: "bla".to_string(),
-        ship_fitting: dummy_fitting(),
+        ship_fitting: Fitting::default(),
         ship_status: dummy_status(),
     });
     let json = serde_json::to_string_pretty(&data)?;

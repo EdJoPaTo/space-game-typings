@@ -20,9 +20,9 @@ impl From<&crate::persist::site_entity::SiteEntity> for SiteEntity {
             crate::persist::site_entity::SiteEntity::Facility(info) => {
                 Self::Facility(Facility { id: info.id })
             }
-            crate::persist::site_entity::SiteEntity::Lifeless(info) => {
-                Self::Lifeless(Lifeless { id: info.id.to_string() })
-            }
+            crate::persist::site_entity::SiteEntity::Lifeless(info) => Self::Lifeless(Lifeless {
+                id: info.id.to_string(),
+            }),
             crate::persist::site_entity::SiteEntity::Npc(info) => Self::Npc(Npc {
                 faction: info.faction,
                 shiplayout: info.shiplayout.to_string(),
