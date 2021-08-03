@@ -147,9 +147,6 @@ fn check_solarsystem() -> anyhow::Result<()> {
     assert!(!all.is_empty(), "is empty");
 
     for (key, value) in &all {
-        assert!(key.starts_with("system"), "starts wrong {}", key);
-
-        assert!(!value.name.is_empty(), "name {}", key);
         assert!(value.security <= 100, "security {}", key);
 
         for (target, planet) in &value.stargates {
@@ -182,7 +179,7 @@ fn graphviz_solarsystems() -> anyhow::Result<()> {
 
     for (key, system) in ordered {
         text += "\t";
-        text += &format!(r#"{}[label="{} ({})"];"#, key, system.name, system.security);
+        text += &format!(r#"{}[label="{} ({})"];"#, key, key, system.security);
         text += "\n";
 
         for target in system.stargates.keys() {

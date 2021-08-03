@@ -10,7 +10,6 @@ pub type Identifier = String;
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 pub struct Solarsystem {
-    pub name: String,
     /// Percentage
     pub security: u8,
     /// Amount
