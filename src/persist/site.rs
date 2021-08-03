@@ -4,7 +4,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::fixed::site::Kind;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteInfo")]
 pub struct Info {
