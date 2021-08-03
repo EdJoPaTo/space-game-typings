@@ -14,22 +14,22 @@ pub enum SiteEntity {
     Player(Player),
 }
 
-impl From<crate::persist::site_entity::SiteEntity> for SiteEntity {
-    fn from(entity: crate::persist::site_entity::SiteEntity) -> Self {
+impl From<&crate::persist::site_entity::SiteEntity> for SiteEntity {
+    fn from(entity: &crate::persist::site_entity::SiteEntity) -> Self {
         match entity {
             crate::persist::site_entity::SiteEntity::Facility(info) => {
                 Self::Facility(Facility { id: info.id })
             }
             crate::persist::site_entity::SiteEntity::Lifeless(info) => {
-                Self::Lifeless(Lifeless { id: info.id })
+                Self::Lifeless(Lifeless { id: info.id.to_string() })
             }
             crate::persist::site_entity::SiteEntity::Npc(info) => Self::Npc(Npc {
                 faction: info.faction,
-                shiplayout: info.shiplayout,
+                shiplayout: info.shiplayout.to_string(),
             }),
             crate::persist::site_entity::SiteEntity::Player(info) => Self::Player(Player {
-                id: info.id,
-                shiplayout: info.shiplayout,
+                id: info.id.to_string(),
+                shiplayout: info.shiplayout.to_string(),
             }),
         }
     }
