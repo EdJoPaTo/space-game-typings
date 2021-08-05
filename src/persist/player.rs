@@ -18,7 +18,7 @@ pub struct General {
 impl Default for General {
     fn default() -> Self {
         Self {
-            home_solarsystem: "Wabinihwa".to_string(),
+            home_solarsystem: solarsystem::Identifier::Wabinihwa,
             home_station: 0,
             paperclips: 2000,
         }

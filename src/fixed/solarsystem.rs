@@ -4,7 +4,25 @@ use serde::{Deserialize, Serialize};
 
 use crate::serde_helper::ordered_map;
 
-pub type Identifier = String;
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(test, derive(ts_rs::TS))]
+#[serde(rename = "SolarsystemIdentifier")]
+pub enum Identifier {
+    /// The home system for new players
+    Wabinihwa,
+
+    Arama,
+    Iramil,
+    Liagi,
+    Plagar,
+    Vosu,
+}
+
+impl std::fmt::Display for Identifier {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
@@ -27,4 +45,7 @@ pub struct Solarsystem {
 }
 
 #[cfg(test)]
-ts_rs::export! {Solarsystem => "solarsystem.ts"}
+ts_rs::export! {
+    Identifier => "solarsystem-identifier.ts",
+    Solarsystem => "solarsystem.ts",
+}

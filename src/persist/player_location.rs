@@ -44,10 +44,21 @@ ts_rs::export! {
     Site => "player-location-site.ts",
 }
 
+impl PlayerLocation {
+    #[must_use]
+    pub fn solarsystem(&self) -> solarsystem::Identifier {
+        match self {
+            PlayerLocation::Site(o) => o.solarsystem,
+            PlayerLocation::Station(o) => o.solarsystem,
+            PlayerLocation::Warp(o) => o.solarsystem,
+        }
+    }
+}
+
 #[test]
 fn can_identify_site() {
     let data = PlayerLocation::Site(Site {
-        solarsystem: "bla".to_string(),
+        solarsystem: solarsystem::Identifier::Wabinihwa,
         site: Info {
             kind: crate::fixed::site::Kind::AsteroidField,
             unique: "666".to_string(),
@@ -60,7 +71,7 @@ fn can_identify_site() {
 #[test]
 fn can_identify_warp() {
     let data = PlayerLocation::Warp(Warp {
-        solarsystem: "bla".to_string(),
+        solarsystem: solarsystem::Identifier::Wabinihwa,
     });
     crate::test_helper::can_serde_parse(&data);
 }
@@ -68,7 +79,7 @@ fn can_identify_warp() {
 #[test]
 fn can_identify_station() {
     let data = PlayerLocation::Station(Station {
-        solarsystem: "bla".to_string(),
+        solarsystem: solarsystem::Identifier::Wabinihwa,
         station: 2,
     });
     crate::test_helper::can_serde_parse(&data);

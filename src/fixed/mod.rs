@@ -55,5 +55,7 @@ where
 
 #[test]
 fn can_import_yaml() {
-    assert!(Statics::import_yaml("static").is_ok());
+    let result = Statics::import_yaml("static");
+    println!("{:?}", result);
+    assert!(result.is_ok());
 }

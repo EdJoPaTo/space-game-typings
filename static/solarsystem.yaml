@@ -1,11 +1,19 @@
 ---
+Wabinihwa:
+  security: 92
+  planets: 4
+  stargates:
+    Arama: 4
+    Liagi: 3
+  stations:
+    - 2
 Arama:
   security: 51
   planets: 2
   stargates:
+    Wabinihwa: 1
     Iramil: 2
     Plagar: 2
-    Wabinihwa: 1
   stations:
     - 2
 Iramil:
@@ -20,8 +28,8 @@ Liagi:
   security: 100
   planets: 7
   stargates:
-    Iramil: 7
     Wabinihwa: 5
+    Iramil: 7
   stations:
     - 3
     - 5
@@ -40,11 +48,3 @@ Vosu:
     Plagar: 4
   stations:
     - 3
-Wabinihwa:
-  security: 92
-  planets: 4
-  stargates:
-    Arama: 4
-    Liagi: 3
-  stations:
-    - 2

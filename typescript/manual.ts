@@ -9,7 +9,6 @@ export type LifelessIdentifier = `lifeless${string}`;
 export type ModulePassiveIdentifier = `modp${string}`;
 export type ModuleUntargetedIdentifier = `modu${string}`;
 export type ModuleTargetedIdentifier = `modt${string}`;
-export type SolarsystemIdentifier = string;
 
 /** Example: player-tg-1337 */
 export type PlayerIdentifier = `player-${string}-${number}`;
