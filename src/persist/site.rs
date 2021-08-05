@@ -23,7 +23,7 @@ ts_rs::export! {
 
 #[test]
 fn can_deserialize_no_name() -> anyhow::Result<()> {
-    let result = serde_json::from_str::<Info>(r#"{"kind": "facilityStargate", "unique": "42"}"#)?;
+    let result = serde_json::from_str::<Info>(r#"{"kind": "stargate", "unique": "42"}"#)?;
     assert!(result.name.is_none());
     Ok(())
 }

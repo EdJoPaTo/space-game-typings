@@ -1,7 +1,7 @@
 ---
-facilityStargate:
-  services:
-    - jump
-facilityStation:
+station:
   services:
     - dock
+stargate:
+  services:
+    - jump

@@ -12,10 +12,8 @@ pub enum Service {
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "FacilityIdentifier")]
 pub enum Identifier {
-    #[serde(rename = "facilityStargate")]
-    Stargate,
-    #[serde(rename = "facilityStation")]
     Station,
+    Stargate,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

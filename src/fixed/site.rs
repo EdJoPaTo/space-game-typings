@@ -4,8 +4,8 @@ use serde::{Deserialize, Serialize};
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteKind")]
 pub enum Kind {
-    FacilityStargate,
-    FacilityStation,
+    Station,
+    Stargate,
     AsteroidField,
 }
 
