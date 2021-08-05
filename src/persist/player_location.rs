@@ -4,7 +4,7 @@ use crate::fixed::solarsystem;
 
 use super::site::Info;
 
-#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", untagged)]
 pub enum PlayerLocation {
@@ -13,7 +13,7 @@ pub enum PlayerLocation {
     Warp(Warp),
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "PlayerLocationStation")]
 pub struct Station {
@@ -21,14 +21,14 @@ pub struct Station {
     pub station: u8,
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "PlayerLocationWarp")]
 pub struct Warp {
     pub solarsystem: solarsystem::Identifier,
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "PlayerLocationSite")]
 pub struct Site {
