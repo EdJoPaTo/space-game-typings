@@ -30,7 +30,7 @@ pub enum Targeted {
 // #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", tag = "type")]
 pub enum Movement {
-    Undock(Undock),
+    Undock,
     Warp(Warp),
 }
 
@@ -64,25 +64,17 @@ pub struct Warp {
     pub site_unique: String,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "InstructionMovementUndock")]
-pub struct Undock {
-    ship_id: u8,
-}
-
 #[cfg(test)]
 ts_rs::export! {
     ModuleUntargeted => "instruction-untargeted-module.ts",
     ModuleTargeted => "instruction-targeted-module.ts",
     Facility => "instruction-targeted-facility.ts",
     Warp => "instruction-movement-warp.ts",
-    Undock => "instruction-movement-undock.ts",
 }
 
 #[test]
 fn can_identify_undock() {
-    let data = Instruction::Movement(Movement::Undock(Undock { ship_id: 42 }));
+    let data = Instruction::Movement(Movement::Undock);
     crate::test_helper::can_serde_parse(&data);
 }
 
