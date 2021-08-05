@@ -2,8 +2,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::fixed::solarsystem;
 
-use super::site::Info;
-
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", untagged)]
@@ -26,6 +24,7 @@ pub struct Station {
 #[serde(rename_all = "camelCase", rename = "PlayerLocationWarp")]
 pub struct Warp {
     pub solarsystem: solarsystem::Identifier,
+    pub towards_site_unique: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -33,7 +32,7 @@ pub struct Warp {
 #[serde(rename_all = "camelCase", rename = "PlayerLocationSite")]
 pub struct Site {
     pub solarsystem: solarsystem::Identifier,
-    pub site: Info,
+    pub site_unique: String,
 }
 
 #[cfg(test)]
@@ -59,11 +58,7 @@ impl PlayerLocation {
 fn can_identify_site() {
     let data = PlayerLocation::Site(Site {
         solarsystem: solarsystem::Identifier::default(),
-        site: Info {
-            kind: crate::fixed::site::Kind::AsteroidField,
-            unique: "666".to_string(),
-            name: None,
-        },
+        site_unique: "666".to_string(),
     });
     crate::test_helper::can_serde_parse(&data);
 }
@@ -72,6 +67,7 @@ fn can_identify_site() {
 fn can_identify_warp() {
     let data = PlayerLocation::Warp(Warp {
         solarsystem: solarsystem::Identifier::default(),
+        towards_site_unique: "666".to_string(),
     });
     crate::test_helper::can_serde_parse(&data);
 }
