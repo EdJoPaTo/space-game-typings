@@ -4,7 +4,7 @@ use crate::fixed::npc_faction::NpcFaction;
 use crate::fixed::{facility, lifeless, shiplayout};
 use crate::persist::player;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
 // #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", tag = "type")]
 pub enum SiteEntity {
@@ -35,21 +35,21 @@ impl From<&crate::persist::site_entity::SiteEntity> for SiteEntity {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityFacility")]
 pub struct Facility {
     pub id: facility::Identifier,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityLifeless")]
 pub struct Lifeless {
     pub id: lifeless::Identifier,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityNpc")]
 pub struct Npc {
@@ -57,7 +57,7 @@ pub struct Npc {
     pub shiplayout: shiplayout::Identifier,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityPlayer")]
 pub struct Player {
@@ -75,44 +75,35 @@ ts_rs::export! {
 }
 
 #[test]
-fn can_parse_entity_lifeless() -> anyhow::Result<()> {
-    let origin = SiteEntity::Lifeless(Lifeless {
-        id: "lifelessAsteroid".to_string(),
+fn can_parse_facility() {
+    let data = SiteEntity::Facility(Facility {
+        id: facility::Identifier::Stargate,
     });
-    let json = serde_json::to_string_pretty(&origin)?;
-    println!("json {}", json);
-
-    let some = serde_json::from_str::<SiteEntity>(&json)?;
-    println!("some {:?}", some);
-
-    if let SiteEntity::Lifeless(info) = some {
-        assert_eq!(info.id, "lifelessAsteroid");
-        Ok(())
-    } else {
-        panic!();
-    }
+    crate::test_helper::can_serde_parse(&data);
 }
 
 #[test]
-fn can_parse_entity_npc() -> anyhow::Result<()> {
-    let origin = SiteEntity::Npc(Npc {
+fn can_parse_lifeless() {
+    let data = SiteEntity::Lifeless(Lifeless {
+        id: "lifelessAsteroid".to_string(),
+    });
+    crate::test_helper::can_serde_parse(&data);
+}
+
+#[test]
+fn can_parse_npc() {
+    let data = SiteEntity::Npc(Npc {
         faction: NpcFaction::Pirates,
         shiplayout: "shiplayoutFrigate".to_string(),
     });
-    let json = serde_json::to_string_pretty(&origin)?;
-    println!("json {}", json);
+    crate::test_helper::can_serde_parse(&data);
+}
 
-    let some = serde_json::from_str::<SiteEntity>(&json)?;
-    println!("some {:?}", some);
-
-    if let SiteEntity::Npc(info) = some {
-        assert_eq!(info.shiplayout, "shiplayoutFrigate");
-        if let NpcFaction::Pirates = info.faction {
-            Ok(())
-        } else {
-            panic!();
-        }
-    } else {
-        panic!();
-    }
+#[test]
+fn can_parse_player() {
+    let data = SiteEntity::Player(Player {
+        id: "player-tg-666".to_string(),
+        shiplayout: "shiplayoutFrigate".to_string(),
+    });
+    crate::test_helper::can_serde_parse(&data);
 }
