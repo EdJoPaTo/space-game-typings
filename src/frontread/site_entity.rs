@@ -61,7 +61,7 @@ pub struct Npc {
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityPlayer")]
 pub struct Player {
-    pub id: player::Identifer,
+    pub id: player::Identifier,
     pub shiplayout: shiplayout::Identifier,
 }
 

@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::fixed::solarsystem;
 
-pub type Identifer = String;
+pub type Identifier = String;
 
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
@@ -18,7 +18,7 @@ pub struct General {
 impl Default for General {
     fn default() -> Self {
         Self {
-            home_solarsystem: solarsystem::Identifier::Wabinihwa,
+            home_solarsystem: solarsystem::Identifier::default(),
             home_station: 0,
             paperclips: 2000,
         }

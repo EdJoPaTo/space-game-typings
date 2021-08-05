@@ -58,7 +58,7 @@ impl PlayerLocation {
 #[test]
 fn can_identify_site() {
     let data = PlayerLocation::Site(Site {
-        solarsystem: solarsystem::Identifier::Wabinihwa,
+        solarsystem: solarsystem::Identifier::default(),
         site: Info {
             kind: crate::fixed::site::Kind::AsteroidField,
             unique: "666".to_string(),
@@ -71,7 +71,7 @@ fn can_identify_site() {
 #[test]
 fn can_identify_warp() {
     let data = PlayerLocation::Warp(Warp {
-        solarsystem: solarsystem::Identifier::Wabinihwa,
+        solarsystem: solarsystem::Identifier::default(),
     });
     crate::test_helper::can_serde_parse(&data);
 }
@@ -79,7 +79,7 @@ fn can_identify_warp() {
 #[test]
 fn can_identify_station() {
     let data = PlayerLocation::Station(Station {
-        solarsystem: solarsystem::Identifier::Wabinihwa,
+        solarsystem: solarsystem::Identifier::default(),
         station: 2,
     });
     crate::test_helper::can_serde_parse(&data);

@@ -38,7 +38,7 @@ pub struct Npc {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct Player {
-    pub id: player::Identifer,
+    pub id: player::Identifier,
     pub shiplayout: shiplayout::Identifier,
 }
 
