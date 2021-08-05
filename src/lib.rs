@@ -15,3 +15,6 @@ pub mod frontread;
 
 /// Data the frontend reads ands writes.
 pub mod frontrw;
+
+#[cfg(test)]
+mod test_helper;

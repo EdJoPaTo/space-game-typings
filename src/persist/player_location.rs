@@ -4,7 +4,7 @@ use crate::fixed::solarsystem;
 
 use super::site::Info;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", untagged)]
 pub enum PlayerLocation {
@@ -13,7 +13,7 @@ pub enum PlayerLocation {
     Warp(Warp),
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "PlayerLocationStation")]
 pub struct Station {
@@ -21,14 +21,14 @@ pub struct Station {
     pub station: u8,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "PlayerLocationWarp")]
 pub struct Warp {
     pub solarsystem: solarsystem::Identifier,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "PlayerLocationSite")]
 pub struct Site {
@@ -45,7 +45,7 @@ ts_rs::export! {
 }
 
 #[test]
-fn can_identify_site() -> anyhow::Result<()> {
+fn can_identify_site() {
     let data = PlayerLocation::Site(Site {
         solarsystem: "bla".to_string(),
         site: Info {
@@ -54,46 +54,22 @@ fn can_identify_site() -> anyhow::Result<()> {
             name: None,
         },
     });
-    let json = serde_json::to_string_pretty(&data)?;
-    println!("json {}", json);
-    let some = serde_json::from_str::<PlayerLocation>(&json)?;
-    println!("parsed {:?}", some);
-    if let PlayerLocation::Site(_) = some {
-        Ok(())
-    } else {
-        panic!("wrong!");
-    }
+    crate::test_helper::can_serde_parse(&data);
 }
 
 #[test]
-fn can_identify_warp() -> anyhow::Result<()> {
+fn can_identify_warp() {
     let data = PlayerLocation::Warp(Warp {
         solarsystem: "bla".to_string(),
     });
-    let json = serde_json::to_string_pretty(&data)?;
-    println!("json {}", json);
-    let some = serde_json::from_str::<PlayerLocation>(&json)?;
-    println!("parsed {:?}", some);
-    if let PlayerLocation::Warp(_) = some {
-        Ok(())
-    } else {
-        panic!("wrong!");
-    }
+    crate::test_helper::can_serde_parse(&data);
 }
 
 #[test]
-fn can_identify_station() -> anyhow::Result<()> {
+fn can_identify_station() {
     let data = PlayerLocation::Station(Station {
         solarsystem: "bla".to_string(),
         station: 2,
     });
-    let json = serde_json::to_string_pretty(&data)?;
-    println!("json {}", json);
-    let some = serde_json::from_str::<PlayerLocation>(&json)?;
-    println!("parsed {:?}", some);
-    if let PlayerLocation::Station(_) = some {
-        Ok(())
-    } else {
-        panic!("wrong!");
-    }
+    crate::test_helper::can_serde_parse(&data);
 }
