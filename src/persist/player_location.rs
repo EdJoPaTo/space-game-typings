@@ -2,7 +2,6 @@ use serde::{Deserialize, Serialize};
 
 use crate::fixed::solarsystem;
 
-use super::ship::{Fitting, Status};
 use super::site::Info;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -10,8 +9,8 @@ use super::site::Info;
 #[serde(rename_all = "camelCase", untagged)]
 pub enum PlayerLocation {
     Site(Site),
-    Warp(Warp),
     Station(Station),
+    Warp(Warp),
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -27,9 +26,6 @@ pub struct Station {
 #[serde(rename_all = "camelCase", rename = "PlayerLocationWarp")]
 pub struct Warp {
     pub solarsystem: solarsystem::Identifier,
-
-    pub ship_fitting: Fitting,
-    pub ship_status: Status,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -38,9 +34,6 @@ pub struct Warp {
 pub struct Site {
     pub solarsystem: solarsystem::Identifier,
     pub site: Info,
-
-    pub ship_fitting: Fitting,
-    pub ship_status: Status,
 }
 
 #[cfg(test)]
@@ -49,15 +42,6 @@ ts_rs::export! {
     Station => "player-location-station.ts",
     Warp => "player-location-warp.ts",
     Site => "player-location-site.ts",
-}
-
-#[cfg(test)]
-fn dummy_status() -> Status {
-    Status {
-        capacitor: 42,
-        hitpoints_armor: 42,
-        hitpoints_structure: 42,
-    }
 }
 
 #[test]
@@ -69,12 +53,11 @@ fn can_identify_site() -> anyhow::Result<()> {
             unique: "666".to_string(),
             name: None,
         },
-        ship_fitting: Fitting::default(),
-        ship_status: dummy_status(),
     });
     let json = serde_json::to_string_pretty(&data)?;
     println!("json {}", json);
     let some = serde_json::from_str::<PlayerLocation>(&json)?;
+    println!("parsed {:?}", some);
     if let PlayerLocation::Site(_) = some {
         Ok(())
     } else {
@@ -86,12 +69,11 @@ fn can_identify_site() -> anyhow::Result<()> {
 fn can_identify_warp() -> anyhow::Result<()> {
     let data = PlayerLocation::Warp(Warp {
         solarsystem: "bla".to_string(),
-        ship_fitting: Fitting::default(),
-        ship_status: dummy_status(),
     });
     let json = serde_json::to_string_pretty(&data)?;
     println!("json {}", json);
     let some = serde_json::from_str::<PlayerLocation>(&json)?;
+    println!("parsed {:?}", some);
     if let PlayerLocation::Warp(_) = some {
         Ok(())
     } else {
@@ -108,6 +90,7 @@ fn can_identify_station() -> anyhow::Result<()> {
     let json = serde_json::to_string_pretty(&data)?;
     println!("json {}", json);
     let some = serde_json::from_str::<PlayerLocation>(&json)?;
+    println!("parsed {:?}", some);
     if let PlayerLocation::Station(_) = some {
         Ok(())
     } else {

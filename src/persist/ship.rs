@@ -2,7 +2,15 @@ use serde::{Deserialize, Serialize};
 
 use crate::fixed::{module, shiplayout, ShipLayouts, Statics};
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
+#[cfg_attr(test, derive(ts_rs::TS))]
+#[serde(rename_all = "camelCase")]
+pub struct Ship {
+    pub fitting: Fitting,
+    pub status: Status,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "ShipFitting")]
 pub struct Fitting {
@@ -15,7 +23,7 @@ pub struct Fitting {
 
 /// The current situation of the ship.
 /// For the totals check the `ShipFitting`.
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "ShipStatus")]
 pub struct Status {
@@ -26,6 +34,7 @@ pub struct Status {
 
 #[cfg(test)]
 ts_rs::export! {
+    Ship => "ship.ts",
     Fitting => "ship-fitting.ts",
     Status => "ship-status.ts",
 }

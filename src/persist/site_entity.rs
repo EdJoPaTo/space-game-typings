@@ -4,6 +4,7 @@ use crate::fixed::npc_faction::NpcFaction;
 use crate::fixed::{facility, lifeless, shiplayout};
 
 use super::player;
+use super::ship::Ship;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase", tag = "type")]
@@ -31,9 +32,7 @@ pub struct Lifeless {
 #[serde(rename_all = "camelCase")]
 pub struct Npc {
     pub faction: NpcFaction,
-    pub shiplayout: shiplayout::Identifier,
-    // TODO: fitting
-    // TODO: status like hitpoints?
+    pub ship: Ship,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

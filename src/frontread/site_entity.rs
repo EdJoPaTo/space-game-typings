@@ -25,7 +25,7 @@ impl From<&crate::persist::site_entity::SiteEntity> for SiteEntity {
             }),
             crate::persist::site_entity::SiteEntity::Npc(info) => Self::Npc(Npc {
                 faction: info.faction,
-                shiplayout: info.shiplayout.to_string(),
+                shiplayout: info.ship.fitting.layout.to_string(),
             }),
             crate::persist::site_entity::SiteEntity::Player(info) => Self::Player(Player {
                 id: info.id.to_string(),
