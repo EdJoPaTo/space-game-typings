@@ -1,4 +1,5 @@
 use std::collections::HashMap;
+use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
 
@@ -27,6 +28,13 @@ impl std::fmt::Display for Identifier {
 impl Default for Identifier {
     fn default() -> Self {
         Self::Wabinihwa
+    }
+}
+
+impl FromStr for Identifier {
+    type Err = serde_json::Error;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(&format!(r#""{}""#, s))
     }
 }
 
