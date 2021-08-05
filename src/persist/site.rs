@@ -24,7 +24,7 @@ ts_rs::export! {
 
 impl Info {
     #[must_use]
-    pub fn generate_station(solarsystem: &solarsystem::Identifier, station_index: u8) -> Self {
+    pub fn generate_station(solarsystem: solarsystem::Identifier, station_index: u8) -> Self {
         let number = station_index + 1;
         // TODO: römisch
         let name = format!("{} {}", solarsystem, number);
@@ -37,7 +37,7 @@ impl Info {
     }
 
     #[must_use]
-    pub fn generate_stargate(target_solarsystem: &solarsystem::Identifier) -> Self {
+    pub fn generate_stargate(target_solarsystem: solarsystem::Identifier) -> Self {
         let name = target_solarsystem.to_string();
         let unique = format!("stargate{}", target_solarsystem);
         Self {
