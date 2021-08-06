@@ -4,46 +4,25 @@ use crate::fixed::facility::Service;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 // #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", tag = "step")]
+#[serde(rename_all = "camelCase", tag = "type")]
 pub enum Instruction {
-    Untargeted(Untargeted),
-    Targeted(Targeted),
-    Movement(Movement),
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-// #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", tag = "type")]
-pub enum Untargeted {
-    Module(ModuleUntargeted),
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-// #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", tag = "type")]
-pub enum Targeted {
+    ModuleUntargeted(ModuleUntargeted),
+    ModuleTargeted(ModuleTargeted),
     Facility(Facility),
-    Module(ModuleTargeted),
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-// #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", tag = "type")]
-pub enum Movement {
     Undock,
     Warp(Warp),
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "InstructionUntargetedModule")]
+#[serde(rename_all = "camelCase", rename = "InstructionModuleUntargeted")]
 pub struct ModuleUntargeted {
     pub module_index: u8,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "InstructionTargetedModule")]
+#[serde(rename_all = "camelCase", rename = "InstructionModuleTargeted")]
 pub struct ModuleTargeted {
     pub target_index_in_site: u8,
     pub module_index: u8,
@@ -51,7 +30,7 @@ pub struct ModuleTargeted {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "InstructionTargetedFacility")]
+#[serde(rename_all = "camelCase", rename = "InstructionFacility")]
 pub struct Facility {
     pub target_index_in_site: u8,
     pub service: Service,
@@ -59,53 +38,53 @@ pub struct Facility {
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "InstructionMovementWarp")]
+#[serde(rename_all = "camelCase", rename = "InstructionWarp")]
 pub struct Warp {
     pub site_unique: String,
 }
 
 #[cfg(test)]
 ts_rs::export! {
-    ModuleUntargeted => "instruction-untargeted-module.ts",
-    ModuleTargeted => "instruction-targeted-module.ts",
-    Facility => "instruction-targeted-facility.ts",
-    Warp => "instruction-movement-warp.ts",
+    ModuleUntargeted => "instruction-module-untargeted.ts",
+    ModuleTargeted => "instruction-module-targeted.ts",
+    Facility => "instruction-facility.ts",
+    Warp => "instruction-warp.ts",
 }
 
 #[test]
 fn can_identify_undock() {
-    let data = Instruction::Movement(Movement::Undock);
+    let data = Instruction::Undock;
     crate::test_helper::can_serde_parse(&data);
 }
 
 #[test]
 fn can_identify_warp() {
-    let data = Instruction::Movement(Movement::Warp(Warp {
+    let data = Instruction::Warp(Warp {
         site_unique: "666".to_string(),
-    }));
+    });
     crate::test_helper::can_serde_parse(&data);
 }
 
 #[test]
 fn can_identify_facility() {
-    let data = Instruction::Targeted(Targeted::Facility(Facility {
+    let data = Instruction::Facility(Facility {
         target_index_in_site: 42,
         service: Service::Dock,
-    }));
+    });
     crate::test_helper::can_serde_parse(&data);
 }
 
 #[test]
 fn can_identify_module_untargeted() {
-    let data = Instruction::Untargeted(Untargeted::Module(ModuleUntargeted { module_index: 4 }));
+    let data = Instruction::ModuleUntargeted(ModuleUntargeted { module_index: 4 });
     crate::test_helper::can_serde_parse(&data);
 }
 
 #[test]
 fn can_identify_module_targeted() {
-    let data = Instruction::Targeted(Targeted::Module(ModuleTargeted {
+    let data = Instruction::ModuleTargeted(ModuleTargeted {
         target_index_in_site: 42,
         module_index: 4,
-    }));
+    });
     crate::test_helper::can_serde_parse(&data);
 }
