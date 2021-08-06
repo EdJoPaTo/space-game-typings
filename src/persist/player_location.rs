@@ -2,11 +2,13 @@ use serde::{Deserialize, Serialize};
 
 use crate::fixed::solarsystem;
 
+use super::site;
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", untagged)]
 pub enum PlayerLocation {
-    Site(Site),
+    Site(site::Identifier),
     Station(Station),
     Warp(Warp),
 }
@@ -27,20 +29,11 @@ pub struct Warp {
     pub towards_site_unique: String,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "PlayerLocationSite")]
-pub struct Site {
-    pub solarsystem: solarsystem::Identifier,
-    pub site_unique: String,
-}
-
 #[cfg(test)]
 ts_rs::export! {
     PlayerLocation => "player-location.ts",
     Station => "player-location-station.ts",
     Warp => "player-location-warp.ts",
-    Site => "player-location-site.ts",
 }
 
 impl PlayerLocation {
@@ -56,7 +49,7 @@ impl PlayerLocation {
 
 #[test]
 fn can_identify_site() {
-    let data = PlayerLocation::Site(Site {
+    let data = PlayerLocation::Site(site::Identifier {
         solarsystem: solarsystem::Identifier::default(),
         site_unique: "666".to_string(),
     });
