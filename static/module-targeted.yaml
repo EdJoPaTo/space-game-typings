@@ -2,10 +2,18 @@
 modtRookieLaser:
   requiredCpu: 10
   requiredPowergrid: 15
-  energyConsumption: 5
-  damage: 10
+  effectsOrigin:
+    - type: capacitor
+      amount: -5
+  effectsTarget:
+    - type: damage
+      amount: 10
 modtRookieMiningLaser:
   requiredCpu: 10
   requiredPowergrid: 15
-  energyConsumption: 5
-  amountMined: 5
+  effectsOrigin:
+    - type: capacitor
+      amount: -5
+  effectsTarget:
+    - type: mine
+      amount: 5

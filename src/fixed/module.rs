@@ -1,8 +1,27 @@
 use serde::{Deserialize, Serialize};
 
+use crate::serde_helper::ordered_vec;
+
 pub type TargetedIdentifier = String;
 pub type PassiveIdentifier = String;
 pub type UntargetedIdentifier = String;
+
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(test, derive(ts_rs::TS))]
+#[serde(
+    rename_all = "camelCase",
+    rename = "ModuleEffect",
+    tag = "type",
+    content = "amount"
+)]
+/// Effects in the order they get applied
+pub enum Effect {
+    Capacitor(i16),
+    ArmorRepair(u32),
+    Damage(u32),
+    Mine(u32),
+    WarpDisruption,
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
@@ -24,10 +43,8 @@ pub struct Untargeted {
     pub required_cpu: u32,
     pub required_powergrid: u32,
 
-    pub energy_consumption: u32,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub armor_repair: Option<u32>,
+    #[serde(serialize_with = "ordered_vec")]
+    pub effects: Vec<Effect>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -37,16 +54,15 @@ pub struct Targeted {
     pub required_cpu: u32,
     pub required_powergrid: u32,
 
-    pub energy_consumption: u32,
-
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub amount_mined: Option<u32>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub damage: Option<u32>,
+    #[serde(serialize_with = "ordered_vec")]
+    pub effects_origin: Vec<Effect>,
+    #[serde(serialize_with = "ordered_vec")]
+    pub effects_target: Vec<Effect>,
 }
 
 #[cfg(test)]
 ts_rs::export! {
+    Effect => "module-effect.ts",
     Passive => "module-passive.ts",
     Untargeted => "module-untargeted.ts",
     Targeted => "module-targeted.ts",

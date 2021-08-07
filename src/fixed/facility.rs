@@ -1,5 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::serde_helper::ordered_vec;
+
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
@@ -20,6 +22,7 @@ pub enum Identifier {
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 pub struct Facility {
+    #[serde(serialize_with = "ordered_vec")]
     pub services: Vec<Service>,
 }
 

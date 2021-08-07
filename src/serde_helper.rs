@@ -12,3 +12,13 @@ where
     let ordered: BTreeMap<_, _> = value.iter().collect();
     ordered.serialize(serializer)
 }
+
+pub fn ordered_vec<S, T>(value: &[T], serializer: S) -> Result<S::Ok, S::Error>
+where
+    T: Serialize + std::cmp::Ord,
+    S: Serializer,
+{
+    let mut ordered = value.iter().collect::<Vec<_>>();
+    ordered.sort();
+    ordered.serialize(serializer)
+}
