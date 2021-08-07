@@ -39,6 +39,17 @@ ts_rs::export! {
     Status => "ship-status.ts",
 }
 
+impl Ship {
+    #[allow(clippy::missing_panics_doc)]
+    #[must_use]
+    pub fn default(statics: &Statics) -> Self {
+        Self {
+            fitting: Fitting::default(),
+            status: Status::new(statics, &Fitting::default()).unwrap(),
+        }
+    }
+}
+
 impl Default for Fitting {
     fn default() -> Self {
         Self {
@@ -113,6 +124,13 @@ impl Status {
             hitpoints_structure: self.hitpoints_structure.min(other.hitpoints_structure),
         }
     }
+}
+
+#[test]
+fn can_generate_default_ship() {
+    let statics = Statics::default();
+    let ship = Ship::default(&statics);
+    assert_eq!(ship.fitting.layout, Fitting::default().layout);
 }
 
 #[test]
