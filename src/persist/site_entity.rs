@@ -4,7 +4,7 @@ use crate::fixed::npc_faction::NpcFaction;
 use crate::fixed::{facility, lifeless, shiplayout};
 
 use super::player;
-use super::ship::Ship;
+use super::ship::{Ship, Status};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", tag = "type")]
@@ -25,8 +25,7 @@ pub struct Facility {
 #[serde(rename_all = "camelCase")]
 pub struct Lifeless {
     pub id: lifeless::Identifier,
-    pub hitpoints_armor: u16,
-    pub hitpoints_structure: u16,
+    pub status: Status,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -47,8 +46,11 @@ pub struct Player {
 fn can_parse() {
     let data = SiteEntity::Lifeless(Lifeless {
         id: "lifelessAsteroid".to_string(),
-        hitpoints_armor: 42,
-        hitpoints_structure: 42,
+        status: Status {
+            capacitor: 0,
+            hitpoints_armor: 42,
+            hitpoints_structure: 42,
+        },
     });
     crate::test_helper::can_serde_parse(&data);
 }
