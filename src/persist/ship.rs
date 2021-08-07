@@ -27,9 +27,9 @@ pub struct Fitting {
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "ShipStatus")]
 pub struct Status {
-    pub capacitor: u32,
-    pub hitpoints_armor: u32,
-    pub hitpoints_structure: u32,
+    pub capacitor: u16,
+    pub hitpoints_armor: u16,
+    pub hitpoints_structure: u16,
 }
 
 #[cfg(test)]

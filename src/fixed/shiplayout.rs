@@ -10,13 +10,16 @@ pub struct ShipLayout {
     pub slots_untargeted: u8,
     pub slots_passive: u8,
 
-    pub cpu: u32,
-    pub powergrid: u32,
-    pub capacitor: u32,
-    pub capacitor_recharge: u32,
+    pub cpu: u16,
+    pub powergrid: u16,
+    pub capacitor: u16,
+    pub capacitor_recharge: u16,
 
-    pub hitpoints_armor: u32,
-    pub hitpoints_structure: u32,
+    pub hitpoints_armor: u16,
+    pub hitpoints_structure: u16,
+    //
+    // TODO: module effects like passives?
+    // they could do stuff like recharge and are a kinda 'free' bonus system
 }
 
 #[cfg(test)]
