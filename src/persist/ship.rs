@@ -124,6 +124,18 @@ impl Status {
             hitpoints_structure: self.hitpoints_structure.min(other.hitpoints_structure),
         }
     }
+
+    #[must_use]
+    /// Returns the possible status in this fitting.
+    pub fn min_layout(&self, statics: &Statics, fitting: &Fitting) -> Option<Self> {
+        let ship_maximum = Self::new(statics, fitting)?;
+        Some(self.min(&ship_maximum))
+    }
+
+    #[must_use]
+    pub fn is_alive(&self) -> bool {
+        self.hitpoints_structure > 0
+    }
 }
 
 #[test]
