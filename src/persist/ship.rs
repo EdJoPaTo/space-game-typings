@@ -23,7 +23,7 @@ pub struct Fitting {
 
 /// The current situation of the ship.
 /// For the totals check the `ShipFitting`.
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "ShipStatus")]
 pub struct Status {

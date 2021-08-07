@@ -6,7 +6,7 @@ pub type TargetedIdentifier = String;
 pub type PassiveIdentifier = String;
 pub type UntargetedIdentifier = String;
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(
     rename_all = "camelCase",
