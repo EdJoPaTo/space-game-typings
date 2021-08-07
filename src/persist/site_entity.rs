@@ -25,7 +25,8 @@ pub struct Facility {
 #[serde(rename_all = "camelCase")]
 pub struct Lifeless {
     pub id: lifeless::Identifier,
-    // TODO: status like hitpoints?
+    pub hitpoints_armor: u16,
+    pub hitpoints_structure: u16,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -46,6 +47,8 @@ pub struct Player {
 fn can_parse() {
     let data = SiteEntity::Lifeless(Lifeless {
         id: "lifelessAsteroid".to_string(),
+        hitpoints_armor: 42,
+        hitpoints_structure: 42,
     });
     crate::test_helper::can_serde_parse(&data);
 }
