@@ -30,32 +30,28 @@ pub struct Statics {
     pub solarsystems: Solarsystems,
 }
 
-impl Statics {
-    pub fn import_yaml(basepath: &str) -> anyhow::Result<Self> {
-        Ok(Self {
-            facilities: import_yaml(basepath, "facility")?,
-            lifeless: import_yaml(basepath, "lifeless")?,
-            modules_passive: import_yaml(basepath, "module-passive")?,
-            modules_untargeted: import_yaml(basepath, "module-untargeted")?,
-            modules_targeted: import_yaml(basepath, "module-targeted")?,
-            ship_layouts: import_yaml(basepath, "ship-layout")?,
-            solarsystems: import_yaml(basepath, "solarsystem")?,
-        })
+impl Default for Statics {
+    fn default() -> Self {
+        Self {
+            facilities: parse(include_str!("../../static/facility.yaml")),
+            lifeless: parse(include_str!("../../static/lifeless.yaml")),
+            modules_passive: parse(include_str!("../../static/module-passive.yaml")),
+            modules_untargeted: parse(include_str!("../../static/module-untargeted.yaml")),
+            modules_targeted: parse(include_str!("../../static/module-targeted.yaml")),
+            ship_layouts: parse(include_str!("../../static/ship-layout.yaml")),
+            solarsystems: parse(include_str!("../../static/solarsystem.yaml")),
+        }
     }
 }
 
-fn import_yaml<T>(basepath: &str, filename: &str) -> anyhow::Result<T>
+fn parse<T>(yaml_str: &str) -> T
 where
     T: serde::de::DeserializeOwned,
 {
-    let yaml_str = std::fs::read_to_string(&format!("{}/{}.yaml", basepath, filename))?;
-    let value = serde_yaml::from_str::<T>(&yaml_str)?;
-    Ok(value)
+    serde_yaml::from_str::<T>(yaml_str).unwrap()
 }
 
 #[test]
-fn can_import_yaml() {
-    let result = Statics::import_yaml("static");
-    println!("{:?}", result);
-    assert!(result.is_ok());
+fn can_generate_statics_from_include() {
+    Statics::default();
 }

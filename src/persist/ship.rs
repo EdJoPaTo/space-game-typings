@@ -85,7 +85,6 @@ impl Status {
 
 #[test]
 fn default_fitting_is_valid() {
-    if let Ok(statics) = crate::fixed::Statics::import_yaml("static") {
-        assert!(Fitting::default().is_valid(&statics));
-    }
+    let statics = crate::fixed::Statics::default();
+    assert!(Fitting::default().is_valid(&statics));
 }
