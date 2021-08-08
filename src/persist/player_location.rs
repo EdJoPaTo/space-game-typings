@@ -13,7 +13,7 @@ pub enum PlayerLocation {
     Warp(Warp),
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "PlayerLocationStation")]
 pub struct Station {
@@ -34,6 +34,12 @@ ts_rs::export! {
     PlayerLocation => "player-location.ts",
     Station => "player-location-station.ts",
     Warp => "player-location-warp.ts",
+}
+
+impl Default for PlayerLocation {
+    fn default() -> Self {
+        Self::Station(Station::default())
+    }
 }
 
 impl PlayerLocation {
