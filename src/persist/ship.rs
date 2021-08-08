@@ -112,12 +112,12 @@ impl Status {
     /// use typings::persist::ship::Status;
     /// let status = Status {capacitor: 20, hitpoints_armor: 42, hitpoints_structure: 4};
     /// let ship_maximum = Status {capacitor: 20, hitpoints_armor: 20, hitpoints_structure: 10};
-    /// let min = status.min(&ship_maximum);
+    /// let min = status.min(ship_maximum);
     /// assert_eq!(min.capacitor, 20);
     /// assert_eq!(min.hitpoints_armor, 20);
     /// assert_eq!(min.hitpoints_structure, 4);
     /// ```
-    pub fn min(&self, other: &Self) -> Self {
+    pub fn min(self, other: Self) -> Self {
         Self {
             capacitor: self.capacitor.min(other.capacitor),
             hitpoints_armor: self.hitpoints_armor.min(other.hitpoints_armor),
@@ -127,13 +127,13 @@ impl Status {
 
     #[must_use]
     /// Returns the possible status in this fitting.
-    pub fn min_layout(&self, statics: &Statics, fitting: &Fitting) -> Option<Self> {
+    pub fn min_layout(self, statics: &Statics, fitting: &Fitting) -> Option<Self> {
         let ship_maximum = Self::new(statics, fitting)?;
-        Some(self.min(&ship_maximum))
+        Some(self.min(ship_maximum))
     }
 
     #[must_use]
-    pub const fn is_alive(&self) -> bool {
+    pub const fn is_alive(self) -> bool {
         self.hitpoints_structure > 0
     }
 }
