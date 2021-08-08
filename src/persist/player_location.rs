@@ -26,6 +26,7 @@ pub struct Station {
 #[serde(rename_all = "camelCase", rename = "PlayerLocationWarp")]
 pub struct Warp {
     pub solarsystem: solarsystem::Identifier,
+    pub towards_site_unique: String,
 }
 
 #[cfg(test)]
@@ -59,6 +60,7 @@ fn can_identify_site() {
 fn can_identify_warp() {
     let data = PlayerLocation::Warp(Warp {
         solarsystem: solarsystem::Identifier::default(),
+        towards_site_unique: "666".to_string(),
     });
     crate::test_helper::can_serde_parse(&data);
 }
