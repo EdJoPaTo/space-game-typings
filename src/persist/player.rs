@@ -4,7 +4,7 @@ use crate::fixed::solarsystem;
 
 pub type Identifier = String;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "PlayerGeneral")]
 pub struct General {
@@ -26,7 +26,9 @@ impl Default for General {
 }
 
 #[cfg(test)]
-ts_rs::export! {General => "player-general.ts"}
+ts_rs::export! {
+    General => "player-general.ts",
+}
 
 #[must_use]
 pub fn parse_identifier(identifier: &str) -> Option<(String, String)> {
