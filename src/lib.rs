@@ -1,5 +1,3 @@
-#![allow(clippy::missing_errors_doc)]
-
 mod serde_helper;
 
 /// Static data which is read-only for everyone.
