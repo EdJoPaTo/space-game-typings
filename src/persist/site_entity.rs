@@ -46,7 +46,7 @@ pub struct Player {
 #[test]
 fn can_parse() {
     let data = SiteEntity::Lifeless(Lifeless {
-        id: "lifelessAsteroid".to_string(),
+        id: lifeless::Identifier::Asteroid,
         status: Status {
             capacitor: 0,
             hitpoints_armor: 42,

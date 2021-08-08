@@ -48,7 +48,7 @@ fn parse<T>(yaml_str: &str) -> T
 where
     T: serde::de::DeserializeOwned,
 {
-    serde_yaml::from_str::<T>(yaml_str).unwrap()
+    serde_yaml::from_str::<T>(yaml_str).expect("failed to parse statics")
 }
 
 #[test]

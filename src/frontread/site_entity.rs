@@ -20,9 +20,9 @@ impl From<&crate::persist::site_entity::SiteEntity> for SiteEntity {
             crate::persist::site_entity::SiteEntity::Facility(info) => {
                 Self::Facility(Facility { id: info.id })
             }
-            crate::persist::site_entity::SiteEntity::Lifeless(info) => Self::Lifeless(Lifeless {
-                id: info.id.to_string(),
-            }),
+            crate::persist::site_entity::SiteEntity::Lifeless(info) => {
+                Self::Lifeless(Lifeless { id: info.id })
+            }
             crate::persist::site_entity::SiteEntity::Npc(info) => Self::Npc(Npc {
                 faction: info.faction,
                 shiplayout: info.fitting.layout.to_string(),
@@ -85,7 +85,7 @@ fn can_parse_facility() {
 #[test]
 fn can_parse_lifeless() {
     let data = SiteEntity::Lifeless(Lifeless {
-        id: "lifelessAsteroid".to_string(),
+        id: lifeless::Identifier::Asteroid,
     });
     crate::test_helper::can_serde_parse(&data);
 }

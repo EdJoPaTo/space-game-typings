@@ -1,6 +1,11 @@
 use serde::{Deserialize, Serialize};
 
-pub type Identifier = String;
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(test, derive(ts_rs::TS))]
+#[serde(rename_all = "camelCase", rename = "LifelessIdentifier")]
+pub enum Identifier {
+    Asteroid,
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
@@ -14,4 +19,7 @@ pub struct Lifeless {
 }
 
 #[cfg(test)]
-ts_rs::export! {Lifeless => "lifeless.ts"}
+ts_rs::export! {
+    Identifier => "lifeless-identifier.ts",
+    Lifeless => "lifeless.ts",
+}
