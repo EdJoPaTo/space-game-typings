@@ -39,13 +39,15 @@ ts_rs::export! {
     Status => "ship-status.ts",
 }
 
-impl Ship {
-    #[allow(clippy::missing_panics_doc)]
-    #[must_use]
-    pub fn default(statics: &Statics) -> Self {
+impl Default for Ship {
+    fn default() -> Self {
         Self {
             fitting: Fitting::default(),
-            status: Status::new(statics, &Fitting::default()).unwrap(),
+            status: Status {
+                capacitor: 40,
+                hitpoints_armor: 30,
+                hitpoints_structure: 10,
+            },
         }
     }
 }
@@ -139,10 +141,16 @@ impl Status {
 }
 
 #[test]
-fn can_generate_default_ship() {
+fn default_ship_is_exactly_from_statics() {
     let statics = Statics::default();
-    let ship = Ship::default(&statics);
-    assert_eq!(ship.fitting.layout, Fitting::default().layout);
+    let expected = Ship {
+        fitting: Fitting::default(),
+        status: Status::new(&statics, &Fitting::default()).unwrap(),
+    };
+
+    assert_eq!(Ship::default().fitting, Fitting::default());
+    assert_eq!(Ship::default().status, expected.status);
+    assert_eq!(Ship::default(), expected);
 }
 
 #[test]
