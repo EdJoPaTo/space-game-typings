@@ -133,7 +133,7 @@ impl Status {
     }
 
     #[must_use]
-    pub fn is_alive(&self) -> bool {
+    pub const fn is_alive(&self) -> bool {
         self.hitpoints_structure > 0
     }
 }

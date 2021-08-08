@@ -37,7 +37,7 @@ ts_rs::export! {
 
 impl PlayerLocation {
     #[must_use]
-    pub fn solarsystem(&self) -> solarsystem::Identifier {
+    pub const fn solarsystem(&self) -> solarsystem::Identifier {
         match self {
             PlayerLocation::Site(o) => o.solarsystem,
             PlayerLocation::Station(o) => o.solarsystem,
