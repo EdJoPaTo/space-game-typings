@@ -1,25 +1,8 @@
 use serde::{Deserialize, Serialize};
 
-use crate::fixed::{module, shiplayout, Statics};
+use crate::fixed::Statics;
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase")]
-pub struct Ship {
-    pub fitting: Fitting,
-    pub status: Status,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "ShipFitting")]
-pub struct Fitting {
-    pub layout: shiplayout::Identifier,
-
-    pub slots_targeted: Vec<module::TargetedIdentifier>,
-    pub slots_untargeted: Vec<module::UntargetedIdentifier>,
-    pub slots_passive: Vec<module::PassiveIdentifier>,
-}
+use super::Fitting;
 
 /// The current situation of the ship.
 /// For the totals check the `ShipFitting`.
@@ -34,54 +17,7 @@ pub struct Status {
 
 #[cfg(test)]
 ts_rs::export! {
-    Ship => "ship.ts",
-    Fitting => "ship-fitting.ts",
     Status => "ship-status.ts",
-}
-
-impl Default for Ship {
-    fn default() -> Self {
-        Self {
-            fitting: Fitting::default(),
-            status: Status {
-                capacitor: 40,
-                hitpoints_armor: 30,
-                hitpoints_structure: 10,
-            },
-        }
-    }
-}
-
-impl Default for Fitting {
-    fn default() -> Self {
-        Self {
-            layout: "shiplayoutRookieShip".into(),
-            slots_targeted: vec!["modtRookieMiningLaser".into(), "modtRookieLaser".into()],
-            slots_untargeted: vec!["moduRookieArmorRepair".into()],
-            slots_passive: vec!["modpRookieArmorPlate".into()],
-        }
-    }
-}
-
-impl Fitting {
-    #[must_use]
-    pub fn is_valid(&self, statics: &Statics) -> bool {
-        if let Some(layout) = statics.ship_layouts.get(&self.layout) {
-            if self.slots_targeted.len() > layout.slots_targeted.into()
-                || self.slots_untargeted.len() > layout.slots_untargeted.into()
-                || self.slots_passive.len() > layout.slots_passive.into()
-            {
-                return false;
-            }
-
-            // TODO: check modules existing
-
-            // TODO: check cpu / powergrid
-
-            return true;
-        }
-        false
-    }
 }
 
 impl Status {
@@ -157,25 +93,6 @@ impl Status {
         let max = Self::new(statics, fitting)?;
         Some(self.health_percentage((max.hitpoints_armor, max.hitpoints_structure)))
     }
-}
-
-#[test]
-fn default_ship_is_exactly_from_statics() {
-    let statics = Statics::default();
-    let expected = Ship {
-        fitting: Fitting::default(),
-        status: Status::new(&statics, &Fitting::default()).unwrap(),
-    };
-
-    assert_eq!(Ship::default().fitting, Fitting::default());
-    assert_eq!(Ship::default().status, expected.status);
-    assert_eq!(Ship::default(), expected);
-}
-
-#[test]
-fn default_fitting_is_valid() {
-    let statics = crate::fixed::Statics::default();
-    assert!(Fitting::default().is_valid(&statics));
 }
 
 #[test]
