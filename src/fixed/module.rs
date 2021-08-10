@@ -14,7 +14,6 @@ pub type UntargetedIdentifier = String;
     tag = "type",
     content = "amount"
 )]
-/// Effects in the order they get applied
 pub enum Effect {
     Capacitor(i16),
     ArmorRepair(u16),

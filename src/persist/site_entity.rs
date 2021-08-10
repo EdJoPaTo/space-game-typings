@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::fixed::npc_faction::NpcFaction;
-use crate::fixed::{facility, lifeless, shiplayout};
+use crate::fixed::{facility, lifeless};
 
 use super::player;
 use super::ship::{Fitting, Status};
@@ -40,7 +40,6 @@ pub struct Npc {
 #[serde(rename_all = "camelCase")]
 pub struct Player {
     pub id: player::Identifier,
-    pub shiplayout: shiplayout::Identifier,
 }
 
 #[test]

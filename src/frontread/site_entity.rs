@@ -1,10 +1,10 @@
 use serde::{Deserialize, Serialize};
 
 use crate::fixed::npc_faction::NpcFaction;
-use crate::fixed::{facility, lifeless, shiplayout};
+use crate::fixed::{facility, lifeless, shiplayout, LifelessThingies, Statics};
 use crate::persist::player;
 
-#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 // #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", tag = "type")]
 pub enum SiteEntity {
@@ -14,27 +14,6 @@ pub enum SiteEntity {
     Player(Player),
 }
 
-impl From<&crate::persist::site_entity::SiteEntity> for SiteEntity {
-    fn from(entity: &crate::persist::site_entity::SiteEntity) -> Self {
-        match entity {
-            crate::persist::site_entity::SiteEntity::Facility(info) => {
-                Self::Facility(Facility { id: info.id })
-            }
-            crate::persist::site_entity::SiteEntity::Lifeless(info) => {
-                Self::Lifeless(Lifeless { id: info.id })
-            }
-            crate::persist::site_entity::SiteEntity::Npc(info) => Self::Npc(Npc {
-                faction: info.faction,
-                shiplayout: info.fitting.layout.to_string(),
-            }),
-            crate::persist::site_entity::SiteEntity::Player(info) => Self::Player(Player {
-                id: info.id.to_string(),
-                shiplayout: info.shiplayout.to_string(),
-            }),
-        }
-    }
-}
-
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityFacility")]
@@ -42,27 +21,93 @@ pub struct Facility {
     pub id: facility::Identifier,
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+impl From<&crate::persist::site_entity::Facility> for Facility {
+    fn from(info: &crate::persist::site_entity::Facility) -> Self {
+        Self { id: info.id }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityLifeless")]
 pub struct Lifeless {
     pub id: lifeless::Identifier,
+    pub armor: f32,
+    pub structure: f32,
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+impl Lifeless {
+    #[must_use]
+    pub fn new(statics: &LifelessThingies, info: &crate::persist::site_entity::Lifeless) -> Self {
+        let (armor, structure) = statics
+            .get(&info.id)
+            .map(|shelf| {
+                info.status
+                    .health_percentage((shelf.hitpoints_armor, shelf.hitpoints_structure))
+            })
+            .unwrap_or_default();
+        Self {
+            id: info.id,
+            armor,
+            structure,
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityNpc")]
 pub struct Npc {
     pub faction: NpcFaction,
     pub shiplayout: shiplayout::Identifier,
+    pub armor: f32,
+    pub structure: f32,
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
+impl Npc {
+    #[must_use]
+    pub fn new(statics: &Statics, info: &crate::persist::site_entity::Npc) -> Self {
+        let (armor, structure) = info
+            .status
+            .health_percentage_layout(statics, &info.fitting)
+            .unwrap_or_default();
+        Self {
+            faction: info.faction,
+            shiplayout: info.fitting.layout.to_string(),
+            armor,
+            structure,
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityPlayer")]
 pub struct Player {
     pub id: player::Identifier,
     pub shiplayout: shiplayout::Identifier,
+    pub armor: f32,
+    pub structure: f32,
+}
+
+impl Player {
+    #[must_use]
+    pub fn new(
+        statics: &Statics,
+        info: &crate::persist::site_entity::Player,
+        ship: &crate::persist::ship::Ship,
+    ) -> Self {
+        let (armor, structure) = ship
+            .status
+            .health_percentage_layout(statics, &ship.fitting)
+            .unwrap_or_default();
+        Self {
+            id: info.id.to_string(),
+            shiplayout: ship.fitting.layout.to_string(),
+            armor,
+            structure,
+        }
+    }
 }
 
 #[cfg(test)]
@@ -86,6 +131,8 @@ fn can_parse_facility() {
 fn can_parse_lifeless() {
     let data = SiteEntity::Lifeless(Lifeless {
         id: lifeless::Identifier::Asteroid,
+        armor: 0.0,
+        structure: 42.0,
     });
     crate::test_helper::can_serde_parse(&data);
 }
@@ -95,6 +142,8 @@ fn can_parse_npc() {
     let data = SiteEntity::Npc(Npc {
         faction: NpcFaction::Pirates,
         shiplayout: "shiplayoutFrigate".to_string(),
+        armor: 0.0,
+        structure: 42.0,
     });
     crate::test_helper::can_serde_parse(&data);
 }
@@ -104,6 +153,8 @@ fn can_parse_player() {
     let data = SiteEntity::Player(Player {
         id: "player-tg-666".to_string(),
         shiplayout: "shiplayoutFrigate".to_string(),
+        armor: 0.0,
+        structure: 42.0,
     });
     crate::test_helper::can_serde_parse(&data);
 }
