@@ -1,6 +1,10 @@
+use std::collections::HashMap;
+
 use serde::{Deserialize, Serialize};
 
-use crate::serde_helper::ordered_vec;
+use crate::serde_helper::{ordered_map, ordered_vec};
+
+use super::shiplayout::ShipQuality;
 
 pub type TargetedIdentifier = String;
 pub type PassiveIdentifier = String;
@@ -29,10 +33,8 @@ pub struct Passive {
     pub required_cpu: u16,
     pub required_powergrid: u16,
 
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub capacitor: Option<u16>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub hitpoints_armor: Option<u16>,
+    #[serde(serialize_with = "ordered_map")]
+    pub qualities: HashMap<ShipQuality, i16>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]

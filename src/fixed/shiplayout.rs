@@ -1,6 +1,21 @@
+use std::collections::HashMap;
+
 use serde::{Deserialize, Serialize};
 
+use crate::serde_helper::ordered_map;
+
 pub type Identifier = String;
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(test, derive(ts_rs::TS))]
+#[serde(rename_all = "camelCase")]
+pub enum ShipQuality {
+    HitpointsArmor,
+    HitpointsStructure,
+
+    Capacitor,
+    CapacitorRecharge,
+}
 
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
@@ -12,15 +27,13 @@ pub struct ShipLayout {
 
     pub cpu: u16,
     pub powergrid: u16,
-    pub capacitor: u16,
-    pub capacitor_recharge: u16,
 
-    pub hitpoints_armor: u16,
-    pub hitpoints_structure: u16,
-    //
-    // TODO: module effects like passives?
-    // they could do stuff like recharge and are a kinda 'free' bonus system
+    #[serde(default, serialize_with = "ordered_map")]
+    pub qualities: HashMap<ShipQuality, i16>,
 }
 
 #[cfg(test)]
-ts_rs::export! {ShipLayout => "ship-layout.ts"}
+ts_rs::export! {
+    ShipQuality => "ship-quality.ts",
+    ShipLayout => "ship-layout.ts",
+}

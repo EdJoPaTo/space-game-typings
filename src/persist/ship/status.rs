@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+use crate::fixed::shiplayout::ShipQuality;
 use crate::fixed::Statics;
 
 use super::Fitting;
@@ -22,24 +23,39 @@ ts_rs::export! {
 
 impl Status {
     #[must_use]
+    #[allow(clippy::cast_sign_loss)]
     pub fn new(statics: &Statics, fitting: &Fitting) -> Option<Self> {
+        let mut capacitor: i16 = 0;
+        let mut armor: i16 = 0;
+        let mut structure = 0;
+
         let layout = statics.ship_layouts.get(&fitting.layout)?;
-        let mut status = Status {
-            capacitor: layout.capacitor,
-            hitpoints_armor: layout.hitpoints_armor,
-            hitpoints_structure: layout.hitpoints_structure,
-        };
-        for passive_identifier in &fitting.slots_passive {
-            if let Some(module) = statics.modules_passive.get(passive_identifier) {
-                if let Some(armor) = module.hitpoints_armor {
-                    status.hitpoints_armor = status.hitpoints_armor.saturating_add(armor);
+        let qualities = fitting
+            .slots_passive
+            .iter()
+            .filter_map(|o| statics.modules_passive.get(o))
+            .flat_map(|o| &o.qualities)
+            .chain(&layout.qualities);
+        for (q, amount) in qualities {
+            match q {
+                ShipQuality::HitpointsArmor => {
+                    armor = amount.saturating_add(armor);
                 }
-                if let Some(capacitor) = module.capacitor {
-                    status.capacitor = status.capacitor.saturating_add(capacitor);
+                ShipQuality::HitpointsStructure => {
+                    structure = amount.saturating_add(structure);
                 }
+                ShipQuality::Capacitor => {
+                    capacitor = amount.saturating_add(capacitor);
+                }
+                ShipQuality::CapacitorRecharge => {}
             }
         }
-        Some(status)
+
+        Some(Status {
+            capacitor: capacitor.saturating_abs() as u16,
+            hitpoints_armor: armor.saturating_abs() as u16,
+            hitpoints_structure: structure.saturating_abs() as u16,
+        })
     }
 
     #[must_use]
@@ -96,6 +112,7 @@ impl Status {
 }
 
 #[test]
+#[allow(clippy::cast_sign_loss)]
 fn status_without_modules_correct() {
     let statics = Statics::default();
     let expected = statics.ship_layouts.get("shiplayoutFrigate").unwrap();
@@ -109,14 +126,21 @@ fn status_without_modules_correct() {
     assert_eq!(
         result,
         Some(Status {
-            capacitor: expected.capacitor,
-            hitpoints_armor: expected.hitpoints_armor,
-            hitpoints_structure: expected.hitpoints_structure,
+            capacitor: *expected.qualities.get(&ShipQuality::Capacitor).unwrap() as u16,
+            hitpoints_armor: *expected
+                .qualities
+                .get(&ShipQuality::HitpointsArmor)
+                .unwrap() as u16,
+            hitpoints_structure: *expected
+                .qualities
+                .get(&ShipQuality::HitpointsStructure)
+                .unwrap() as u16,
         })
     );
 }
 
 #[test]
+#[allow(clippy::cast_sign_loss)]
 fn status_of_default_fitting_correct() {
     let statics = Statics::default();
     let fitting = Fitting::default();
@@ -125,14 +149,28 @@ fn status_of_default_fitting_correct() {
         .modules_passive
         .get(&fitting.slots_passive[0])
         .unwrap();
+    let expected_passive_armor_bonus = 10;
+    assert_eq!(
+        expected_passive.qualities.values().collect::<Vec<_>>(),
+        vec![&expected_passive_armor_bonus]
+    );
     let result = Status::new(&statics, &fitting);
     assert_eq!(
         result,
         Some(Status {
-            capacitor: expected_layout.capacitor,
-            hitpoints_armor: expected_layout.hitpoints_armor
-                + expected_passive.hitpoints_armor.unwrap(),
-            hitpoints_structure: expected_layout.hitpoints_structure,
+            capacitor: *expected_layout
+                .qualities
+                .get(&ShipQuality::Capacitor)
+                .unwrap() as u16,
+            hitpoints_armor: (*expected_layout
+                .qualities
+                .get(&ShipQuality::HitpointsArmor)
+                .unwrap() as u16)
+                + (expected_passive_armor_bonus as u16),
+            hitpoints_structure: *expected_layout
+                .qualities
+                .get(&ShipQuality::HitpointsStructure)
+                .unwrap() as u16,
         })
     );
 }

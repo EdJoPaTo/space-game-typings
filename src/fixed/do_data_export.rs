@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 use std::fs;
 
+use crate::fixed::shiplayout::ShipQuality;
+
 use super::{
     Facilites, LifelessThingies, ModulesPassive, ModulesTargeted, ModulesUntargeted, ShipLayouts,
     Solarsystems,
@@ -81,6 +83,11 @@ fn check_module_passive() -> anyhow::Result<()> {
             "module requires nothing {}",
             key
         );
+        assert!(
+            !value.qualities.is_empty(),
+            "passive module needs to have some quality {}",
+            key
+        );
     }
 
     export(filename, &all)
@@ -97,6 +104,11 @@ fn check_module_untargeted() -> anyhow::Result<()> {
         assert!(
             value.required_cpu.saturating_add(value.required_powergrid) > 0,
             "module requires nothing {}",
+            key
+        );
+        assert!(
+            !value.effects.is_empty(),
+            "module needs to have some effect {}",
             key
         );
     }
@@ -117,6 +129,8 @@ fn check_module_targeted() -> anyhow::Result<()> {
             "module requires nothing {}",
             key
         );
+        let total_effects = value.effects_origin.len() + value.effects_target.len();
+        assert_ne!(total_effects, 0);
     }
 
     export(filename, &all)
@@ -129,11 +143,31 @@ fn check_ship_layout() -> anyhow::Result<()> {
     assert!(!all.is_empty(), "is empty");
 
     for (key, value) in &all {
+        println!("key {}", key);
+
         assert!(key.starts_with("shiplayout"), "starts wrong {}", key);
 
-        assert!(value.capacitor > 0, "capacitor {}", key);
-        assert!(value.capacitor_recharge > 0, "cap recharge {}", key);
-        assert!(value.hitpoints_structure > 0, "structure {}", key);
+        assert!(
+            value
+                .qualities
+                .get(&ShipQuality::Capacitor)
+                .expect("capacitor")
+                > &0
+        );
+        assert!(
+            value
+                .qualities
+                .get(&ShipQuality::HitpointsArmor)
+                .expect("armor")
+                >= &0
+        );
+        assert!(
+            value
+                .qualities
+                .get(&ShipQuality::HitpointsStructure)
+                .expect("structure")
+                > &0
+        );
     }
 
     export(filename, &all)
