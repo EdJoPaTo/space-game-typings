@@ -2,6 +2,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::fixed::{module, shiplayout, Statics};
 
+use super::Status;
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "ShipFitting")]
@@ -19,6 +21,7 @@ pub enum Error {
 
     Cpu((u16, u16)),
     Powergrid((u16, u16)),
+    HitpointsStructureZero,
 
     TooManyPassiveModules,
     TooManyTargetedModules,
@@ -97,6 +100,12 @@ impl Fitting {
             }
             if layout.powergrid < powergrid {
                 return Err(Error::Powergrid((powergrid, layout.powergrid)));
+            }
+
+            // Dead on undock
+            let status = Status::new(statics, self).expect("layout is existing due to prior check");
+            if !status.is_alive() {
+                return Err(Error::HitpointsStructureZero);
             }
 
             return Ok(());
