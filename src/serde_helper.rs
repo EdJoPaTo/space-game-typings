@@ -13,12 +13,13 @@ where
     ordered.serialize(serializer)
 }
 
-pub fn ordered_vec<S, T>(value: &[T], serializer: S) -> Result<S::Ok, S::Error>
+pub fn ordered_vec<S, I, T>(value: I, serializer: S) -> Result<S::Ok, S::Error>
 where
+    I: IntoIterator<Item = T>,
     T: Serialize + std::cmp::Ord,
     S: Serializer,
 {
-    let mut ordered = value.iter().collect::<Vec<_>>();
+    let mut ordered = value.into_iter().collect::<Vec<_>>();
     ordered.sort();
     ordered.serialize(serializer)
 }

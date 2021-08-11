@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
 use serde::{Deserialize, Serialize};
 
@@ -10,7 +10,7 @@ pub type TargetedIdentifier = String;
 pub type PassiveIdentifier = String;
 pub type UntargetedIdentifier = String;
 
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, Serialize, Hash, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(
     rename_all = "camelCase",
@@ -45,7 +45,7 @@ pub struct Untargeted {
     pub required_powergrid: u16,
 
     #[serde(serialize_with = "ordered_vec")]
-    pub effects: Vec<Effect>,
+    pub effects: HashSet<Effect>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -56,9 +56,9 @@ pub struct Targeted {
     pub required_powergrid: u16,
 
     #[serde(serialize_with = "ordered_vec")]
-    pub effects_origin: Vec<Effect>,
+    pub effects_origin: HashSet<Effect>,
     #[serde(serialize_with = "ordered_vec")]
-    pub effects_target: Vec<Effect>,
+    pub effects_target: HashSet<Effect>,
 }
 
 #[cfg(test)]
