@@ -1,8 +1,6 @@
-use std::collections::HashMap;
-
 use serde::{Deserialize, Serialize};
 
-use crate::fixed::shiplayout::{ShipLayout, ShipQuality};
+use crate::fixed::shiplayout::{ShipLayout, ShipQualities, ShipQuality};
 use crate::fixed::{module, Statics};
 
 use super::Status;
@@ -117,8 +115,8 @@ impl Fitting {
     }
 
     #[must_use]
-    pub fn qualities(&self, statics: &Statics) -> HashMap<ShipQuality, i16> {
-        let mut map: HashMap<ShipQuality, i16> = HashMap::new();
+    pub fn qualities(&self, statics: &Statics) -> ShipQualities {
+        let mut map = ShipQualities::new();
         let layout = statics
             .ship_layouts
             .get(&self.layout)

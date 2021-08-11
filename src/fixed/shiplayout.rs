@@ -12,6 +12,8 @@ pub enum ShipLayout {
     Frigate,
 }
 
+pub type ShipQualities = HashMap<ShipQuality, i16>;
+
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
@@ -35,7 +37,7 @@ pub struct Details {
     pub powergrid: u16,
 
     #[serde(default, serialize_with = "ordered_map")]
-    pub qualities: HashMap<ShipQuality, i16>,
+    pub qualities: ShipQualities,
 }
 
 #[cfg(test)]

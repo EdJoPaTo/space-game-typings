@@ -14,6 +14,7 @@ export type PlayerIdentifier = `player-${string}-${number}`;
 export type PlayerTelegramIdentifier = `player-tg-${number}`;
 
 export type SitesNearPlanet = Readonly<Record<number, readonly SiteInfo[]>>;
+export type ShipQualities = Readonly<Partial<Record<ShipQuality, number>>>;
 
 export type SiteEntity =
   | ({ type: "lifeless" } & SiteEntityLifeless)
