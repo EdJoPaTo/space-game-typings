@@ -2,8 +2,8 @@ use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
-use crate::fixed::shiplayout::ShipQuality;
-use crate::fixed::{module, shiplayout, Statics};
+use crate::fixed::shiplayout::{ShipLayout, ShipQuality};
+use crate::fixed::{module, Statics};
 
 use super::Status;
 
@@ -11,7 +11,7 @@ use super::Status;
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "ShipFitting")]
 pub struct Fitting {
-    pub layout: shiplayout::Identifier,
+    pub layout: ShipLayout,
 
     pub slots_targeted: Vec<module::TargetedIdentifier>,
     pub slots_untargeted: Vec<module::UntargetedIdentifier>,
@@ -43,7 +43,7 @@ ts_rs::export! {
 impl Default for Fitting {
     fn default() -> Self {
         Self {
-            layout: shiplayout::Identifier::RookieShip,
+            layout: ShipLayout::RookieShip,
             slots_targeted: vec!["modtRookieMiner".into(), "modtRookieLaser".into()],
             slots_untargeted: vec!["moduRookieArmorRepair".into()],
             slots_passive: vec!["modpRookieArmorPlate".into()],
@@ -169,12 +169,9 @@ fn default_fitting_is_valid() {
 #[allow(clippy::cast_sign_loss)]
 fn status_without_modules_correct() {
     let statics = Statics::default();
-    let expected = statics
-        .ship_layouts
-        .get(&shiplayout::Identifier::RookieShip)
-        .unwrap();
+    let expected = statics.ship_layouts.get(&ShipLayout::RookieShip).unwrap();
     let fitting = Fitting {
-        layout: shiplayout::Identifier::RookieShip,
+        layout: ShipLayout::RookieShip,
         slots_targeted: vec![],
         slots_untargeted: vec![],
         slots_passive: vec![],

@@ -18,13 +18,13 @@ pub enum SiteEntity {
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[serde(rename_all = "camelCase")]
 pub struct Facility {
-    pub id: facility::Identifier,
+    pub id: facility::Facility,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct Lifeless {
-    pub id: lifeless::Identifier,
+    pub id: lifeless::Lifeless,
     pub status: Status,
 }
 
@@ -45,7 +45,7 @@ pub struct Player {
 #[test]
 fn can_parse() {
     let data = SiteEntity::Lifeless(Lifeless {
-        id: lifeless::Identifier::Asteroid,
+        id: lifeless::Lifeless::Asteroid,
         status: Status {
             capacitor: 0,
             hitpoints_armor: 42,

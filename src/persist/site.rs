@@ -3,13 +3,13 @@ use std::collections::BTreeMap;
 use serde::{Deserialize, Serialize};
 
 use crate::fixed::site::Kind;
-use crate::fixed::solarsystem;
+use crate::fixed::solarsystem::Solarsystem;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteIdentifier")]
 pub struct Identifier {
-    pub solarsystem: solarsystem::Identifier,
+    pub solarsystem: Solarsystem,
     pub site_unique: String,
 }
 
@@ -33,7 +33,7 @@ ts_rs::export! {
 
 impl Info {
     #[must_use]
-    pub fn generate_station(solarsystem: solarsystem::Identifier, station_index: u8) -> Self {
+    pub fn generate_station(solarsystem: Solarsystem, station_index: u8) -> Self {
         let number = station_index + 1;
         // TODO: römisch
         let name = format!("{} {}", solarsystem, number);
@@ -46,7 +46,7 @@ impl Info {
     }
 
     #[must_use]
-    pub fn generate_stargate(target_solarsystem: solarsystem::Identifier) -> Self {
+    pub fn generate_stargate(target_solarsystem: Solarsystem) -> Self {
         let name = target_solarsystem.to_string();
         let site_unique = format!("stargate{}", target_solarsystem);
         Self {

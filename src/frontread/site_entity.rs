@@ -1,7 +1,8 @@
 use serde::{Deserialize, Serialize};
 
 use crate::fixed::npc_faction::NpcFaction;
-use crate::fixed::{facility, lifeless, shiplayout, LifelessThingies, Statics};
+use crate::fixed::shiplayout::ShipLayout;
+use crate::fixed::{facility, lifeless, LifelessThingies, Statics};
 use crate::persist::player;
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
@@ -18,7 +19,7 @@ pub enum SiteEntity {
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityFacility")]
 pub struct Facility {
-    pub id: facility::Identifier,
+    pub id: facility::Facility,
 }
 
 impl From<&crate::persist::site_entity::Facility> for Facility {
@@ -31,7 +32,7 @@ impl From<&crate::persist::site_entity::Facility> for Facility {
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityLifeless")]
 pub struct Lifeless {
-    pub id: lifeless::Identifier,
+    pub id: lifeless::Lifeless,
     pub armor: f32,
     pub structure: f32,
 }
@@ -59,7 +60,7 @@ impl Lifeless {
 #[serde(rename_all = "camelCase", rename = "SiteEntityNpc")]
 pub struct Npc {
     pub faction: NpcFaction,
-    pub shiplayout: shiplayout::Identifier,
+    pub shiplayout: ShipLayout,
     pub armor: f32,
     pub structure: f32,
 }
@@ -85,7 +86,7 @@ impl Npc {
 #[serde(rename_all = "camelCase", rename = "SiteEntityPlayer")]
 pub struct Player {
     pub id: player::Identifier,
-    pub shiplayout: shiplayout::Identifier,
+    pub shiplayout: ShipLayout,
     pub armor: f32,
     pub structure: f32,
 }
@@ -122,7 +123,7 @@ ts_rs::export! {
 #[test]
 fn can_parse_facility() {
     let data = SiteEntity::Facility(Facility {
-        id: facility::Identifier::Stargate,
+        id: facility::Facility::Stargate,
     });
     crate::test_helper::can_serde_parse(&data);
 }
@@ -130,7 +131,7 @@ fn can_parse_facility() {
 #[test]
 fn can_parse_lifeless() {
     let data = SiteEntity::Lifeless(Lifeless {
-        id: lifeless::Identifier::Asteroid,
+        id: lifeless::Lifeless::Asteroid,
         armor: 0.0,
         structure: 42.0,
     });
@@ -141,7 +142,7 @@ fn can_parse_lifeless() {
 fn can_parse_npc() {
     let data = SiteEntity::Npc(Npc {
         faction: NpcFaction::Pirates,
-        shiplayout: shiplayout::Identifier::RookieShip,
+        shiplayout: ShipLayout::RookieShip,
         armor: 0.0,
         structure: 42.0,
     });
@@ -152,7 +153,7 @@ fn can_parse_npc() {
 fn can_parse_player() {
     let data = SiteEntity::Player(Player {
         id: "player-tg-666".to_string(),
-        shiplayout: shiplayout::Identifier::RookieShip,
+        shiplayout: ShipLayout::RookieShip,
         armor: 0.0,
         structure: 42.0,
     });

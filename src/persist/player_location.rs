@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::fixed::solarsystem;
+use crate::fixed::solarsystem::Solarsystem;
 
 use super::site;
 
@@ -17,7 +17,7 @@ pub enum PlayerLocation {
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "PlayerLocationStation")]
 pub struct Station {
-    pub solarsystem: solarsystem::Identifier,
+    pub solarsystem: Solarsystem,
     pub station: u8,
 }
 
@@ -25,7 +25,7 @@ pub struct Station {
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "PlayerLocationWarp")]
 pub struct Warp {
-    pub solarsystem: solarsystem::Identifier,
+    pub solarsystem: Solarsystem,
     pub towards_site_unique: String,
 }
 
@@ -44,7 +44,7 @@ impl Default for PlayerLocation {
 
 impl PlayerLocation {
     #[must_use]
-    pub const fn solarsystem(&self) -> solarsystem::Identifier {
+    pub const fn solarsystem(&self) -> Solarsystem {
         match self {
             PlayerLocation::Site(o) => o.solarsystem,
             PlayerLocation::Station(o) => o.solarsystem,
@@ -56,7 +56,7 @@ impl PlayerLocation {
 #[test]
 fn can_identify_site() {
     let data = PlayerLocation::Site(site::Identifier {
-        solarsystem: solarsystem::Identifier::default(),
+        solarsystem: Solarsystem::default(),
         site_unique: "666".to_string(),
     });
     crate::test_helper::can_serde_parse(&data);
@@ -65,7 +65,7 @@ fn can_identify_site() {
 #[test]
 fn can_identify_warp() {
     let data = PlayerLocation::Warp(Warp {
-        solarsystem: solarsystem::Identifier::default(),
+        solarsystem: Solarsystem::default(),
         towards_site_unique: "666".to_string(),
     });
     crate::test_helper::can_serde_parse(&data);
@@ -74,7 +74,7 @@ fn can_identify_warp() {
 #[test]
 fn can_identify_station() {
     let data = PlayerLocation::Station(Station {
-        solarsystem: solarsystem::Identifier::default(),
+        solarsystem: Solarsystem::default(),
         station: 2,
     });
     crate::test_helper::can_serde_parse(&data);

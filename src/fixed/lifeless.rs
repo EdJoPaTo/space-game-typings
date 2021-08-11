@@ -4,15 +4,15 @@ use crate::serde_helper::is_default;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "LifelessIdentifier")]
-pub enum Identifier {
+#[serde(rename_all = "camelCase", rename = "Lifeless")]
+pub enum Lifeless {
     Asteroid,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase")]
-pub struct Lifeless {
+#[serde(rename_all = "camelCase", rename = "LifelessDetails")]
+pub struct Details {
     #[serde(default, skip_serializing_if = "is_default")]
     pub hitpoints_armor: u16,
     pub hitpoints_structure: u16,
@@ -23,6 +23,6 @@ pub struct Lifeless {
 
 #[cfg(test)]
 ts_rs::export! {
-    Identifier => "lifeless-identifier.ts",
     Lifeless => "lifeless.ts",
+    Details => "lifeless-details.ts",
 }

@@ -6,8 +6,8 @@ use crate::serde_helper::ordered_map;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "ShipLayoutIdentifier")]
-pub enum Identifier {
+#[serde(rename_all = "camelCase")]
+pub enum ShipLayout {
     RookieShip,
     Frigate,
 }
@@ -25,8 +25,8 @@ pub enum ShipQuality {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase")]
-pub struct ShipLayout {
+#[serde(rename_all = "camelCase", rename = "ShipLayoutDetails")]
+pub struct Details {
     pub slots_targeted: u8,
     pub slots_untargeted: u8,
     pub slots_passive: u8,
@@ -40,7 +40,7 @@ pub struct ShipLayout {
 
 #[cfg(test)]
 ts_rs::export! {
-    Identifier => "ship-layout-identifier.ts",
-    ShipQuality => "ship-quality.ts",
     ShipLayout => "ship-layout.ts",
+    ShipQuality => "ship-quality.ts",
+    Details => "ship-layout-details.ts",
 }

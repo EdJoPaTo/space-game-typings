@@ -7,8 +7,7 @@ use crate::serde_helper::ordered_map;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename = "SolarsystemIdentifier")]
-pub enum Identifier {
+pub enum Solarsystem {
     /// The home system for new players
     Wabinihwa,
 
@@ -19,19 +18,19 @@ pub enum Identifier {
     Vosu,
 }
 
-impl std::fmt::Display for Identifier {
+impl std::fmt::Display for Solarsystem {
     fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(f, "{:?}", self)
     }
 }
 
-impl Default for Identifier {
+impl Default for Solarsystem {
     fn default() -> Self {
         Self::Wabinihwa
     }
 }
 
-impl FromStr for Identifier {
+impl FromStr for Solarsystem {
     type Err = serde_json::Error;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         serde_json::from_str(&format!(r#""{}""#, s))
@@ -40,8 +39,8 @@ impl FromStr for Identifier {
 
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase")]
-pub struct Solarsystem {
+#[serde(rename_all = "camelCase", rename = "SolarsystemDetails")]
+pub struct Details {
     /// Percentage
     pub security: u8,
     /// Amount
@@ -51,7 +50,7 @@ pub struct Solarsystem {
     /// Key: Target System
     /// Value: The planet they are
     #[serde(serialize_with = "ordered_map")]
-    pub stargates: HashMap<Identifier, u8>,
+    pub stargates: HashMap<Solarsystem, u8>,
 
     /// Stations and at which planet they are.
     /// Example: [1,3] -> Station 1 is at Planet 1, Station 2 is at Planet 3
@@ -60,6 +59,6 @@ pub struct Solarsystem {
 
 #[cfg(test)]
 ts_rs::export! {
-    Identifier => "solarsystem-identifier.ts",
     Solarsystem => "solarsystem.ts",
+    Details => "solarsystem-details.ts",
 }

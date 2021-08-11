@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::fixed::solarsystem;
+use crate::fixed::solarsystem::Solarsystem;
 
 pub type Identifier = String;
 
@@ -8,7 +8,7 @@ pub type Identifier = String;
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "PlayerGeneral")]
 pub struct General {
-    pub home_solarsystem: solarsystem::Identifier,
+    pub home_solarsystem: Solarsystem,
     pub home_station: u8,
 
     /// Paperclips are the currency
@@ -18,7 +18,7 @@ pub struct General {
 impl Default for General {
     fn default() -> Self {
         Self {
-            home_solarsystem: solarsystem::Identifier::default(),
+            home_solarsystem: Solarsystem::default(),
             home_station: 0,
             paperclips: 2000,
         }

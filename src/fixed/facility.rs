@@ -12,16 +12,16 @@ pub enum Service {
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "FacilityIdentifier")]
-pub enum Identifier {
+#[serde(rename_all = "camelCase", rename = "Facility")]
+pub enum Facility {
     Station,
     Stargate,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase")]
-pub struct Facility {
+#[serde(rename_all = "camelCase", rename = "FacilityDetails")]
+pub struct Details {
     #[serde(serialize_with = "ordered_vec")]
     pub services: Vec<Service>,
 }
@@ -29,6 +29,6 @@ pub struct Facility {
 #[cfg(test)]
 ts_rs::export! {
     Service => "facility-service.ts",
-    Identifier => "facility-identifier.ts",
     Facility => "facility.ts",
+    Details => "facility-details.ts",
 }
