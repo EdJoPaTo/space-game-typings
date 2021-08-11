@@ -41,7 +41,7 @@ fn default_ship_is_exactly_from_statics() {
     let statics = Statics::default();
     let expected = Ship {
         fitting: Fitting::default(),
-        status: Status::new(&statics, &Fitting::default()).unwrap(),
+        status: Fitting::default().maximum_status(&statics),
     };
 
     assert_eq!(Ship::default().fitting, Fitting::default());
