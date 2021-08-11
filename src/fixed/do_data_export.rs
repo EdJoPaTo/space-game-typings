@@ -77,17 +77,12 @@ fn check_module_passive() -> anyhow::Result<()> {
     assert!(!all.is_empty(), "is empty");
 
     for (key, value) in &all {
-        assert!(key.starts_with("modp"), "starts wrong {}", key);
         assert!(
             value.required_cpu.saturating_add(value.required_powergrid) > 0,
-            "module requires nothing {}",
+            "require {:?}",
             key
         );
-        assert!(
-            !value.qualities.is_empty(),
-            "passive module needs to have some quality {}",
-            key
-        );
+        assert!(!value.qualities.is_empty(), "quality {:?}", key);
     }
 
     export(filename, &all)
@@ -100,17 +95,12 @@ fn check_module_untargeted() -> anyhow::Result<()> {
     assert!(!all.is_empty(), "is empty");
 
     for (key, value) in &all {
-        assert!(key.starts_with("modu"), "starts wrong {}", key);
         assert!(
             value.required_cpu.saturating_add(value.required_powergrid) > 0,
-            "module requires nothing {}",
+            "require {:?}",
             key
         );
-        assert!(
-            !value.effects.is_empty(),
-            "module needs to have some effect {}",
-            key
-        );
+        assert!(!value.effects.is_empty(), "effect {:?}", key);
     }
 
     export(filename, &all)
@@ -123,14 +113,13 @@ fn check_module_targeted() -> anyhow::Result<()> {
     assert!(!all.is_empty(), "is empty");
 
     for (key, value) in &all {
-        assert!(key.starts_with("modt"), "starts wrong {}", key);
         assert!(
             value.required_cpu.saturating_add(value.required_powergrid) > 0,
-            "module requires nothing {}",
+            "requires {:?}",
             key
         );
         let total_effects = value.effects_origin.len() + value.effects_target.len();
-        assert_ne!(total_effects, 0);
+        assert_ne!(total_effects, 0, "effects {:?}", key);
     }
 
     export(filename, &all)

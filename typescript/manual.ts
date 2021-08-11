@@ -5,10 +5,6 @@
  * TODO: repolink
  */
 
-export type ModulePassiveIdentifier = `modp${string}`;
-export type ModuleUntargetedIdentifier = `modu${string}`;
-export type ModuleTargetedIdentifier = `modt${string}`;
-
 /** Example: player-tg-1337 */
 export type PlayerIdentifier = `player-${string}-${number}`;
 export type PlayerTelegramIdentifier = `player-tg-${number}`;

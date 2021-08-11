@@ -1,5 +1,5 @@
 ---
-modpRookieArmorPlate:
+rookieArmorPlate:
   requiredCpu: 0
   requiredPowergrid: 10
   qualities:

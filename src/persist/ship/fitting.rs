@@ -1,7 +1,10 @@
 use serde::{Deserialize, Serialize};
 
+use crate::fixed::module::passive::Passive;
+use crate::fixed::module::targeted::Targeted;
+use crate::fixed::module::untargeted::Untargeted;
 use crate::fixed::shiplayout::{ShipLayout, ShipQualities, ShipQuality};
-use crate::fixed::{module, Statics};
+use crate::fixed::Statics;
 
 use super::Status;
 
@@ -11,9 +14,9 @@ use super::Status;
 pub struct Fitting {
     pub layout: ShipLayout,
 
-    pub slots_targeted: Vec<module::TargetedIdentifier>,
-    pub slots_untargeted: Vec<module::UntargetedIdentifier>,
-    pub slots_passive: Vec<module::PassiveIdentifier>,
+    pub slots_targeted: Vec<Targeted>,
+    pub slots_untargeted: Vec<Untargeted>,
+    pub slots_passive: Vec<Passive>,
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -27,10 +30,6 @@ pub enum Error {
     TooManyPassiveModules,
     TooManyTargetedModules,
     TooManyUntargetedModules,
-
-    UnknownPassiveModule(String),
-    UnknownTargetedModule(String),
-    UnknownUntargetedModule(String),
 }
 
 #[cfg(test)]
@@ -42,9 +41,9 @@ impl Default for Fitting {
     fn default() -> Self {
         Self {
             layout: ShipLayout::RookieShip,
-            slots_targeted: vec!["modtRookieMiner".into(), "modtRookieLaser".into()],
-            slots_untargeted: vec!["moduRookieArmorRepair".into()],
-            slots_passive: vec!["modpRookieArmorPlate".into()],
+            slots_targeted: vec![Targeted::RookieMiner, Targeted::RookieLaser],
+            slots_untargeted: vec![Untargeted::RookieArmorRepair],
+            slots_passive: vec![Passive::RookieArmorPlate],
         }
     }
 }
@@ -69,30 +68,29 @@ impl Fitting {
             let mut cpu = 0;
             let mut powergrid = 0;
 
-            // Modules exist
             for id in &self.slots_targeted {
-                if let Some(m) = statics.modules_targeted.get(id) {
-                    cpu += m.required_cpu;
-                    powergrid += m.required_powergrid;
-                } else {
-                    return Err(Error::UnknownTargetedModule(id.to_string()));
-                }
+                let m = statics
+                    .modules_targeted
+                    .get(id)
+                    .expect("targeted module has to be in statics");
+                cpu += m.required_cpu;
+                powergrid += m.required_powergrid;
             }
             for id in &self.slots_untargeted {
-                if let Some(m) = statics.modules_untargeted.get(id) {
-                    cpu += m.required_cpu;
-                    powergrid += m.required_powergrid;
-                } else {
-                    return Err(Error::UnknownUntargetedModule(id.to_string()));
-                }
+                let m = statics
+                    .modules_untargeted
+                    .get(id)
+                    .expect("untargeted module has to be in statics");
+                cpu += m.required_cpu;
+                powergrid += m.required_powergrid;
             }
             for id in &self.slots_passive {
-                if let Some(m) = statics.modules_passive.get(id) {
-                    cpu += m.required_cpu;
-                    powergrid += m.required_powergrid;
-                } else {
-                    return Err(Error::UnknownPassiveModule(id.to_string()));
-                }
+                let m = statics
+                    .modules_passive
+                    .get(id)
+                    .expect("passive module has to be in statics");
+                cpu += m.required_cpu;
+                powergrid += m.required_powergrid;
             }
 
             // Check cpu / powergrid

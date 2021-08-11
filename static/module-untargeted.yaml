@@ -1,5 +1,5 @@
 ---
-moduRookieArmorRepair:
+rookieArmorRepair:
   requiredCpu: 5
   requiredPowergrid: 15
   effects:

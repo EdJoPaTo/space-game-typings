@@ -1,5 +1,5 @@
 ---
-modtRookieLaser:
+rookieLaser:
   requiredCpu: 10
   requiredPowergrid: 15
   effectsOrigin:
@@ -8,7 +8,7 @@ modtRookieLaser:
   effectsTarget:
     - type: damage
       amount: 10
-modtRookieMiner:
+rookieMiner:
   requiredCpu: 10
   requiredPowergrid: 10
   effectsOrigin:
