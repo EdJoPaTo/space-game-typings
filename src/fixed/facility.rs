@@ -1,5 +1,3 @@
-use std::collections::HashSet;
-
 use serde::{Deserialize, Serialize};
 
 use crate::serde_helper::ordered_vec;
@@ -25,7 +23,7 @@ pub enum Identifier {
 #[serde(rename_all = "camelCase")]
 pub struct Facility {
     #[serde(serialize_with = "ordered_vec")]
-    pub services: HashSet<Service>,
+    pub services: Vec<Service>,
 }
 
 #[cfg(test)]

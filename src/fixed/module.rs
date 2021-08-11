@@ -1,4 +1,4 @@
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 use serde::{Deserialize, Serialize};
 
@@ -45,7 +45,7 @@ pub struct Untargeted {
     pub required_powergrid: u16,
 
     #[serde(serialize_with = "ordered_vec")]
-    pub effects: HashSet<Effect>,
+    pub effects: Vec<Effect>,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -56,9 +56,9 @@ pub struct Targeted {
     pub required_powergrid: u16,
 
     #[serde(serialize_with = "ordered_vec")]
-    pub effects_origin: HashSet<Effect>,
+    pub effects_origin: Vec<Effect>,
     #[serde(serialize_with = "ordered_vec")]
-    pub effects_target: HashSet<Effect>,
+    pub effects_target: Vec<Effect>,
 }
 
 #[cfg(test)]
