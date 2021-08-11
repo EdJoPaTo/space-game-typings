@@ -43,7 +43,7 @@ ts_rs::export! {
 impl Default for Fitting {
     fn default() -> Self {
         Self {
-            layout: "shiplayoutRookieShip".into(),
+            layout: shiplayout::Identifier::RookieShip,
             slots_targeted: vec!["modtRookieMiner".into(), "modtRookieLaser".into()],
             slots_untargeted: vec!["moduRookieArmorRepair".into()],
             slots_passive: vec!["modpRookieArmorPlate".into()],
@@ -169,9 +169,12 @@ fn default_fitting_is_valid() {
 #[allow(clippy::cast_sign_loss)]
 fn status_without_modules_correct() {
     let statics = Statics::default();
-    let expected = statics.ship_layouts.get("shiplayoutFrigate").unwrap();
+    let expected = statics
+        .ship_layouts
+        .get(&shiplayout::Identifier::RookieShip)
+        .unwrap();
     let fitting = Fitting {
-        layout: "shiplayoutFrigate".to_string(),
+        layout: shiplayout::Identifier::RookieShip,
         slots_targeted: vec![],
         slots_untargeted: vec![],
         slots_passive: vec![],

@@ -4,7 +4,13 @@ use serde::{Deserialize, Serialize};
 
 use crate::serde_helper::ordered_map;
 
-pub type Identifier = String;
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(test, derive(ts_rs::TS))]
+#[serde(rename_all = "camelCase", rename = "ShipLayoutIdentifier")]
+pub enum Identifier {
+    RookieShip,
+    Frigate,
+}
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
@@ -34,6 +40,7 @@ pub struct ShipLayout {
 
 #[cfg(test)]
 ts_rs::export! {
+    Identifier => "ship-layout-identifier.ts",
     ShipQuality => "ship-quality.ts",
     ShipLayout => "ship-layout.ts",
 }

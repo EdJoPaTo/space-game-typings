@@ -143,9 +143,7 @@ fn check_ship_layout() -> anyhow::Result<()> {
     assert!(!all.is_empty(), "is empty");
 
     for (key, value) in &all {
-        println!("key {}", key);
-
-        assert!(key.starts_with("shiplayout"), "starts wrong {}", key);
+        println!("key {:?}", key);
 
         assert!(
             value

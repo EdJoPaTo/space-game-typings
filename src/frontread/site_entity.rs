@@ -73,7 +73,7 @@ impl Npc {
             .unwrap_or_default();
         Self {
             faction: info.faction,
-            shiplayout: info.fitting.layout.to_string(),
+            shiplayout: info.fitting.layout,
             armor,
             structure,
         }
@@ -103,7 +103,7 @@ impl Player {
             .unwrap_or_default();
         Self {
             id: info.id.to_string(),
-            shiplayout: ship.fitting.layout.to_string(),
+            shiplayout: ship.fitting.layout,
             armor,
             structure,
         }
@@ -141,7 +141,7 @@ fn can_parse_lifeless() {
 fn can_parse_npc() {
     let data = SiteEntity::Npc(Npc {
         faction: NpcFaction::Pirates,
-        shiplayout: "shiplayoutFrigate".to_string(),
+        shiplayout: shiplayout::Identifier::RookieShip,
         armor: 0.0,
         structure: 42.0,
     });
@@ -152,7 +152,7 @@ fn can_parse_npc() {
 fn can_parse_player() {
     let data = SiteEntity::Player(Player {
         id: "player-tg-666".to_string(),
-        shiplayout: "shiplayoutFrigate".to_string(),
+        shiplayout: shiplayout::Identifier::RookieShip,
         armor: 0.0,
         structure: 42.0,
     });
