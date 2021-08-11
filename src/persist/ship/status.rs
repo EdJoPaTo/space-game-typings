@@ -52,23 +52,4 @@ impl Status {
     pub const fn is_alive(self) -> bool {
         self.hitpoints_structure > 0
     }
-
-    #[must_use]
-    /// (Armor, Structure) within 0.0..=1.0
-    pub fn health_percentage(self, max: (u16, u16)) -> (f32, f32) {
-        let armor = f32::from(self.hitpoints_armor) / f32::from(max.0);
-        let structure = f32::from(self.hitpoints_structure) / f32::from(max.1);
-        (armor, structure)
-    }
-
-    #[must_use]
-    /// (Armor, Structure) within 0.0..=1.0
-    pub fn health_percentage_layout(
-        self,
-        statics: &Statics,
-        fitting: &Fitting,
-    ) -> Option<(f32, f32)> {
-        let max = fitting.maximum_status(statics);
-        Some(self.health_percentage((max.hitpoints_armor, max.hitpoints_structure)))
-    }
 }

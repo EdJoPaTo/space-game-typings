@@ -5,6 +5,8 @@ use crate::fixed::shiplayout::ShipLayout;
 use crate::fixed::{facility, lifeless, LifelessThingies, Statics};
 use crate::persist::player;
 
+use super::health::Health;
+
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 // #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", tag = "type")]
@@ -33,24 +35,24 @@ impl From<&crate::persist::site_entity::Facility> for Facility {
 #[serde(rename_all = "camelCase", rename = "SiteEntityLifeless")]
 pub struct Lifeless {
     pub id: lifeless::Lifeless,
-    pub armor: f32,
-    pub structure: f32,
+    #[serde(flatten)]
+    pub health: Health,
 }
 
 impl Lifeless {
     #[must_use]
     pub fn new(statics: &LifelessThingies, info: &crate::persist::site_entity::Lifeless) -> Self {
-        let (armor, structure) = statics
+        let shelf = statics
             .get(&info.id)
-            .map(|shelf| {
-                info.status
-                    .health_percentage((shelf.hitpoints_armor, shelf.hitpoints_structure))
-            })
-            .unwrap_or_default();
+            .expect("lifeless has to be in statics");
+        let health = Health::from_raw(
+            info.status,
+            shelf.hitpoints_armor,
+            shelf.hitpoints_structure,
+        );
         Self {
             id: info.id,
-            armor,
-            structure,
+            health,
         }
     }
 }
@@ -61,22 +63,17 @@ impl Lifeless {
 pub struct Npc {
     pub faction: NpcFaction,
     pub shiplayout: ShipLayout,
-    pub armor: f32,
-    pub structure: f32,
+    #[serde(flatten)]
+    pub health: Health,
 }
 
 impl Npc {
     #[must_use]
     pub fn new(statics: &Statics, info: &crate::persist::site_entity::Npc) -> Self {
-        let (armor, structure) = info
-            .status
-            .health_percentage_layout(statics, &info.fitting)
-            .unwrap_or_default();
         Self {
             faction: info.faction,
             shiplayout: info.fitting.layout,
-            armor,
-            structure,
+            health: Health::from_ship(statics, &info.fitting, info.status),
         }
     }
 }
@@ -87,8 +84,8 @@ impl Npc {
 pub struct Player {
     pub id: player::Identifier,
     pub shiplayout: ShipLayout,
-    pub armor: f32,
-    pub structure: f32,
+    #[serde(flatten)]
+    pub health: Health,
 }
 
 impl Player {
@@ -98,15 +95,10 @@ impl Player {
         info: &crate::persist::site_entity::Player,
         ship: &crate::persist::ship::Ship,
     ) -> Self {
-        let (armor, structure) = ship
-            .status
-            .health_percentage_layout(statics, &ship.fitting)
-            .unwrap_or_default();
         Self {
             id: info.id.to_string(),
             shiplayout: ship.fitting.layout,
-            armor,
-            structure,
+            health: Health::from_ship(statics, &ship.fitting, ship.status),
         }
     }
 }
@@ -132,8 +124,10 @@ fn can_parse_facility() {
 fn can_parse_lifeless() {
     let data = SiteEntity::Lifeless(Lifeless {
         id: lifeless::Lifeless::Asteroid,
-        armor: 0.0,
-        structure: 42.0,
+        health: Health {
+            armor: 0.0,
+            structure: 42.0,
+        },
     });
     crate::test_helper::can_serde_parse(&data);
 }
@@ -143,8 +137,10 @@ fn can_parse_npc() {
     let data = SiteEntity::Npc(Npc {
         faction: NpcFaction::Pirates,
         shiplayout: ShipLayout::RookieShip,
-        armor: 0.0,
-        structure: 42.0,
+        health: Health {
+            armor: 0.0,
+            structure: 42.0,
+        },
     });
     crate::test_helper::can_serde_parse(&data);
 }
@@ -154,8 +150,10 @@ fn can_parse_player() {
     let data = SiteEntity::Player(Player {
         id: "player-tg-666".to_string(),
         shiplayout: ShipLayout::RookieShip,
-        armor: 0.0,
-        structure: 42.0,
+        health: Health {
+            armor: 0.0,
+            structure: 42.0,
+        },
     });
     crate::test_helper::can_serde_parse(&data);
 }
