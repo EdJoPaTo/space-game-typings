@@ -3,7 +3,7 @@ rookieArmorRepair:
   requiredCpu: 5
   requiredPowergrid: 15
   effects:
-    - type: capacitor
-      amount: -5
+    - type: capacitorDrain
+      amount: 5
     - type: armorRepair
       amount: 5

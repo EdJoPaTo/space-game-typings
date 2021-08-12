@@ -1,28 +1,18 @@
-use std::collections::HashMap;
-
 use serde::{Deserialize, Serialize};
 
-use crate::serde_helper::ordered_map;
+use crate::persist::ship::Status;
+use crate::serde_helper::ordered_vec;
+
+use super::round_effect::RoundEffect;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 pub enum ShipLayout {
+    /// Beginner default ship
     RookieShip,
+
     Frigate,
-}
-
-pub type ShipQualities = HashMap<ShipQuality, i16>;
-
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase")]
-pub enum ShipQuality {
-    HitpointsArmor,
-    HitpointsStructure,
-
-    Capacitor,
-    CapacitorRecharge,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -36,13 +26,15 @@ pub struct Details {
     pub cpu: u16,
     pub powergrid: u16,
 
-    #[serde(default, serialize_with = "ordered_map")]
-    pub qualities: ShipQualities,
+    #[serde(flatten)]
+    pub status: Status,
+
+    #[serde(default, serialize_with = "ordered_vec")]
+    pub round_effects: Vec<RoundEffect>,
 }
 
 #[cfg(test)]
 ts_rs::export! {
     ShipLayout => "ship-layout.ts",
-    ShipQuality => "ship-quality.ts",
     Details => "ship-layout-details.ts",
 }

@@ -4,6 +4,7 @@ pub mod facility;
 pub mod lifeless;
 pub mod module;
 pub mod npc_faction;
+pub mod round_effect;
 pub mod shiplayout;
 pub mod site;
 pub mod solarsystem;

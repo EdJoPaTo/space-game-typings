@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::fixed::module::passive::Passive;
 use crate::fixed::module::targeted::Targeted;
 use crate::fixed::module::untargeted::Untargeted;
-use crate::fixed::shiplayout::{ShipLayout, ShipQualities, ShipQuality};
+use crate::fixed::shiplayout::ShipLayout;
 use crate::fixed::Statics;
 
 use super::Status;
@@ -21,8 +21,6 @@ pub struct Fitting {
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Error {
-    LayoutNotExistant,
-
     Cpu((u16, u16)),
     Powergrid((u16, u16)),
     HitpointsStructureZero,
@@ -53,105 +51,93 @@ impl Fitting {
     /// # Errors
     /// When Fitting isnt valid the Error states why
     pub fn is_valid(&self, statics: &Statics) -> Result<(), Error> {
-        if let Some(layout) = statics.ship_layouts.get(&self.layout) {
-            // More modules than layout offers
-            if self.slots_targeted.len() > layout.slots_targeted.into() {
-                return Err(Error::TooManyTargetedModules);
-            }
-            if self.slots_untargeted.len() > layout.slots_untargeted.into() {
-                return Err(Error::TooManyUntargetedModules);
-            }
-            if self.slots_passive.len() > layout.slots_passive.into() {
-                return Err(Error::TooManyPassiveModules);
-            }
-
-            let mut cpu = 0;
-            let mut powergrid = 0;
-
-            for id in &self.slots_targeted {
-                let m = statics
-                    .modules_targeted
-                    .get(id)
-                    .expect("targeted module has to be in statics");
-                cpu += m.required_cpu;
-                powergrid += m.required_powergrid;
-            }
-            for id in &self.slots_untargeted {
-                let m = statics
-                    .modules_untargeted
-                    .get(id)
-                    .expect("untargeted module has to be in statics");
-                cpu += m.required_cpu;
-                powergrid += m.required_powergrid;
-            }
-            for id in &self.slots_passive {
-                let m = statics
-                    .modules_passive
-                    .get(id)
-                    .expect("passive module has to be in statics");
-                cpu += m.required_cpu;
-                powergrid += m.required_powergrid;
-            }
-
-            // Check cpu / powergrid
-            if layout.cpu < cpu {
-                return Err(Error::Cpu((cpu, layout.cpu)));
-            }
-            if layout.powergrid < powergrid {
-                return Err(Error::Powergrid((powergrid, layout.powergrid)));
-            }
-
-            // Dead on undock
-            let status = self.maximum_status(statics);
-            if !status.is_alive() {
-                return Err(Error::HitpointsStructureZero);
-            }
-
-            return Ok(());
-        }
-        Err(Error::LayoutNotExistant)
-    }
-
-    #[must_use]
-    pub fn qualities(&self, statics: &Statics) -> ShipQualities {
-        let mut map = ShipQualities::new();
         let layout = statics
             .ship_layouts
             .get(&self.layout)
-            .expect("ship_layout has to exist");
-        for (q, amount) in &layout.qualities {
-            let e = map.entry(*q).or_default();
-            *e = e.saturating_add(*amount);
+            .expect("statics have to contain ship layout");
+        // More modules than layout offers
+        if self.slots_targeted.len() > layout.slots_targeted.into() {
+            return Err(Error::TooManyTargetedModules);
+        }
+        if self.slots_untargeted.len() > layout.slots_untargeted.into() {
+            return Err(Error::TooManyUntargetedModules);
+        }
+        if self.slots_passive.len() > layout.slots_passive.into() {
+            return Err(Error::TooManyPassiveModules);
+        }
+
+        let mut cpu = 0;
+        let mut powergrid = 0;
+        for id in &self.slots_targeted {
+            let m = statics
+                .modules_targeted
+                .get(id)
+                .expect("targeted module has to be in statics");
+            cpu += m.required_cpu;
+            powergrid += m.required_powergrid;
+        }
+        for id in &self.slots_untargeted {
+            let m = statics
+                .modules_untargeted
+                .get(id)
+                .expect("untargeted module has to be in statics");
+            cpu += m.required_cpu;
+            powergrid += m.required_powergrid;
         }
         for id in &self.slots_passive {
-            if let Some(m) = statics.modules_passive.get(id) {
-                for (q, amount) in &m.qualities {
-                    let e = map.entry(*q).or_default();
-                    *e = e.saturating_add(*amount);
-                }
-            }
+            let m = statics
+                .modules_passive
+                .get(id)
+                .expect("passive module has to be in statics");
+            cpu += m.required_cpu;
+            powergrid += m.required_powergrid;
         }
-        map
+
+        // Check cpu / powergrid
+        if cpu > layout.cpu {
+            return Err(Error::Cpu((cpu, layout.cpu)));
+        }
+        if powergrid > layout.powergrid {
+            return Err(Error::Powergrid((powergrid, layout.powergrid)));
+        }
+
+        // Dead on undock
+        let status = self.maximum_status(statics);
+        if !status.is_alive() {
+            return Err(Error::HitpointsStructureZero);
+        }
+
+        Ok(())
     }
 
     #[must_use]
     #[allow(clippy::cast_sign_loss)]
     pub fn maximum_status(&self, statics: &Statics) -> Status {
-        let qualities = self.qualities(statics);
-        Status {
-            capacitor: qualities
-                .get(&ShipQuality::Capacitor)
-                .expect("ship has to have a capacitor")
-                .saturating_abs() as u16,
-            hitpoints_armor: qualities
-                .get(&ShipQuality::HitpointsArmor)
-                .map(|o| o.saturating_abs() as u16)
-                .unwrap_or_default(),
-            hitpoints_structure: qualities
-                .get(&ShipQuality::HitpointsStructure)
-                .expect("ship has to have structure")
-                .saturating_abs() as u16,
+        #[allow(clippy::cast_sign_loss)]
+        const fn add(base: u16, add: i16) -> u16 {
+            if add >= 0 {
+                base.saturating_add(add as u16)
+            } else {
+                let b = add.saturating_abs() as u16;
+                base.saturating_sub(b)
+            }
         }
+
+        let mut status = statics
+            .ship_layouts
+            .get(&self.layout)
+            .expect("statics have to contain ship layout")
+            .status;
+
+        for id in &self.slots_passive {
+            let m = statics
+                .modules_passive
+                .get(id)
+                .expect("passive module has to be in statics");
+            status.hitpoints_armor = add(status.hitpoints_armor, m.hitpoints_armor);
+        }
+
+        status
     }
 }
 
@@ -173,20 +159,7 @@ fn status_without_modules_correct() {
         slots_passive: vec![],
     };
     let result = fitting.maximum_status(&statics);
-    assert_eq!(
-        result,
-        Status {
-            capacitor: *expected.qualities.get(&ShipQuality::Capacitor).unwrap() as u16,
-            hitpoints_armor: *expected
-                .qualities
-                .get(&ShipQuality::HitpointsArmor)
-                .unwrap() as u16,
-            hitpoints_structure: *expected
-                .qualities
-                .get(&ShipQuality::HitpointsStructure)
-                .unwrap() as u16,
-        }
-    );
+    assert_eq!(result, expected.status);
 }
 
 #[test]
@@ -199,28 +172,14 @@ fn status_of_default_fitting_correct() {
         .modules_passive
         .get(&fitting.slots_passive[0])
         .unwrap();
-    let expected_passive_armor_bonus = 10;
-    assert_eq!(
-        expected_passive.qualities.values().collect::<Vec<_>>(),
-        vec![&expected_passive_armor_bonus]
-    );
     let result = fitting.maximum_status(&statics);
     assert_eq!(
         result,
         Status {
-            capacitor: *expected_layout
-                .qualities
-                .get(&ShipQuality::Capacitor)
-                .unwrap() as u16,
-            hitpoints_armor: (*expected_layout
-                .qualities
-                .get(&ShipQuality::HitpointsArmor)
-                .unwrap() as u16)
-                + (expected_passive_armor_bonus as u16),
-            hitpoints_structure: *expected_layout
-                .qualities
-                .get(&ShipQuality::HitpointsStructure)
-                .unwrap() as u16,
+            capacitor: expected_layout.status.capacitor,
+            hitpoints_armor: (expected_layout.status.hitpoints_armor)
+                + (expected_passive.hitpoints_armor as u16),
+            hitpoints_structure: expected_layout.status.hitpoints_structure,
         }
     );
 }

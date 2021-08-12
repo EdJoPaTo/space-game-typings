@@ -5,19 +5,21 @@ rookieShip:
   slotsPassive: 1
   cpu: 30
   powergrid: 50
-  qualities:
-    hitpointsArmor: 20
-    hitpointsStructure: 10
-    capacitor: 40
-    capacitorRecharge: 5
+  capacitor: 40
+  hitpointsArmor: 20
+  hitpointsStructure: 10
+  roundEffects:
+    - type: capacitorRecharge
+      amount: 5
 frigate:
   slotsTargeted: 3
   slotsUntargeted: 2
   slotsPassive: 2
   cpu: 80
   powergrid: 100
-  qualities:
-    hitpointsArmor: 25
-    hitpointsStructure: 15
-    capacitor: 100
-    capacitorRecharge: 7
+  capacitor: 100
+  hitpointsArmor: 25
+  hitpointsStructure: 15
+  roundEffects:
+    - type: capacitorRecharge
+      amount: 7

@@ -2,5 +2,4 @@
 rookieArmorPlate:
   requiredCpu: 0
   requiredPowergrid: 10
-  qualities:
-    hitpointsArmor: 10
+  hitpointsArmor: 10

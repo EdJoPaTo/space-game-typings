@@ -3,8 +3,8 @@ rookieLaser:
   requiredCpu: 10
   requiredPowergrid: 15
   effectsOrigin:
-    - type: capacitor
-      amount: -5
+    - type: capacitorDrain
+      amount: 5
   effectsTarget:
     - type: damage
       amount: 10
@@ -12,8 +12,8 @@ rookieMiner:
   requiredCpu: 10
   requiredPowergrid: 10
   effectsOrigin:
-    - type: capacitor
-      amount: -5
+    - type: capacitorDrain
+      amount: 5
   effectsTarget:
     - type: mine
       amount: 5

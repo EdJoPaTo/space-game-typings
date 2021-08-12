@@ -1,8 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::fixed::round_effect::RoundEffect;
 use crate::serde_helper::ordered_vec;
-
-use super::Effect;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
@@ -19,7 +18,7 @@ pub struct Details {
     pub required_powergrid: u16,
 
     #[serde(serialize_with = "ordered_vec")]
-    pub effects: Vec<Effect>,
+    pub effects: Vec<RoundEffect>,
 }
 
 #[cfg(test)]

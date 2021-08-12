@@ -1,8 +1,6 @@
 use std::collections::HashMap;
 use std::fs;
 
-use crate::fixed::shiplayout::ShipQuality;
-
 use super::{
     Facilites, LifelessThingies, ModulesPassive, ModulesTargeted, ModulesUntargeted, ShipLayouts,
     Solarsystems,
@@ -82,7 +80,7 @@ fn check_module_passive() -> anyhow::Result<()> {
             "require {:?}",
             key
         );
-        assert!(!value.qualities.is_empty(), "quality {:?}", key);
+        // TODO: ensure some attribute does something
     }
 
     export(filename, &all)
@@ -132,29 +130,8 @@ fn check_ship_layout() -> anyhow::Result<()> {
     assert!(!all.is_empty(), "is empty");
 
     for (key, value) in &all {
-        println!("key {:?}", key);
-
-        assert!(
-            value
-                .qualities
-                .get(&ShipQuality::Capacitor)
-                .expect("capacitor")
-                > &0
-        );
-        assert!(
-            value
-                .qualities
-                .get(&ShipQuality::HitpointsArmor)
-                .expect("armor")
-                >= &0
-        );
-        assert!(
-            value
-                .qualities
-                .get(&ShipQuality::HitpointsStructure)
-                .expect("structure")
-                > &0
-        );
+        assert!(value.status.capacitor > 0, "capacitor {:?}", key);
+        assert!(value.status.is_alive(), "alive {:?}", key);
     }
 
     export(filename, &all)

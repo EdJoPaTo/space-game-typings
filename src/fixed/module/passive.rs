@@ -1,7 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::fixed::shiplayout::ShipQualities;
-use crate::serde_helper::ordered_map;
+use crate::serde_helper::is_default;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
@@ -17,8 +16,8 @@ pub struct Details {
     pub required_cpu: u16,
     pub required_powergrid: u16,
 
-    #[serde(serialize_with = "ordered_map")]
-    pub qualities: ShipQualities,
+    #[serde(default, skip_serializing_if = "is_default")]
+    pub hitpoints_armor: i16,
 }
 
 #[cfg(test)]
