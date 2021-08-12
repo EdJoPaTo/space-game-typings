@@ -1,4 +1,14 @@
 ---
+guardianLaser:
+  requiredCpu: 800
+  requiredPowergrid: 1400
+  effectsOrigin: []
+  effectsTarget:
+    - type: capacitorDrain
+      amount: 200
+    - type: damage
+      amount: 20
+    - type: warpDisruption
 rookieLaser:
   requiredCpu: 10
   requiredPowergrid: 15

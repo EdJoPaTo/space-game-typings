@@ -7,6 +7,9 @@ use crate::serde_helper::ordered_vec;
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "ModuleTargeted")]
 pub enum Targeted {
+    /// Weapon only meant to be used by the NpcFaction Guardians
+    GuardianLaser,
+
     RookieLaser,
     RookieMiner,
 }

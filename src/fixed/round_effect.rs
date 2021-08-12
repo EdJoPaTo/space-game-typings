@@ -8,6 +8,8 @@ pub enum RoundEffect {
     CapacitorRecharge(u16),
 
     ArmorRepair(u16),
+    /// Should only be used by the GuardianDefender
+    StructureRepair(u16),
 
     Damage(u16),
     Mine(u16),

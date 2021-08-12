@@ -9,6 +9,9 @@ use super::round_effect::RoundEffect;
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 pub enum ShipLayout {
+    /// Special Ship used by the Guardians to secure the High Sec
+    GuardianDefender,
+
     /// Beginner default ship
     RookieShip,
 
