@@ -49,6 +49,14 @@ impl Status {
     }
 
     #[must_use]
+    /// Returns if it's still alive or not
+    /// # Example
+    /// ```
+    /// use typings::persist::ship::Status;
+    /// assert!(Status {capacitor: 20, hitpoints_armor: 42, hitpoints_structure: 4}.is_alive());
+    /// assert!(Status {capacitor: 0, hitpoints_armor: 0, hitpoints_structure: 4}.is_alive());
+    /// assert!(!Status {capacitor: 20, hitpoints_armor: 42, hitpoints_structure: 0}.is_alive());
+    /// ```
     pub const fn is_alive(self) -> bool {
         self.hitpoints_structure > 0
     }
