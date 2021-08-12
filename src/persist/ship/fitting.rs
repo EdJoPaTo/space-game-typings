@@ -38,7 +38,7 @@ ts_rs::export! {
 impl Default for Fitting {
     fn default() -> Self {
         Self {
-            layout: ShipLayout::RookieShip,
+            layout: ShipLayout::Abis,
             slots_targeted: vec![Targeted::RookieMiner, Targeted::RookieLaser],
             slots_untargeted: vec![Untargeted::RookieArmorRepair],
             slots_passive: vec![Passive::RookieArmorPlate],
@@ -132,9 +132,9 @@ fn default_fitting_is_valid() {
 #[allow(clippy::cast_sign_loss)]
 fn status_without_modules_correct() {
     let statics = Statics::default();
-    let expected = statics.ship_layouts.get(&ShipLayout::RookieShip);
+    let expected = statics.ship_layouts.get(&ShipLayout::Abis);
     let fitting = Fitting {
-        layout: ShipLayout::RookieShip,
+        layout: ShipLayout::Abis,
         slots_targeted: vec![],
         slots_untargeted: vec![],
         slots_passive: vec![],

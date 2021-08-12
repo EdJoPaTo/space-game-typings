@@ -1,5 +1,6 @@
 ---
-guardianDefender:
+Paladin:
+  class: cruiser
   slotsTargeted: 8
   slotsUntargeted: 0
   slotsPassive: 0
@@ -15,7 +16,8 @@ guardianDefender:
       amount: 10000
     - type: structureRepair
       amount: 10000
-rookieShip:
+Abis:
+  class: rookieShip
   slotsTargeted: 2
   slotsUntargeted: 1
   slotsPassive: 1
@@ -27,7 +29,8 @@ rookieShip:
   roundEffects:
     - type: capacitorRecharge
       amount: 5
-frigate:
+Hecate:
+  class: frigate
   slotsTargeted: 3
   slotsUntargeted: 2
   slotsPassive: 2
