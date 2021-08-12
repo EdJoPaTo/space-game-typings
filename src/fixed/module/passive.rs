@@ -9,7 +9,7 @@ pub enum Passive {
     RookieArmorPlate,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "ModulePassiveDetails")]
 pub struct Details {
