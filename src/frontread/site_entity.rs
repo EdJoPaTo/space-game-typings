@@ -42,9 +42,7 @@ pub struct Lifeless {
 impl Lifeless {
     #[must_use]
     pub fn new(statics: &LifelessThingies, info: &crate::persist::site_entity::Lifeless) -> Self {
-        let shelf = statics
-            .get(&info.id)
-            .expect("lifeless has to be in statics");
+        let shelf = statics.get(&info.id);
         let health = Health::from_raw(
             info.status,
             shelf.hitpoints_armor,

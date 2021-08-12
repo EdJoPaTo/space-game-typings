@@ -51,10 +51,7 @@ impl Fitting {
     /// # Errors
     /// When Fitting isnt valid the Error states why
     pub fn is_valid(&self, statics: &Statics) -> Result<(), Error> {
-        let layout = statics
-            .ship_layouts
-            .get(&self.layout)
-            .expect("statics have to contain ship layout");
+        let layout = statics.ship_layouts.get(&self.layout);
         // More modules than layout offers
         if self.slots_targeted.len() > layout.slots_targeted.into() {
             return Err(Error::TooManyTargetedModules);
@@ -69,26 +66,17 @@ impl Fitting {
         let mut cpu = 0;
         let mut powergrid = 0;
         for id in &self.slots_targeted {
-            let m = statics
-                .modules_targeted
-                .get(id)
-                .expect("targeted module has to be in statics");
+            let m = statics.modules_targeted.get(id);
             cpu += m.required_cpu;
             powergrid += m.required_powergrid;
         }
         for id in &self.slots_untargeted {
-            let m = statics
-                .modules_untargeted
-                .get(id)
-                .expect("untargeted module has to be in statics");
+            let m = statics.modules_untargeted.get(id);
             cpu += m.required_cpu;
             powergrid += m.required_powergrid;
         }
         for id in &self.slots_passive {
-            let m = statics
-                .modules_passive
-                .get(id)
-                .expect("passive module has to be in statics");
+            let m = statics.modules_passive.get(id);
             cpu += m.required_cpu;
             powergrid += m.required_powergrid;
         }
@@ -123,17 +111,10 @@ impl Fitting {
             }
         }
 
-        let mut status = statics
-            .ship_layouts
-            .get(&self.layout)
-            .expect("statics have to contain ship layout")
-            .status;
+        let mut status = statics.ship_layouts.get(&self.layout).status;
 
         for id in &self.slots_passive {
-            let m = statics
-                .modules_passive
-                .get(id)
-                .expect("passive module has to be in statics");
+            let m = statics.modules_passive.get(id);
             status.hitpoints_armor = add(status.hitpoints_armor, m.hitpoints_armor);
         }
 
@@ -151,7 +132,7 @@ fn default_fitting_is_valid() {
 #[allow(clippy::cast_sign_loss)]
 fn status_without_modules_correct() {
     let statics = Statics::default();
-    let expected = statics.ship_layouts.get(&ShipLayout::RookieShip).unwrap();
+    let expected = statics.ship_layouts.get(&ShipLayout::RookieShip);
     let fitting = Fitting {
         layout: ShipLayout::RookieShip,
         slots_targeted: vec![],
@@ -167,11 +148,8 @@ fn status_without_modules_correct() {
 fn status_of_default_fitting_correct() {
     let statics = Statics::default();
     let fitting = Fitting::default();
-    let expected_layout = statics.ship_layouts.get(&fitting.layout).unwrap();
-    let expected_passive = statics
-        .modules_passive
-        .get(&fitting.slots_passive[0])
-        .unwrap();
+    let expected_layout = statics.ship_layouts.get(&fitting.layout);
+    let expected_passive = statics.modules_passive.get(&fitting.slots_passive[0]);
     let result = fitting.maximum_status(&statics);
     assert_eq!(
         result,

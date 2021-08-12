@@ -44,8 +44,8 @@ impl Status {
 
     #[must_use]
     /// Returns the possible status in this fitting.
-    pub fn min_layout(self, statics: &Statics, fitting: &Fitting) -> Option<Self> {
-        Some(self.min(fitting.maximum_status(statics)))
+    pub fn min_layout(self, statics: &Statics, fitting: &Fitting) -> Self {
+        self.min(fitting.maximum_status(statics))
     }
 
     #[must_use]

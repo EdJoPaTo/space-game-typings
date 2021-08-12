@@ -1,4 +1,4 @@
-use std::collections::HashMap;
+use self::database::Database;
 
 pub mod facility;
 pub mod lifeless;
@@ -9,18 +9,19 @@ pub mod shiplayout;
 pub mod site;
 pub mod solarsystem;
 
+mod database;
+
 #[cfg(test)]
 mod do_data_export;
 
-pub type Facilites = HashMap<facility::Facility, facility::Details>;
-pub type LifelessThingies = HashMap<lifeless::Lifeless, lifeless::Details>;
-pub type ModulesPassive = HashMap<module::passive::Passive, module::passive::Details>;
-pub type ModulesUntargeted = HashMap<module::untargeted::Untargeted, module::untargeted::Details>;
-pub type ModulesTargeted = HashMap<module::targeted::Targeted, module::targeted::Details>;
-pub type ShipLayouts = HashMap<shiplayout::ShipLayout, shiplayout::Details>;
-pub type Solarsystems = HashMap<solarsystem::Solarsystem, solarsystem::Details>;
+pub type Facilites = Database<facility::Facility, facility::Details>;
+pub type LifelessThingies = Database<lifeless::Lifeless, lifeless::Details>;
+pub type ModulesPassive = Database<module::passive::Passive, module::passive::Details>;
+pub type ModulesUntargeted = Database<module::untargeted::Untargeted, module::untargeted::Details>;
+pub type ModulesTargeted = Database<module::targeted::Targeted, module::targeted::Details>;
+pub type ShipLayouts = Database<shiplayout::ShipLayout, shiplayout::Details>;
+pub type Solarsystems = Database<solarsystem::Solarsystem, solarsystem::Details>;
 
-#[derive(Debug)]
 pub struct Statics {
     pub facilities: Facilites,
     pub lifeless: LifelessThingies,
@@ -34,25 +35,18 @@ pub struct Statics {
 impl Default for Statics {
     fn default() -> Self {
         Self {
-            facilities: parse(include_str!("../../static/facility.yaml")),
-            lifeless: parse(include_str!("../../static/lifeless.yaml")),
-            modules_passive: parse(include_str!("../../static/module-passive.yaml")),
-            modules_untargeted: parse(include_str!("../../static/module-untargeted.yaml")),
-            modules_targeted: parse(include_str!("../../static/module-targeted.yaml")),
-            ship_layouts: parse(include_str!("../../static/ship-layout.yaml")),
-            solarsystems: parse(include_str!("../../static/solarsystem.yaml")),
+            facilities: Database::p(include_str!("../../static/facility.yaml")),
+            lifeless: Database::p(include_str!("../../static/lifeless.yaml")),
+            modules_passive: Database::p(include_str!("../../static/module-passive.yaml")),
+            modules_untargeted: Database::p(include_str!("../../static/module-untargeted.yaml")),
+            modules_targeted: Database::p(include_str!("../../static/module-targeted.yaml")),
+            ship_layouts: Database::p(include_str!("../../static/ship-layout.yaml")),
+            solarsystems: Database::p(include_str!("../../static/solarsystem.yaml")),
         }
     }
 }
 
-fn parse<T>(yaml_str: &str) -> T
-where
-    T: serde::de::DeserializeOwned,
-{
-    serde_yaml::from_str::<T>(yaml_str).expect("failed to parse statics")
-}
-
 #[test]
-fn can_generate_statics_from_include() {
+fn can_generate_default_statics() {
     Statics::default();
 }

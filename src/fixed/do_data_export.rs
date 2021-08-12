@@ -1,19 +1,7 @@
 use std::collections::HashMap;
 use std::fs;
 
-use super::{
-    Facilites, LifelessThingies, ModulesPassive, ModulesTargeted, ModulesUntargeted, ShipLayouts,
-    Solarsystems,
-};
-
-fn import<T>(filename: &str) -> anyhow::Result<T>
-where
-    T: serde::de::DeserializeOwned,
-{
-    let yaml_str = fs::read_to_string(&format!("static/{}.yaml", filename))?;
-    let value = serde_yaml::from_str::<T>(&yaml_str)?;
-    Ok(value)
-}
+use crate::fixed::Statics;
 
 fn export<K, V>(filename: &str, value: &HashMap<K, V>) -> anyhow::Result<()>
 where
@@ -49,32 +37,29 @@ fn graphviz(format: &str, filename: &str) -> anyhow::Result<()> {
 
 #[test]
 fn check_facility() -> anyhow::Result<()> {
-    let filename = "facility";
-    let all = import::<Facilites>(filename)?;
-    assert!(!all.is_empty(), "is empty");
-    export("facility", &all)
+    let all = Statics::default().facilities;
+    assert!(!all.data.is_empty(), "is empty");
+    export("facility", &all.data)
 }
 
 #[test]
 fn check_lifeless() -> anyhow::Result<()> {
-    let filename = "lifeless";
-    let all = import::<LifelessThingies>(filename)?;
-    assert!(!all.is_empty(), "is empty");
+    let all = Statics::default().lifeless;
+    assert!(!all.data.is_empty(), "is empty");
 
-    for (key, value) in &all {
+    for (key, value) in &all.data {
         assert!(value.hitpoints_structure > 0, "structure too low {:?}", key);
     }
 
-    export(filename, &all)
+    export("lifeless", &all.data)
 }
 
 #[test]
 fn check_module_passive() -> anyhow::Result<()> {
-    let filename = "module-passive";
-    let all = import::<ModulesPassive>(filename)?;
-    assert!(!all.is_empty(), "is empty");
+    let all = Statics::default().modules_passive;
+    assert!(!all.data.is_empty(), "is empty");
 
-    for (key, value) in &all {
+    for (key, value) in &all.data {
         assert!(
             value.required_cpu.saturating_add(value.required_powergrid) > 0,
             "require {:?}",
@@ -83,16 +68,15 @@ fn check_module_passive() -> anyhow::Result<()> {
         // TODO: ensure some attribute does something
     }
 
-    export(filename, &all)
+    export("module-passive", &all.data)
 }
 
 #[test]
 fn check_module_untargeted() -> anyhow::Result<()> {
-    let filename = "module-untargeted";
-    let all = import::<ModulesUntargeted>(filename)?;
-    assert!(!all.is_empty(), "is empty");
+    let all = Statics::default().modules_untargeted;
+    assert!(!all.data.is_empty(), "is empty");
 
-    for (key, value) in &all {
+    for (key, value) in &all.data {
         assert!(
             value.required_cpu.saturating_add(value.required_powergrid) > 0,
             "require {:?}",
@@ -101,16 +85,15 @@ fn check_module_untargeted() -> anyhow::Result<()> {
         assert!(!value.effects.is_empty(), "effect {:?}", key);
     }
 
-    export(filename, &all)
+    export("module-untargeted", &all.data)
 }
 
 #[test]
 fn check_module_targeted() -> anyhow::Result<()> {
-    let filename = "module-targeted";
-    let all = import::<ModulesTargeted>(filename)?;
-    assert!(!all.is_empty(), "is empty");
+    let all = Statics::default().modules_targeted;
+    assert!(!all.data.is_empty(), "is empty");
 
-    for (key, value) in &all {
+    for (key, value) in &all.data {
         assert!(
             value.required_cpu.saturating_add(value.required_powergrid) > 0,
             "requires {:?}",
@@ -120,39 +103,31 @@ fn check_module_targeted() -> anyhow::Result<()> {
         assert_ne!(total_effects, 0, "effects {:?}", key);
     }
 
-    export(filename, &all)
+    export("module-targeted", &all.data)
 }
 
 #[test]
 fn check_ship_layout() -> anyhow::Result<()> {
-    let filename = "ship-layout";
-    let all = import::<ShipLayouts>(filename)?;
-    assert!(!all.is_empty(), "is empty");
+    let all = Statics::default().ship_layouts;
+    assert!(!all.data.is_empty(), "is empty");
 
-    for (key, value) in &all {
+    for (key, value) in &all.data {
         assert!(value.status.capacitor > 0, "capacitor {:?}", key);
         assert!(value.status.is_alive(), "alive {:?}", key);
     }
 
-    export(filename, &all)
+    export("ship-layout", &all.data)
 }
 
 #[test]
 fn check_solarsystem() -> anyhow::Result<()> {
-    let filename = "solarsystem";
-    let all = import::<Solarsystems>(filename)?;
-    assert!(!all.is_empty(), "is empty");
+    let all = Statics::default().solarsystems;
+    assert!(!all.data.is_empty(), "is empty");
 
-    for (key, value) in &all {
+    for (key, value) in &all.data {
         assert!(value.security <= 100, "security {:?}", key);
 
-        for (target, planet) in &value.stargates {
-            assert!(
-                all.contains_key(target),
-                "stargate target does not exist {:?} {:?}",
-                key,
-                target
-            );
+        for planet in value.stargates.values() {
             assert!(planet <= &value.planets, "stargate planet {:?}", key);
         }
 
@@ -161,7 +136,7 @@ fn check_solarsystem() -> anyhow::Result<()> {
         }
     }
 
-    export(filename, &all)
+    export("solarsystem", &all.data)
 }
 
 #[test]
@@ -169,9 +144,9 @@ fn graphviz_solarsystems() -> anyhow::Result<()> {
     let mut text = String::new();
     text += "digraph {\n";
 
-    let all = import::<Solarsystems>("solarsystem")?;
+    let all = Statics::default().solarsystems;
 
-    let mut ordered = all.iter().collect::<Vec<_>>();
+    let mut ordered = all.data.iter().collect::<Vec<_>>();
     ordered.sort_by(|a, b| b.1.security.cmp(&a.1.security));
 
     for (key, system) in ordered {
