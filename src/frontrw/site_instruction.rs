@@ -1,8 +1,9 @@
 use serde::{Deserialize, Serialize};
 
 use crate::fixed::facility::Service;
+use crate::persist::site::Site;
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", tag = "type", content = "args")]
 pub enum SiteInstruction {
@@ -12,14 +13,14 @@ pub enum SiteInstruction {
     Warp(Warp),
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteInstructionModuleUntargeted")]
 pub struct ModuleUntargeted {
     pub module_index: u8,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteInstructionModuleTargeted")]
 pub struct ModuleTargeted {
@@ -27,7 +28,7 @@ pub struct ModuleTargeted {
     pub module_index: u8,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteInstructionFacility")]
 pub struct Facility {
@@ -35,11 +36,11 @@ pub struct Facility {
     pub service: Service,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteInstructionWarp")]
 pub struct Warp {
-    pub site_unique: String,
+    pub target: Site,
 }
 
 #[cfg(test)]
@@ -54,7 +55,7 @@ ts_rs::export! {
 #[test]
 fn can_identify_warp() {
     let data = SiteInstruction::Warp(Warp {
-        site_unique: "666".to_string(),
+        target: Site::Station(42),
     });
     crate::test_helper::can_serde_parse(&data);
 }

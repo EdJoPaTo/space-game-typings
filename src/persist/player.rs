@@ -41,12 +41,8 @@ impl std::str::FromStr for Player {
     type Err = anyhow::Error;
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         let mut splitted = s.split('-');
-        let platform = splitted
-            .next()
-            .ok_or_else(|| anyhow!("has to contain platform"))?;
-        let id = splitted
-            .next()
-            .ok_or_else(|| anyhow!("has to contain id"))?;
+        let platform = splitted.next().ok_or_else(|| anyhow!("needs platform"))?;
+        let id = splitted.next().ok_or_else(|| anyhow!("needs id"))?;
         if splitted.next().is_some() {
             return Err(anyhow!("can only contain exactly one dash (-)"));
         }
@@ -66,7 +62,13 @@ impl ToString for Player {
 }
 
 #[test]
-fn can_identify_telegram_player() {
+fn can_serde_parse_telegram_player() {
     let data = Player::Telegram(666);
     crate::test_helper::can_serde_parse(&data);
+}
+
+#[test]
+fn can_string_parse_telegram_player() {
+    let data = Player::Telegram(666);
+    crate::test_helper::can_string_parse(&data);
 }

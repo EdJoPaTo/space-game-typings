@@ -5,8 +5,6 @@
  * TODO: repolink
  */
 
-export type SitesNearPlanet = Readonly<Record<number, readonly SiteInfo[]>>;
-
 export type SiteEntity =
   | ({ type: "lifeless" } & SiteEntityLifeless)
   | ({ type: "facility" } & SiteEntityFacility)

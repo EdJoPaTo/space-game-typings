@@ -1,65 +1,111 @@
 use std::collections::BTreeMap;
 
+use anyhow::anyhow;
 use serde::{Deserialize, Serialize};
 
-use crate::fixed::site::Kind;
 use crate::fixed::solarsystem::Solarsystem;
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "SiteIdentifier")]
-pub struct Identifier {
-    pub solarsystem: Solarsystem,
-    pub site_unique: String,
+#[serde(rename_all = "camelCase", tag = "kind", content = "unique")]
+pub enum Site {
+    /// Zero-based index of station. Station I is 0, station IV is 3.
+    Station(u8),
+    /// Target solarsystem
+    Stargate(Solarsystem),
+    /// unique number, maybe random
+    AsteroidField(u8),
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "SiteInfo")]
-pub struct Info {
-    pub kind: Kind,
-    pub site_unique: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub name: Option<String>,
-}
-
-pub type SitesNearPlanet = BTreeMap<u8, Vec<Info>>;
+pub struct SitesNearPlanet(BTreeMap<u8, Vec<Site>>);
 
 #[cfg(test)]
 ts_rs::export! {
-    Identifier => "site-identifier.ts",
-    Info => "site-info.ts",
+    Site => "site.ts",
+    SitesNearPlanet => "sites-near-planet.ts",
 }
 
-impl Info {
-    #[must_use]
-    pub fn generate_station(solarsystem: Solarsystem, station_index: u8) -> Self {
-        let number = station_index + 1;
-        // TODO: römisch
-        let name = format!("{} {}", solarsystem, number);
-        let site_unique = format!("station{}", number);
-        Self {
-            kind: Kind::Station,
-            name: Some(name),
-            site_unique,
+impl std::str::FromStr for Site {
+    type Err = anyhow::Error;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let mut splitted = s.split('-');
+        let kind = splitted.next().ok_or_else(|| anyhow!("needs kind"))?;
+        let unique = splitted.next().ok_or_else(|| anyhow!("needs unique"))?;
+        if splitted.next().is_some() {
+            return Err(anyhow!("can only contain exactly one dash (-)"));
+        }
+        match kind {
+            "station" => Ok(Site::Station(unique.parse()?)),
+            "stargate" => Ok(Site::Stargate(unique.parse()?)),
+            "asteroidField" => Ok(Site::AsteroidField(unique.parse()?)),
+            _ => Err(anyhow!("unknown site kind {} {}", kind, s)),
         }
     }
+}
 
+impl ToString for Site {
+    fn to_string(&self) -> String {
+        match self {
+            Site::Station(index) => format!("station-{}", index),
+            Site::Stargate(target) => format!("stargate-{}", target.to_string()),
+            Site::AsteroidField(unique) => format!("asteroidField-{:03}", unique),
+        }
+    }
+}
+
+impl SitesNearPlanet {
     #[must_use]
-    pub fn generate_stargate(target_solarsystem: Solarsystem) -> Self {
-        let name = target_solarsystem.to_string();
-        let site_unique = format!("stargate{}", target_solarsystem);
-        Self {
-            kind: Kind::Stargate,
-            name: Some(name),
-            site_unique,
+    pub fn all(&self) -> Vec<Site> {
+        self.0.values().flatten().copied().collect()
+    }
+
+    pub fn add(&mut self, planet: u8, site: Site) {
+        self.0.entry(planet).or_default().push(site);
+    }
+
+    pub fn remove(&mut self, site: Site) {
+        for sites in self.0.values_mut() {
+            if let Some(position) = sites.iter().position(|o| o == &site) {
+                sites.remove(position);
+            }
         }
     }
 }
 
 #[test]
-fn can_deserialize_no_name() -> anyhow::Result<()> {
-    let result = serde_json::from_str::<Info>(r#"{"kind": "stargate", "siteUnique": "42"}"#)?;
-    assert!(result.name.is_none());
-    Ok(())
+fn can_serde_parse_station() {
+    let data = Site::Station(2);
+    crate::test_helper::can_serde_parse(&data);
+}
+
+#[test]
+fn can_serde_parse_stargate() {
+    let data = Site::Stargate(Solarsystem::Wabinihwa);
+    crate::test_helper::can_serde_parse(&data);
+}
+
+#[test]
+fn can_serde_parse_asteroid_field() {
+    let data = Site::AsteroidField(42);
+    crate::test_helper::can_serde_parse(&data);
+}
+
+#[test]
+fn can_string_parse_station() {
+    let data = Site::Station(2);
+    crate::test_helper::can_string_parse(&data);
+}
+
+#[test]
+fn can_string_parse_stargate() {
+    let data = Site::Stargate(Solarsystem::Wabinihwa);
+    crate::test_helper::can_string_parse(&data);
+}
+
+#[test]
+fn can_string_parse_asteroid_field() {
+    let data = Site::AsteroidField(42);
+    crate::test_helper::can_string_parse(&data);
 }

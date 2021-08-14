@@ -1,44 +1,55 @@
+#![allow(clippy::module_name_repetitions)]
+
 use serde::{Deserialize, Serialize};
 
 use crate::fixed::solarsystem::Solarsystem;
 
-use super::site;
+use super::site::Site;
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", untagged)]
 pub enum PlayerLocation {
-    Site(site::Identifier),
-    Station(Station),
-    Warp(Warp),
+    Site(PlayerLocationSite),
+    Station(PlayerLocationStation),
+    Warp(PlayerLocationWarp),
 }
 
-#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "PlayerLocationStation")]
-pub struct Station {
+#[serde(rename_all = "camelCase")]
+pub struct PlayerLocationSite {
+    pub solarsystem: Solarsystem,
+    pub site: Site,
+}
+
+#[derive(Debug, Default, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[cfg_attr(test, derive(ts_rs::TS))]
+#[serde(rename_all = "camelCase")]
+pub struct PlayerLocationStation {
     pub solarsystem: Solarsystem,
     pub station: u8,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "PlayerLocationWarp")]
-pub struct Warp {
+#[serde(rename_all = "camelCase")]
+pub struct PlayerLocationWarp {
     pub solarsystem: Solarsystem,
-    pub towards_site_unique: String,
+    pub towards: Site,
 }
 
 #[cfg(test)]
 ts_rs::export! {
     PlayerLocation => "player-location.ts",
-    Station => "player-location-station.ts",
-    Warp => "player-location-warp.ts",
+    PlayerLocationSite => "player-location-site.ts",
+    PlayerLocationStation => "player-location-station.ts",
+    PlayerLocationWarp => "player-location-warp.ts",
 }
 
 impl Default for PlayerLocation {
     fn default() -> Self {
-        Self::Station(Station::default())
+        Self::Station(PlayerLocationStation::default())
     }
 }
 
@@ -55,25 +66,25 @@ impl PlayerLocation {
 
 #[test]
 fn can_identify_site() {
-    let data = PlayerLocation::Site(site::Identifier {
+    let data = PlayerLocation::Site(PlayerLocationSite {
         solarsystem: Solarsystem::default(),
-        site_unique: "666".to_string(),
+        site: Site::Station(42),
     });
     crate::test_helper::can_serde_parse(&data);
 }
 
 #[test]
 fn can_identify_warp() {
-    let data = PlayerLocation::Warp(Warp {
+    let data = PlayerLocation::Warp(PlayerLocationWarp {
         solarsystem: Solarsystem::default(),
-        towards_site_unique: "666".to_string(),
+        towards: Site::Station(42),
     });
     crate::test_helper::can_serde_parse(&data);
 }
 
 #[test]
 fn can_identify_station() {
-    let data = PlayerLocation::Station(Station {
+    let data = PlayerLocation::Station(PlayerLocationStation {
         solarsystem: Solarsystem::default(),
         station: 2,
     });
