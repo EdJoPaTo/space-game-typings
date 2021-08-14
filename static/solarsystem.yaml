@@ -1,12 +1,15 @@
 ---
 Wabinihwa:
   security: 92
-  planets: 4
+  planets: 6
   stargates:
     Arama: 4
     Liagi: 3
   stations:
     - 2
+    - 3
+    - 2
+    - 4
 Arama:
   security: 51
   planets: 2
