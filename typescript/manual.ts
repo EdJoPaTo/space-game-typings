@@ -5,10 +5,6 @@
  * TODO: repolink
  */
 
-/** Example: player-tg-1337 */
-export type PlayerIdentifier = `player-${string}-${number}`;
-export type PlayerTelegramIdentifier = `player-tg-${number}`;
-
 export type SitesNearPlanet = Readonly<Record<number, readonly SiteInfo[]>>;
 
 export type SiteEntity =

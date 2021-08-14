@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::fixed::npc_faction::NpcFaction;
 use crate::fixed::{facility, lifeless};
 
-use super::player;
+use super::player::Player;
 use super::ship::{Fitting, Status};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -34,12 +34,6 @@ pub struct Npc {
     pub faction: NpcFaction,
     pub fitting: Fitting,
     pub status: Status,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[serde(rename_all = "camelCase")]
-pub struct Player {
-    pub id: player::Identifier,
 }
 
 #[test]

@@ -3,7 +3,6 @@ use serde::{Deserialize, Serialize};
 use crate::fixed::npc_faction::NpcFaction;
 use crate::fixed::shiplayout::ShipLayout;
 use crate::fixed::{facility, lifeless, LifelessThingies, Statics};
-use crate::persist::player;
 
 use super::health::Health;
 
@@ -80,7 +79,7 @@ impl Npc {
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityPlayer")]
 pub struct Player {
-    pub id: player::Identifier,
+    pub id: crate::persist::player::Player,
     pub shiplayout: ShipLayout,
     #[serde(flatten)]
     pub health: Health,
@@ -90,11 +89,11 @@ impl Player {
     #[must_use]
     pub fn new(
         statics: &Statics,
-        info: &crate::persist::site_entity::Player,
+        id: crate::persist::player::Player,
         ship: &crate::persist::ship::Ship,
     ) -> Self {
         Self {
-            id: info.id.to_string(),
+            id,
             shiplayout: ship.fitting.layout,
             health: Health::from_ship(statics, &ship.fitting, ship.status),
         }
@@ -146,7 +145,7 @@ fn can_parse_npc() {
 #[test]
 fn can_parse_player() {
     let data = SiteEntity::Player(Player {
-        id: "player-tg-666".to_string(),
+        id: crate::persist::player::Player::Telegram(666),
         shiplayout: ShipLayout::Abis,
         health: Health {
             armor: 0.0,
