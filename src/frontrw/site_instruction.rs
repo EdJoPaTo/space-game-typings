@@ -3,6 +3,8 @@ use serde::{Deserialize, Serialize};
 use crate::fixed::facility::Service;
 use crate::persist::site::Site;
 
+// TODO: can become untagged with renaming the properties to a more speaking name
+
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", tag = "type", content = "args")]
