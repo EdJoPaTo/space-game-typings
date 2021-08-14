@@ -62,7 +62,9 @@ impl SitesNearPlanet {
     }
 
     pub fn add(&mut self, planet: u8, site: Site) {
-        self.0.entry(planet).or_default().push(site);
+        let vec = self.0.entry(planet).or_default();
+        vec.push(site);
+        vec.sort();
     }
 
     pub fn remove(&mut self, site: Site) {
