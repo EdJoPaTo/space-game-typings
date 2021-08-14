@@ -1,7 +1,8 @@
 use serde::{Deserialize, Serialize};
 
+use crate::fixed::facility::Facility;
+use crate::fixed::lifeless;
 use crate::fixed::npc_faction::NpcFaction;
-use crate::fixed::{facility, lifeless};
 
 use super::player::Player;
 use super::ship::{Fitting, Status};
@@ -13,12 +14,6 @@ pub enum SiteEntity {
     Lifeless(Lifeless),
     Npc(Npc),
     Player(Player),
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[serde(rename_all = "camelCase")]
-pub struct Facility {
-    pub id: facility::Facility,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]

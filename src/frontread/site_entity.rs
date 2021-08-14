@@ -23,9 +23,9 @@ pub struct Facility {
     pub id: facility::Facility,
 }
 
-impl From<&crate::persist::site_entity::Facility> for Facility {
-    fn from(info: &crate::persist::site_entity::Facility) -> Self {
-        Self { id: info.id }
+impl From<&crate::fixed::facility::Facility> for Facility {
+    fn from(info: &crate::fixed::facility::Facility) -> Self {
+        Self { id: *info }
     }
 }
 
