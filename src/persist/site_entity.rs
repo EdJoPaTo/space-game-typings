@@ -32,9 +32,35 @@ pub struct Npc {
 }
 
 #[test]
-fn can_parse() {
+fn can_parse_facility() {
+    let data = SiteEntity::Facility(Facility::Stargate);
+    crate::test_helper::can_serde_parse(&data);
+}
+
+#[test]
+fn can_parse_lifeless() {
     let data = SiteEntity::Lifeless(Lifeless {
         id: lifeless::Lifeless::Asteroid,
+        status: Status {
+            capacitor: 0,
+            hitpoints_armor: 42,
+            hitpoints_structure: 42,
+        },
+    });
+    crate::test_helper::can_serde_parse(&data);
+}
+
+#[test]
+fn can_parse_player() {
+    let data = SiteEntity::Player(Player::Telegram(666));
+    crate::test_helper::can_serde_parse(&data);
+}
+
+#[test]
+fn can_parse_npc() {
+    let data = SiteEntity::Npc(Npc {
+        faction: NpcFaction::Pirates,
+        fitting: Fitting::default(),
         status: Status {
             capacitor: 0,
             hitpoints_armor: 42,
