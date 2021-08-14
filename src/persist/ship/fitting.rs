@@ -38,7 +38,7 @@ ts_rs::export! {
 impl Default for Fitting {
     fn default() -> Self {
         Self {
-            layout: ShipLayout::Abis,
+            layout: ShipLayout::default(),
             slots_targeted: vec![Targeted::RookieMiner, Targeted::RookieLaser],
             slots_untargeted: vec![Untargeted::RookieArmorRepair],
             slots_passive: vec![Passive::RookieArmorPlate],

@@ -133,7 +133,7 @@ fn can_parse_lifeless() {
 fn can_parse_npc() {
     let data = SiteEntity::Npc(Npc {
         faction: NpcFaction::Pirates,
-        shiplayout: ShipLayout::Hecate,
+        shiplayout: ShipLayout::default(),
         health: Health {
             armor: 0.0,
             structure: 42.0,
@@ -146,7 +146,7 @@ fn can_parse_npc() {
 fn can_parse_player() {
     let data = SiteEntity::Player(Player {
         id: crate::persist::player::Player::Telegram(666),
-        shiplayout: ShipLayout::Abis,
+        shiplayout: ShipLayout::default(),
         health: Health {
             armor: 0.0,
             structure: 42.0,

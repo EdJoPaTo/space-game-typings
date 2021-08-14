@@ -59,3 +59,9 @@ impl std::fmt::Display for ShipLayout {
         write!(f, "{:?}", self)
     }
 }
+
+impl Default for ShipLayout {
+    fn default() -> Self {
+        Self::Abis
+    }
+}
