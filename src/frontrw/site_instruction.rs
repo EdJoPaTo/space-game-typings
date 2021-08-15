@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use serde::{Deserialize, Serialize};
 
 use crate::fixed::facility::Service;
@@ -52,6 +54,41 @@ ts_rs::export! {
     ModuleTargeted => "site-instruction-module-targeted.ts",
     Facility => "site-instruction-facility.ts",
     Warp => "site-instruction-warp.ts",
+}
+
+#[must_use]
+/// Filter instructions to be possible afterwards.
+///
+/// For example you can not do anything besides warping or docking.
+/// Also its not possible to use the same module twice.
+pub fn filter_possible(instructions: &[SiteInstruction]) -> Vec<SiteInstruction> {
+    let mut untargeted = HashMap::new();
+    let mut targeted = HashMap::new();
+    let mut standalone = None;
+
+    for i in instructions.iter().copied() {
+        match i {
+            SiteInstruction::ModuleUntargeted(m) => {
+                standalone = None;
+                untargeted.insert(m.module_index, i);
+            }
+            SiteInstruction::ModuleTargeted(m) => {
+                standalone = None;
+                targeted.insert(m.module_index, i);
+            }
+            SiteInstruction::Facility(_) | SiteInstruction::Warp(_) => {
+                untargeted.clear();
+                targeted.clear();
+                standalone = Some(i);
+            }
+        }
+    }
+    untargeted
+        .values()
+        .chain(targeted.values())
+        .chain(standalone.iter())
+        .copied()
+        .collect()
 }
 
 #[test]
