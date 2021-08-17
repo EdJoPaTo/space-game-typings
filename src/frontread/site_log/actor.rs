@@ -10,8 +10,8 @@ use crate::persist::player::Player;
 use crate::persist::ship::Ship;
 use crate::persist::site_entity::SiteEntity;
 
-pub(super) type Npc = (NpcFaction, ShipLayout);
-pub(super) type PlayerLayout = (Player, ShipLayout);
+type Npc = (NpcFaction, ShipLayout);
+type PlayerLayout = (Player, ShipLayout);
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
 #[cfg_attr(test, derive(ts_rs::TS))]

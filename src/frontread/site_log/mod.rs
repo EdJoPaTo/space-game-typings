@@ -5,7 +5,6 @@ use serde::{Deserialize, Serialize};
 use crate::fixed::module::targeted::Targeted;
 
 pub use self::actor::SiteLogActor;
-use self::actor::{Npc, PlayerLayout};
 
 mod actor;
 
@@ -15,13 +14,14 @@ mod actor;
 pub enum SiteLog {
     ModuleTargeted((SiteLogActor, Targeted, SiteLogActor)),
 
+    Jump(SiteLogActor),
     RapidUnscheduledDisassembly(SiteLogActor),
 
-    Dock(PlayerLayout),
-    Undock(PlayerLayout),
-    WarpIn(PlayerLayout),
-    Appears(Npc),
-    WarpOut(PlayerLayout),
+    Dock(SiteLogActor),
+    Undock(SiteLogActor),
+
+    WarpIn(SiteLogActor),
+    WarpOut(SiteLogActor),
 }
 
 #[cfg(test)]
