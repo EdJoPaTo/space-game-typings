@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::fixed::Statics;
 use crate::persist::ship::{Fitting, Status};
 
-#[derive(Debug, Copy, Clone, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 /// In Percentages 0.0..=1.0
