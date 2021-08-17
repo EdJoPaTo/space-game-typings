@@ -8,7 +8,7 @@ pub use self::actor::SiteLogActor;
 
 mod actor;
 
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
 #[cfg_attr(test, derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", tag = "type", content = "details")]
 pub enum SiteLog {
