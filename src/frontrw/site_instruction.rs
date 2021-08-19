@@ -13,6 +13,7 @@ use crate::persist::site::Site;
 pub enum SiteInstruction {
     ModuleUntargeted(ModuleUntargeted),
     ModuleTargeted(ModuleTargeted),
+    SelfDestruct,
     Facility(Facility),
     Warp(Warp),
 }
@@ -76,7 +77,9 @@ pub fn filter_possible(instructions: &[SiteInstruction]) -> Vec<SiteInstruction>
                 standalone = None;
                 targeted.insert(m.module_index, i);
             }
-            SiteInstruction::Facility(_) | SiteInstruction::Warp(_) => {
+            SiteInstruction::SelfDestruct
+            | SiteInstruction::Facility(_)
+            | SiteInstruction::Warp(_) => {
                 untargeted.clear();
                 targeted.clear();
                 standalone = Some(i);
@@ -92,6 +95,27 @@ pub fn filter_possible(instructions: &[SiteInstruction]) -> Vec<SiteInstruction>
 }
 
 #[test]
+fn can_identify_module_untargeted() {
+    let data = SiteInstruction::ModuleUntargeted(ModuleUntargeted { module_index: 4 });
+    crate::test_helper::can_serde_parse(&data);
+}
+
+#[test]
+fn can_identify_module_targeted() {
+    let data = SiteInstruction::ModuleTargeted(ModuleTargeted {
+        target_index_in_site: 42,
+        module_index: 4,
+    });
+    crate::test_helper::can_serde_parse(&data);
+}
+
+#[test]
+fn can_identify_self_destruct() {
+    let data = SiteInstruction::SelfDestruct;
+    crate::test_helper::can_serde_parse(&data);
+}
+
+#[test]
 fn can_identify_warp() {
     let data = SiteInstruction::Warp(Warp {
         target: Site::Station(42),
@@ -104,21 +128,6 @@ fn can_identify_facility() {
     let data = SiteInstruction::Facility(Facility {
         target_index_in_site: 42,
         service: Service::Dock,
-    });
-    crate::test_helper::can_serde_parse(&data);
-}
-
-#[test]
-fn can_identify_module_untargeted() {
-    let data = SiteInstruction::ModuleUntargeted(ModuleUntargeted { module_index: 4 });
-    crate::test_helper::can_serde_parse(&data);
-}
-
-#[test]
-fn can_identify_module_targeted() {
-    let data = SiteInstruction::ModuleTargeted(ModuleTargeted {
-        target_index_in_site: 42,
-        module_index: 4,
     });
     crate::test_helper::can_serde_parse(&data);
 }
