@@ -21,6 +21,12 @@ ts_rs::export! {
 }
 
 impl Status {
+    pub const DEAD: Status = Status {
+        capacitor: 0,
+        hitpoints_armor: 0,
+        hitpoints_structure: 0,
+    };
+
     #[must_use]
     /// Returns the minimum of two status thingies.
     /// Helpful when ensuring a status is still within the ships limits
