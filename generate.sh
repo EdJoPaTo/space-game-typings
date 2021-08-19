@@ -2,7 +2,7 @@
 set -e
 
 rm ./*.ts 2> /dev/null || true
-cargo test
+cargo test --tests
 
 targetfile='typescript/generated.ts'
 cat typescript/manual.ts > $targetfile
