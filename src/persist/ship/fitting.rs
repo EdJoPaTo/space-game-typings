@@ -9,7 +9,7 @@ use crate::fixed::Statics;
 use super::Status;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "ShipFitting")]
 pub struct Fitting {
     pub layout: ShipLayout,
@@ -30,7 +30,7 @@ pub enum Error {
     TooManyUntargetedModules,
 }
 
-#[cfg(test)]
+#[cfg(feature = "typescript")]
 ts_rs::export! {
     Fitting => "ship-fitting.ts",
 }

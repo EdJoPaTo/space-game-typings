@@ -7,7 +7,7 @@ use crate::fixed::solarsystem::Solarsystem;
 use super::site::Site;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", untagged)]
 pub enum PlayerLocation {
     Site(PlayerLocationSite),
@@ -16,7 +16,7 @@ pub enum PlayerLocation {
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 pub struct PlayerLocationSite {
     pub solarsystem: Solarsystem,
@@ -24,7 +24,7 @@ pub struct PlayerLocationSite {
 }
 
 #[derive(Debug, Default, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 pub struct PlayerLocationStation {
     pub solarsystem: Solarsystem,
@@ -32,14 +32,14 @@ pub struct PlayerLocationStation {
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 pub struct PlayerLocationWarp {
     pub solarsystem: Solarsystem,
     pub towards: Site,
 }
 
-#[cfg(test)]
+#[cfg(feature = "typescript")]
 ts_rs::export! {
     PlayerLocation => "player-location.ts",
     PlayerLocationSite => "player-location-site.ts",

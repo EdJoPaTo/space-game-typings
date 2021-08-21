@@ -7,7 +7,7 @@ use super::Fitting;
 /// The current situation of the ship.
 /// For the totals check the `ShipFitting`.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "ShipStatus")]
 pub struct Status {
     pub capacitor: u16,
@@ -15,7 +15,7 @@ pub struct Status {
     pub hitpoints_structure: u16,
 }
 
-#[cfg(test)]
+#[cfg(feature = "typescript")]
 ts_rs::export! {
     Status => "ship-status.ts",
 }

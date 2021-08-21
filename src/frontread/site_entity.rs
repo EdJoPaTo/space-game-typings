@@ -7,7 +7,7 @@ use crate::fixed::{facility, lifeless, LifelessThingies, Statics};
 use super::health::Health;
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-// #[cfg_attr(test, derive(ts_rs::TS))]
+// #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", tag = "type")]
 pub enum SiteEntity {
     Facility(Facility),
@@ -17,7 +17,7 @@ pub enum SiteEntity {
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityFacility")]
 pub struct Facility {
     pub id: facility::Facility,
@@ -30,7 +30,7 @@ impl From<&crate::fixed::facility::Facility> for Facility {
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityLifeless")]
 pub struct Lifeless {
     pub id: lifeless::Lifeless,
@@ -55,7 +55,7 @@ impl Lifeless {
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityNpc")]
 pub struct Npc {
     pub faction: NpcFaction,
@@ -76,7 +76,7 @@ impl Npc {
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityPlayer")]
 pub struct Player {
     pub id: crate::persist::player::Player,
@@ -100,7 +100,7 @@ impl Player {
     }
 }
 
-#[cfg(test)]
+#[cfg(feature = "typescript")]
 ts_rs::export! {
     // SiteEntity => "site-entity.ts",
     Facility => "site-entity-facility.ts",

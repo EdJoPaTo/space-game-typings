@@ -6,7 +6,7 @@ use crate::serde_helper::ordered_vec;
 use super::round_effect::RoundEffect;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 pub enum ShipClass {
     RookieShip,
@@ -16,7 +16,7 @@ pub enum ShipClass {
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 pub enum ShipLayout {
     /// Special Ship used by the Guardians to secure the High Sec
     Paladin,
@@ -28,7 +28,7 @@ pub enum ShipLayout {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "ShipLayoutDetails")]
 pub struct Details {
     pub class: ShipClass,
@@ -47,7 +47,7 @@ pub struct Details {
     pub round_effects: Vec<RoundEffect>,
 }
 
-#[cfg(test)]
+#[cfg(feature = "typescript")]
 ts_rs::export! {
     ShipClass => "ship-class.ts",
     ShipLayout => "ship-layout.ts",

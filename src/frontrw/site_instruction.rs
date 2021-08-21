@@ -8,7 +8,7 @@ use crate::persist::site::Site;
 // TODO: can become untagged with renaming the properties to a more speaking name
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", tag = "type", content = "args")]
 pub enum SiteInstruction {
     ModuleUntargeted(ModuleUntargeted),
@@ -19,14 +19,14 @@ pub enum SiteInstruction {
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteInstructionModuleUntargeted")]
 pub struct ModuleUntargeted {
     pub module_index: u8,
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteInstructionModuleTargeted")]
 pub struct ModuleTargeted {
     pub target_index_in_site: u8,
@@ -34,7 +34,7 @@ pub struct ModuleTargeted {
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteInstructionFacility")]
 pub struct Facility {
     pub target_index_in_site: u8,
@@ -42,13 +42,13 @@ pub struct Facility {
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteInstructionWarp")]
 pub struct Warp {
     pub target: Site,
 }
 
-#[cfg(test)]
+#[cfg(feature = "typescript")]
 ts_rs::export! {
     SiteInstruction => "site-instruction.ts",
     ModuleUntargeted => "site-instruction-module-untargeted.ts",

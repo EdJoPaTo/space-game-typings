@@ -4,7 +4,7 @@ use crate::fixed::round_effect::RoundEffect;
 use crate::serde_helper::ordered_vec;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "ModuleTargeted")]
 pub enum Targeted {
     /// Weapon only meant to be used by the NpcFaction Guardians
@@ -15,7 +15,7 @@ pub enum Targeted {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "ModuleTargetedDetails")]
 pub struct Details {
     pub required_cpu: u16,
@@ -27,7 +27,7 @@ pub struct Details {
     pub effects_target: Vec<RoundEffect>,
 }
 
-#[cfg(test)]
+#[cfg(feature = "typescript")]
 ts_rs::export! {
     Targeted => "module-targeted.ts",
     Details => "module-targeted-details.ts",

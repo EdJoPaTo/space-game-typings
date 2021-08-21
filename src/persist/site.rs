@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use crate::fixed::solarsystem::Solarsystem;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", tag = "kind", content = "unique")]
 pub enum Site {
     /// Zero-based index of station. Station I is 0, station IV is 3.
@@ -18,10 +18,10 @@ pub enum Site {
 }
 
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 pub struct SitesNearPlanet(BTreeMap<u8, Vec<Site>>);
 
-#[cfg(test)]
+#[cfg(feature = "typescript")]
 ts_rs::export! {
     Site => "site.ts",
     SitesNearPlanet => "sites-near-planet.ts",

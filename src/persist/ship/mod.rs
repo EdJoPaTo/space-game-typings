@@ -7,14 +7,14 @@ pub use fitting::Fitting;
 pub use status::Status;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 pub struct Ship {
     pub fitting: Fitting,
     pub status: Status,
 }
 
-#[cfg(test)]
+#[cfg(feature = "typescript")]
 ts_rs::export! {
     Ship => "ship.ts",
     Status => "ship-status.ts",

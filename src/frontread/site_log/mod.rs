@@ -9,7 +9,7 @@ pub use self::actor::SiteLogActor;
 mod actor;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", tag = "type", content = "details")]
 pub enum SiteLog {
     ModuleTargeted((SiteLogActor, Targeted, SiteLogActor)),
@@ -24,7 +24,7 @@ pub enum SiteLog {
     WarpOut(SiteLogActor),
 }
 
-#[cfg(test)]
+#[cfg(feature = "typescript")]
 ts_rs::export! {
     SiteLog => "site-log.ts",
 }

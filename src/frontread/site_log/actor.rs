@@ -14,7 +14,7 @@ type Npc = (NpcFaction, ShipLayout);
 type PlayerLayout = (Player, ShipLayout);
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq)]
-#[cfg_attr(test, derive(ts_rs::TS))]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", untagged)]
 pub enum SiteLogActor {
     Facility(Facility),
@@ -41,7 +41,7 @@ impl SiteLogActor {
     }
 }
 
-#[cfg(test)]
+#[cfg(feature = "typescript")]
 ts_rs::export! {
     SiteLogActor => "site-log-actor.ts",
 }
