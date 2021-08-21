@@ -1,5 +1,6 @@
 use std::collections::HashMap;
 use std::fs;
+use std::path::Path;
 
 use crate::fixed::Statics;
 
@@ -12,11 +13,20 @@ where
     let ordered = value.iter().collect::<BTreeMap<_, _>>();
 
     let json_str = serde_json::to_string_pretty(&ordered)?;
-    fs::write(&format!("static/{}.json", filename), json_str)?;
+    write_different(&format!("static/{}.json", filename), &json_str)?;
 
     let yaml_str = serde_yaml::to_string(&ordered)?;
-    fs::write(&format!("static/{}.yaml", filename), yaml_str)?;
+    write_different(&format!("static/{}.yaml", filename), &yaml_str)?;
 
+    Ok(())
+}
+
+fn write_different<P: AsRef<Path>>(path: P, contents: &str) -> std::io::Result<()> {
+    let path = path.as_ref();
+    let current = fs::read_to_string(path).unwrap_or_default();
+    if current != contents {
+        fs::write(path, contents)?;
+    }
     Ok(())
 }
 
