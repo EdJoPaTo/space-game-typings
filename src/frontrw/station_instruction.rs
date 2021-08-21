@@ -6,6 +6,7 @@ use serde::{Deserialize, Serialize};
 pub enum StationInstruction {
     Repair,
     Undock,
+    SellOre,
 }
 
 #[cfg(feature = "typescript")]
