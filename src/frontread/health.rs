@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::fixed::Statics;
-use crate::persist::ship::{Fitting, Status};
+use crate::persist::ship::{Ship, Status};
 
 #[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
@@ -31,8 +31,8 @@ impl Health {
     }
 
     #[must_use]
-    pub fn from_ship(statics: &Statics, fitting: &Fitting, status: Status) -> Self {
-        let max = fitting.maximum_status(statics);
-        Self::from_status(status, max)
+    pub fn from_ship(statics: &Statics, ship: &Ship) -> Self {
+        let max = ship.fitting.maximum_status(statics);
+        Self::from_status(ship.status, max)
     }
 }

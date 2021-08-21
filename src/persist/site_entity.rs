@@ -6,7 +6,7 @@ use crate::fixed::{lifeless, LifelessThingies};
 use crate::serde_helper::is_default;
 
 use super::player::Player;
-use super::ship::{Cargo, Fitting, Status};
+use super::ship::{Ship, Status};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", tag = "type")]
@@ -31,10 +31,9 @@ pub struct Lifeless {
 #[serde(rename_all = "camelCase")]
 pub struct Npc {
     pub faction: NpcFaction,
-    // TODO: use ship with #[serde(flatten)] instead
-    pub fitting: Fitting,
-    pub status: Status,
-    pub cargo: Cargo,
+
+    #[serde(flatten)]
+    pub ship: Ship,
 }
 
 impl Lifeless {
@@ -94,13 +93,7 @@ fn can_parse_player() {
 fn can_parse_npc() {
     let data = SiteEntity::Npc(Npc {
         faction: NpcFaction::Pirates,
-        fitting: Fitting::default(),
-        status: Status {
-            capacitor: 0,
-            hitpoints_armor: 42,
-            hitpoints_structure: 42,
-        },
-        cargo: Cargo::default(),
+        ship: Ship::default(),
     });
     crate::test_helper::can_serde_parse(&data);
 }

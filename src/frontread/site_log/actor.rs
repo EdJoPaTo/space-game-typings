@@ -29,7 +29,7 @@ impl SiteLogActor {
         match entity {
             SiteEntity::Facility(info) => SiteLogActor::Facility(*info),
             SiteEntity::Lifeless(info) => SiteLogActor::Lifeless(info.id),
-            SiteEntity::Npc(info) => SiteLogActor::Npc((info.faction, info.fitting.layout)),
+            SiteEntity::Npc(info) => SiteLogActor::Npc((info.faction, info.ship.fitting.layout)),
             SiteEntity::Player(player) => {
                 let layout = player_ships
                     .get(player)

@@ -69,8 +69,8 @@ impl Npc {
     pub fn new(statics: &Statics, info: &crate::persist::site_entity::Npc) -> Self {
         Self {
             faction: info.faction,
-            shiplayout: info.fitting.layout,
-            health: Health::from_ship(statics, &info.fitting, info.status),
+            shiplayout: info.ship.fitting.layout,
+            health: Health::from_ship(statics, &info.ship),
         }
     }
 }
@@ -95,7 +95,7 @@ impl Player {
         Self {
             id,
             shiplayout: ship.fitting.layout,
-            health: Health::from_ship(statics, &ship.fitting, ship.status),
+            health: Health::from_ship(statics, ship),
         }
     }
 }
