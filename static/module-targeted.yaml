@@ -26,4 +26,4 @@ rookieMiner:
       amount: 5
   effectsTarget:
     - type: mine
-      amount: 5
+      amount: 3

@@ -33,12 +33,14 @@ pub enum ShipLayout {
 pub struct Details {
     pub class: ShipClass,
 
+    pub cpu: u16,
+    pub powergrid: u16,
+
     pub slots_targeted: u8,
     pub slots_untargeted: u8,
     pub slots_passive: u8,
 
-    pub cpu: u16,
-    pub powergrid: u16,
+    pub ore_bay: u16,
 
     #[serde(flatten)]
     pub status: Status,

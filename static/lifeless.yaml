@@ -1,3 +1,6 @@
 ---
 asteroid:
   hitpointsStructure: 42
+  ore: 40
+smallWreck:
+  hitpointsStructure: 5

@@ -1,11 +1,12 @@
 use serde::{Deserialize, Serialize};
 
 use crate::fixed::facility::Facility;
-use crate::fixed::lifeless;
 use crate::fixed::npc_faction::NpcFaction;
+use crate::fixed::{lifeless, LifelessThingies};
+use crate::serde_helper::is_default;
 
 use super::player::Player;
-use super::ship::{Fitting, Status};
+use super::ship::{Cargo, Fitting, Status};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", tag = "type")]
@@ -21,14 +22,46 @@ pub enum SiteEntity {
 pub struct Lifeless {
     pub id: lifeless::Lifeless,
     pub status: Status,
+
+    #[serde(default, skip_serializing_if = "is_default")]
+    pub remaining_ore: u16,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
 pub struct Npc {
     pub faction: NpcFaction,
+    // TODO: use ship with #[serde(flatten)] instead
     pub fitting: Fitting,
     pub status: Status,
+    pub cargo: Cargo,
+}
+
+impl Lifeless {
+    #[must_use]
+    pub fn new(statics: &LifelessThingies, lifeless: lifeless::Lifeless) -> Self {
+        let details = statics.get(&lifeless);
+        Self {
+            id: lifeless,
+            status: Status {
+                capacitor: 0,
+                hitpoints_armor: details.hitpoints_armor,
+                hitpoints_structure: details.hitpoints_structure,
+            },
+            remaining_ore: details.ore,
+        }
+    }
+
+    #[must_use]
+    /// States if the entity has no point anymore and can be removed.
+    /// Asteroid has no ore anymore, Wreck has no loot, ...
+    pub const fn is_collapsed(&self) -> bool {
+        if !self.status.is_alive() {
+            return true;
+        }
+
+        self.remaining_ore == 0
+    }
 }
 
 #[test]
@@ -46,6 +79,7 @@ fn can_parse_lifeless() {
             hitpoints_armor: 42,
             hitpoints_structure: 42,
         },
+        remaining_ore: 42,
     });
     crate::test_helper::can_serde_parse(&data);
 }
@@ -66,6 +100,7 @@ fn can_parse_npc() {
             hitpoints_armor: 42,
             hitpoints_structure: 42,
         },
+        cargo: Cargo::default(),
     });
     crate::test_helper::can_serde_parse(&data);
 }

@@ -7,6 +7,7 @@ use crate::serde_helper::is_default;
 #[serde(rename_all = "camelCase", rename = "Lifeless")]
 pub enum Lifeless {
     Asteroid,
+    SmallWreck,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -16,7 +17,9 @@ pub struct Details {
     #[serde(default, skip_serializing_if = "is_default")]
     pub hitpoints_armor: u16,
     pub hitpoints_structure: u16,
-    // TODO: mineable resources
+
+    #[serde(default, skip_serializing_if = "is_default")]
+    pub ore: u16,
     // TODO: lootable resources
     // TODO: hackable resources
 }

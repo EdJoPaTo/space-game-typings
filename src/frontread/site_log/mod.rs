@@ -14,6 +14,7 @@ mod actor;
 pub enum SiteLog {
     ModuleTargeted((SiteLogActor, Targeted, SiteLogActor)),
 
+    Collapse(SiteLogActor),
     Jump(SiteLogActor),
     RapidUnscheduledDisassembly(SiteLogActor),
 

@@ -1,11 +1,12 @@
 ---
 Paladin:
   class: cruiser
+  cpu: 1337
+  powergrid: 1337
   slotsTargeted: 8
   slotsUntargeted: 0
   slotsPassive: 0
-  cpu: 1337
-  powergrid: 1337
+  oreBay: 0
   capacitor: 1337
   hitpointsArmor: 1337
   hitpointsStructure: 1337
@@ -18,11 +19,12 @@ Paladin:
       amount: 10000
 Abis:
   class: rookieShip
+  cpu: 30
+  powergrid: 50
   slotsTargeted: 2
   slotsUntargeted: 1
   slotsPassive: 1
-  cpu: 30
-  powergrid: 50
+  oreBay: 20
   capacitor: 40
   hitpointsArmor: 20
   hitpointsStructure: 10
@@ -31,11 +33,12 @@ Abis:
       amount: 5
 Hecate:
   class: frigate
+  cpu: 80
+  powergrid: 100
   slotsTargeted: 3
   slotsUntargeted: 2
   slotsPassive: 2
-  cpu: 80
-  powergrid: 100
+  oreBay: 0
   capacitor: 100
   hitpointsArmor: 25
   hitpointsStructure: 15
