@@ -1,7 +1,10 @@
 [package]
-name = "typings"
+name = "space-game-typings"
+description = "Type definitions and generic functions for the untitled space-game"
 version = "0.1.0"
 license = "AGPL-3.0-or-later"
+repository = "https://github.com/EdJoPaTo/space-game-typings"
+authors = ["EdJoPaTo <space-game-typings-rust@edjopato.de>"]
 edition = "2018"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
