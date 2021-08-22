@@ -32,7 +32,7 @@ impl Status {
     /// Helpful when ensuring a status is still within the ships limits
     /// # Example
     /// ```
-    /// use typings::persist::ship::Status;
+    /// use space_game_typings::persist::ship::Status;
     /// let status = Status {capacitor: 20, hitpoints_armor: 42, hitpoints_structure: 4};
     /// let ship_maximum = Status {capacitor: 20, hitpoints_armor: 20, hitpoints_structure: 10};
     /// let min = status.min(ship_maximum);
@@ -58,7 +58,7 @@ impl Status {
     /// Returns if it's still alive or not
     /// # Example
     /// ```
-    /// use typings::persist::ship::Status;
+    /// use space_game_typings::persist::ship::Status;
     /// assert!(Status {capacitor: 20, hitpoints_armor: 42, hitpoints_structure: 4}.is_alive());
     /// assert!(Status {capacitor: 0, hitpoints_armor: 0, hitpoints_structure: 4}.is_alive());
     /// assert!(!Status {capacitor: 20, hitpoints_armor: 42, hitpoints_structure: 0}.is_alive());
