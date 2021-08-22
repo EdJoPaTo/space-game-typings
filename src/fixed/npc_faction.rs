@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 pub enum NpcFaction {
@@ -9,4 +9,6 @@ pub enum NpcFaction {
 }
 
 #[cfg(feature = "typescript")]
-ts_rs::export! {NpcFaction => "npc-faction.ts"}
+ts_rs::export! {
+    NpcFaction => "npc-faction.ts",
+}
