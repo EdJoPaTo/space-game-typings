@@ -32,7 +32,7 @@ where
         if let Some(value) = self.data.get(key) {
             value
         } else {
-            panic!("statics has to contain every key. It is missing {:?}", key)
+            unreachable!("statics has to contain every key. It is missing {:?}", key)
         }
     }
 }
