@@ -58,7 +58,7 @@ fn check_lifeless() -> anyhow::Result<()> {
     assert!(!all.data.is_empty(), "is empty");
 
     for (key, value) in &all.data {
-        assert!(value.hitpoints_structure > 0, "structure too low {:?}", key);
+        assert!(value.collateral.is_alive(), "collateral {:?}", key);
     }
 
     export("lifeless", &all.data)
@@ -122,8 +122,8 @@ fn check_ship_layout() -> anyhow::Result<()> {
     assert!(!all.data.is_empty(), "is empty");
 
     for (key, value) in &all.data {
-        assert!(value.status.capacitor > 0, "capacitor {:?}", key);
-        assert!(value.status.is_alive(), "alive {:?}", key);
+        assert!(value.collateral.capacitor > 0, "capacitor {:?}", key);
+        assert!(value.collateral.is_alive(), "alive {:?}", key);
     }
 
     export("ship-layout", &all.data)

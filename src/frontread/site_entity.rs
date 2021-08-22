@@ -1,11 +1,10 @@
 use serde::{Deserialize, Serialize};
 
+use crate::entity::Health;
 use crate::fixed::npc_faction::NpcFaction;
 use crate::fixed::shiplayout::ShipLayout;
 use crate::fixed::{facility, lifeless, LifelessThingies, Statics};
 use crate::ship::Ship;
-
-use super::health::Health;
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 // #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
@@ -43,14 +42,9 @@ impl Lifeless {
     #[must_use]
     pub fn new(statics: &LifelessThingies, info: &crate::persist::site_entity::Lifeless) -> Self {
         let shelf = statics.get(&info.id);
-        let health = Health::from_raw(
-            info.status,
-            shelf.hitpoints_armor,
-            shelf.hitpoints_structure,
-        );
         Self {
             id: info.id,
-            health,
+            health: info.collateral.calc_health(shelf.collateral),
         }
     }
 }
@@ -71,7 +65,7 @@ impl Npc {
         Self {
             faction: info.faction,
             shiplayout: info.ship.fitting.layout,
-            health: Health::from_ship(statics, &info.ship),
+            health: info.ship.to_health(statics),
         }
     }
 }
@@ -92,7 +86,7 @@ impl Player {
         Self {
             id,
             shiplayout: ship.fitting.layout,
-            health: Health::from_ship(statics, ship),
+            health: ship.to_health(statics),
         }
     }
 }

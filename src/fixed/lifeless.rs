@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 
+use crate::entity::Collateral;
 use crate::serde_helper::is_default;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
@@ -14,9 +15,8 @@ pub enum Lifeless {
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "LifelessDetails")]
 pub struct Details {
-    #[serde(default, skip_serializing_if = "is_default")]
-    pub hitpoints_armor: u16,
-    pub hitpoints_structure: u16,
+    #[serde(flatten)]
+    pub collateral: Collateral,
 
     #[serde(default, skip_serializing_if = "is_default")]
     pub ore: u16,

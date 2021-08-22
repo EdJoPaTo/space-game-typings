@@ -1,10 +1,11 @@
 use serde::{Deserialize, Serialize};
 
+use crate::entity::Collateral;
 use crate::fixed::facility::Facility;
 use crate::fixed::npc_faction::NpcFaction;
 use crate::fixed::{lifeless, LifelessThingies};
 use crate::serde_helper::is_default;
-use crate::ship::{Ship, Status};
+use crate::ship::Ship;
 
 use super::player::Player;
 
@@ -21,7 +22,7 @@ pub enum SiteEntity {
 #[serde(rename_all = "camelCase")]
 pub struct Lifeless {
     pub id: lifeless::Lifeless,
-    pub status: Status,
+    pub collateral: Collateral,
 
     #[serde(default, skip_serializing_if = "is_default")]
     pub remaining_ore: u16,
@@ -42,10 +43,10 @@ impl Lifeless {
         let details = statics.get(&lifeless);
         Self {
             id: lifeless,
-            status: Status {
+            collateral: Collateral {
                 capacitor: 0,
-                hitpoints_armor: details.hitpoints_armor,
-                hitpoints_structure: details.hitpoints_structure,
+                armor: details.collateral.armor,
+                structure: details.collateral.structure,
             },
             remaining_ore: details.ore,
         }
@@ -55,7 +56,7 @@ impl Lifeless {
     /// States if the entity has no point anymore and can be removed.
     /// Asteroid has no ore anymore, Wreck has no loot, ...
     pub const fn is_collapsed(&self) -> bool {
-        if !self.status.is_alive() {
+        if !self.collateral.is_alive() {
             return true;
         }
 
@@ -73,10 +74,10 @@ fn can_parse_facility() {
 fn can_parse_lifeless() {
     let data = SiteEntity::Lifeless(Lifeless {
         id: lifeless::Lifeless::Asteroid,
-        status: Status {
+        collateral: Collateral {
             capacitor: 0,
-            hitpoints_armor: 42,
-            hitpoints_structure: 42,
+            armor: 42,
+            structure: 42,
         },
         remaining_ore: 42,
     });

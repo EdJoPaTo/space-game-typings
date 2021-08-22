@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
+use crate::entity::Collateral;
 use crate::serde_helper::ordered_vec;
-use crate::ship::Status;
 
 use super::round_effect::RoundEffect;
 
@@ -43,7 +43,7 @@ pub struct Details {
     pub ore_bay: u16,
 
     #[serde(flatten)]
-    pub status: Status,
+    pub collateral: Collateral,
 
     #[serde(default, serialize_with = "ordered_vec")]
     pub round_effects: Vec<RoundEffect>,

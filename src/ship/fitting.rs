@@ -6,7 +6,7 @@ use crate::fixed::module::untargeted::Untargeted;
 use crate::fixed::shiplayout::ShipLayout;
 use crate::fixed::Statics;
 
-use super::Status;
+use super::Collateral;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
@@ -23,7 +23,7 @@ pub struct Fitting {
 pub enum Error {
     Cpu((u16, u16)),
     Powergrid((u16, u16)),
-    HitpointsStructureZero,
+    StructureZero,
 
     TooManyPassiveModules,
     TooManyTargetedModules,
@@ -85,9 +85,9 @@ impl Fitting {
         }
 
         // Dead on undock
-        let status = self.maximum_status(statics);
-        if !status.is_alive() {
-            return Err(Error::HitpointsStructureZero);
+        let collateral = self.maximum_collateral(statics);
+        if !collateral.is_alive() {
+            return Err(Error::StructureZero);
         }
 
         Ok(())
@@ -95,7 +95,7 @@ impl Fitting {
 
     #[must_use]
     #[allow(clippy::cast_sign_loss)]
-    pub fn maximum_status(&self, statics: &Statics) -> Status {
+    pub fn maximum_collateral(&self, statics: &Statics) -> Collateral {
         #[allow(clippy::cast_sign_loss)]
         const fn add(base: u16, add: i16) -> u16 {
             if add >= 0 {
@@ -106,14 +106,14 @@ impl Fitting {
             }
         }
 
-        let mut status = statics.ship_layouts.get(&self.layout).status;
+        let mut collateral = statics.ship_layouts.get(&self.layout).collateral;
 
         for id in &self.slots_passive {
             let m = statics.modules_passive.get(id);
-            status.hitpoints_armor = add(status.hitpoints_armor, m.hitpoints_armor);
+            collateral.armor = add(collateral.armor, m.hitpoints_armor);
         }
 
-        status
+        collateral
     }
 }
 
@@ -125,7 +125,7 @@ fn default_fitting_is_valid() {
 
 #[test]
 #[allow(clippy::cast_sign_loss)]
-fn status_without_modules_correct() {
+fn collateral_without_modules_correct() {
     let statics = Statics::default();
     let expected = statics.ship_layouts.get(&ShipLayout::Abis);
     let fitting = Fitting {
@@ -134,25 +134,24 @@ fn status_without_modules_correct() {
         slots_untargeted: vec![],
         slots_passive: vec![],
     };
-    let result = fitting.maximum_status(&statics);
-    assert_eq!(result, expected.status);
+    let result = fitting.maximum_collateral(&statics);
+    assert_eq!(result, expected.collateral);
 }
 
 #[test]
 #[allow(clippy::cast_sign_loss)]
-fn status_of_default_fitting_correct() {
+fn collateral_of_default_fitting_correct() {
     let statics = Statics::default();
     let fitting = Fitting::default();
     let expected_layout = statics.ship_layouts.get(&fitting.layout);
     let expected_passive = statics.modules_passive.get(&fitting.slots_passive[0]);
-    let result = fitting.maximum_status(&statics);
+    let result = fitting.maximum_collateral(&statics);
     assert_eq!(
         result,
-        Status {
-            capacitor: expected_layout.status.capacitor,
-            hitpoints_armor: (expected_layout.status.hitpoints_armor)
-                + (expected_passive.hitpoints_armor as u16),
-            hitpoints_structure: expected_layout.status.hitpoints_structure,
+        Collateral {
+            capacitor: expected_layout.collateral.capacitor,
+            armor: (expected_layout.collateral.armor) + (expected_passive.hitpoints_armor as u16),
+            structure: expected_layout.collateral.structure,
         }
     );
 }

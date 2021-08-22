@@ -16,6 +16,7 @@ pub struct Details {
     pub required_cpu: u16,
     pub required_powergrid: u16,
 
+    // Everything following will be added / removed from the ship that uses it
     #[serde(default, skip_serializing_if = "is_default")]
     pub hitpoints_armor: i16,
 }
