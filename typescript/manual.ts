@@ -2,7 +2,7 @@
  * Space game typings
  * by EdJoPaTo
  * AGPL-3.0-or-later
- * TODO: repolink
+ * https://github.com/EdJoPaTo/space-game-typings
  */
 
 export type SiteEntity =
