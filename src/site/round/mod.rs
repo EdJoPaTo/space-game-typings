@@ -117,7 +117,12 @@ fn finishup_entities(
 ) -> (Vec<Player>, Vec<Entity>) {
     let mut remaining = Vec::new();
     let mut dead = Vec::new();
-    for entity in entities.values() {
+
+    // Keep the order of the index. HashMap uses the hash order, not the number
+    let mut entities = entities.iter().collect::<Vec<_>>();
+    entities.sort_by_key(|(index, _)| *index);
+
+    for (_, entity) in entities {
         match entity {
             Entity::Facility(_) => {
                 remaining.push(entity.clone());
