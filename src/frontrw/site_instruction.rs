@@ -57,11 +57,11 @@ ts_rs::export! {
     Warp => "site-instruction-warp.ts",
 }
 
-#[must_use]
 /// Filter instructions to be possible afterwards.
 ///
 /// For example you can not do anything besides warping or docking.
 /// Also its not possible to use the same module twice.
+#[must_use]
 pub fn filter_possible(instructions: &[SiteInstruction]) -> Vec<SiteInstruction> {
     let mut untargeted = HashMap::new();
     let mut targeted = HashMap::new();

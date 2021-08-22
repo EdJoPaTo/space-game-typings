@@ -17,10 +17,10 @@ pub struct Collateral {
     pub capacitor: u16,
 }
 
+/// In Percentages 0.0..=1.0
 #[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
-/// In Percentages 0.0..=1.0
 pub struct Health {
     pub armor: f32,
     pub structure: f32,
@@ -33,7 +33,6 @@ impl Collateral {
         structure: 0,
     };
 
-    #[must_use]
     /// Returns the minimum of two collaterals.
     /// Helpful when ensuring a collateral is still within the ships limits
     /// # Example
@@ -46,6 +45,7 @@ impl Collateral {
     /// assert_eq!(min.armor, 20);
     /// assert_eq!(min.structure, 4);
     /// ```
+    #[must_use]
     pub fn min(self, other: Self) -> Self {
         Self {
             capacitor: self.capacitor.min(other.capacitor),
@@ -54,7 +54,6 @@ impl Collateral {
         }
     }
 
-    #[must_use]
     /// Returns if it's still alive or not
     /// # Example
     /// ```
@@ -63,6 +62,7 @@ impl Collateral {
     /// assert!(Collateral {capacitor: 0, armor: 0, structure: 4}.is_alive());
     /// assert!(!Collateral {capacitor: 20, armor: 42, structure: 0}.is_alive());
     /// ```
+    #[must_use]
     pub const fn is_alive(self) -> bool {
         self.structure > 0
     }

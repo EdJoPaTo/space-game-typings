@@ -52,9 +52,9 @@ impl Lifeless {
         }
     }
 
-    #[must_use]
     /// States if the entity has no point anymore and can be removed.
     /// Asteroid has no ore anymore, Wreck has no loot, ...
+    #[must_use]
     pub const fn is_collapsed(&self) -> bool {
         if !self.collateral.is_alive() {
             return true;
