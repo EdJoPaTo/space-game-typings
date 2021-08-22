@@ -1,8 +1,17 @@
+#![deny(unsafe_code)]
+#![allow(clippy::implicit_hasher)]
+
 mod serde_helper;
 
+/// Something floating around in space.
+pub mod entity;
 /// Static data which is read-only for everyone.
 /// It only changes on game-updates.
 pub mod fixed;
+/// Ships that can be found in sites, warping or docked.
+pub mod ship;
+/// Everything that happens within a site.
+pub mod site;
 
 /// Persistent data which is read/write by the backend.
 pub mod persist;
@@ -13,12 +22,6 @@ pub mod frontread;
 
 /// Data the frontend reads ands writes.
 pub mod frontrw;
-
-/// Something floating around in space.
-pub mod entity;
-
-/// Ships that can be found in sites, warping or docked
-pub mod ship;
 
 #[cfg(test)]
 mod test_helper;

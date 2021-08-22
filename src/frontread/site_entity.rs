@@ -3,8 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::entity::Health;
 use crate::fixed::npc_faction::NpcFaction;
 use crate::fixed::shiplayout::ShipLayout;
-use crate::fixed::{facility, lifeless, LifelessThingies, Statics};
-use crate::ship::Ship;
+use crate::fixed::{facility, lifeless, Statics};
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 // #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
@@ -23,12 +22,6 @@ pub struct Facility {
     pub id: facility::Facility,
 }
 
-impl From<&crate::fixed::facility::Facility> for Facility {
-    fn from(info: &crate::fixed::facility::Facility) -> Self {
-        Self { id: *info }
-    }
-}
-
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityLifeless")]
@@ -36,17 +29,6 @@ pub struct Lifeless {
     pub id: lifeless::Lifeless,
     #[serde(flatten)]
     pub health: Health,
-}
-
-impl Lifeless {
-    #[must_use]
-    pub fn new(statics: &LifelessThingies, info: &crate::persist::site_entity::Lifeless) -> Self {
-        let shelf = statics.get(&info.id);
-        Self {
-            id: info.id,
-            health: info.collateral.calc_health(shelf.collateral),
-        }
-    }
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
@@ -59,17 +41,6 @@ pub struct Npc {
     pub health: Health,
 }
 
-impl Npc {
-    #[must_use]
-    pub fn new(statics: &Statics, info: &crate::persist::site_entity::Npc) -> Self {
-        Self {
-            faction: info.faction,
-            shiplayout: info.ship.fitting.layout,
-            health: info.ship.to_health(statics),
-        }
-    }
-}
-
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityPlayer")]
@@ -80,17 +51,6 @@ pub struct Player {
     pub health: Health,
 }
 
-impl Player {
-    #[must_use]
-    pub fn new(statics: &Statics, id: crate::persist::player::Player, ship: &Ship) -> Self {
-        Self {
-            id,
-            shiplayout: ship.fitting.layout,
-            health: ship.to_health(statics),
-        }
-    }
-}
-
 #[cfg(feature = "typescript")]
 ts_rs::export! {
     // SiteEntity => "site-entity.ts",
@@ -98,6 +58,31 @@ ts_rs::export! {
     Lifeless => "site-entity-lifeless.ts",
     Npc => "site-entity-npc.ts",
     Player => "site-entity-player.ts",
+}
+
+impl SiteEntity {
+    #[must_use]
+    pub fn from(statics: &Statics, entity: &crate::site::Entity) -> Self {
+        match entity {
+            crate::site::Entity::Facility(f) => Self::Facility(Facility { id: *f }),
+            crate::site::Entity::Lifeless(l) => Self::Lifeless(Lifeless {
+                id: l.id,
+                health: l
+                    .collateral
+                    .calc_health(statics.lifeless.get(&l.id).collateral),
+            }),
+            crate::site::Entity::Npc((faction, ship)) => Self::Npc(Npc {
+                faction: *faction,
+                shiplayout: ship.fitting.layout,
+                health: ship.to_health(statics),
+            }),
+            crate::site::Entity::Player((player, ship)) => Self::Player(Player {
+                id: *player,
+                shiplayout: ship.fitting.layout,
+                health: ship.to_health(statics),
+            }),
+        }
+    }
 }
 
 #[test]
