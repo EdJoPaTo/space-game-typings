@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::fixed::npc_faction::NpcFaction;
 use crate::fixed::shiplayout::ShipLayout;
 use crate::fixed::{facility, lifeless, LifelessThingies, Statics};
+use crate::ship::Ship;
 
 use super::health::Health;
 
@@ -87,11 +88,7 @@ pub struct Player {
 
 impl Player {
     #[must_use]
-    pub fn new(
-        statics: &Statics,
-        id: crate::persist::player::Player,
-        ship: &crate::persist::ship::Ship,
-    ) -> Self {
+    pub fn new(statics: &Statics, id: crate::persist::player::Player, ship: &Ship) -> Self {
         Self {
             id,
             shiplayout: ship.fitting.layout,

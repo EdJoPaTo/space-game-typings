@@ -30,11 +30,6 @@ pub enum Error {
     TooManyUntargetedModules,
 }
 
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    Fitting => "ship-fitting.ts",
-}
-
 impl Default for Fitting {
     fn default() -> Self {
         Self {

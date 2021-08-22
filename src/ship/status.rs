@@ -15,11 +15,6 @@ pub struct Status {
     pub hitpoints_structure: u16,
 }
 
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    Status => "ship-status.ts",
-}
-
 impl Status {
     pub const DEAD: Status = Status {
         capacitor: 0,

@@ -14,5 +14,8 @@ pub mod frontread;
 /// Data the frontend reads ands writes.
 pub mod frontrw;
 
+/// Ships that can be found in sites, warping or docked
+pub mod ship;
+
 #[cfg(test)]
 mod test_helper;

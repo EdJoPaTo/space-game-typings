@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::fixed::Statics;
-use crate::persist::ship::{Ship, Status};
+use crate::ship::{Ship, Status};
 
 #[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]

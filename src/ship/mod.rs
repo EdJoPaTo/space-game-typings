@@ -21,7 +21,11 @@ pub struct Ship {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
+    Cargo => "ship-cargo.ts",
+    CargoAmounts => "ship-cargo-amounts.ts",
+    Fitting => "ship-fitting.ts",
     Ship => "ship.ts",
+    Status => "ship-status.ts",
 }
 
 impl Default for Ship {

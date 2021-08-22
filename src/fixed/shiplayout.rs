@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
-use crate::persist::ship::Status;
 use crate::serde_helper::ordered_vec;
+use crate::ship::Status;
 
 use super::round_effect::RoundEffect;
 

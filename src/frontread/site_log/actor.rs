@@ -7,8 +7,8 @@ use crate::fixed::lifeless::Lifeless;
 use crate::fixed::npc_faction::NpcFaction;
 use crate::fixed::shiplayout::ShipLayout;
 use crate::persist::player::Player;
-use crate::persist::ship::Ship;
 use crate::persist::site_entity::SiteEntity;
+use crate::ship::Ship;
 
 type Npc = (NpcFaction, ShipLayout);
 type PlayerLayout = (Player, ShipLayout);

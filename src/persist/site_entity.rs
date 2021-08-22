@@ -4,9 +4,9 @@ use crate::fixed::facility::Facility;
 use crate::fixed::npc_faction::NpcFaction;
 use crate::fixed::{lifeless, LifelessThingies};
 use crate::serde_helper::is_default;
+use crate::ship::{Ship, Status};
 
 use super::player::Player;
-use super::ship::{Ship, Status};
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase", tag = "type")]

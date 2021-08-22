@@ -23,12 +23,6 @@ pub struct CargoAmounts {
     pub ore: u16,
 }
 
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    Cargo => "ship-cargo.ts",
-    CargoAmounts => "cargo-amounts.ts",
-}
-
 impl Cargo {
     #[must_use]
     pub const fn current_amounts(&self) -> CargoAmounts {

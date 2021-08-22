@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use super::ship::Fitting;
+use crate::ship::Fitting;
 
 #[derive(Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
