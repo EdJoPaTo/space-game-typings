@@ -1,0 +1,48 @@
+name: Build static and typescript
+
+on:
+  push:
+  pull_request:
+  # Build regularly in order to have up to date base images in the edge image
+  schedule:
+    - cron:  '42 0 * * 3' # weekly Wednesday 0:42 UTC
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          override: true
+          profile: minimal
+          target: ${{ matrix.triple }}
+          toolchain: stable
+
+      - uses: actions/checkout@v2
+
+      - name: Generate
+        run: ./generate.sh
+
+      - name: Package
+        run: |
+          7z a generated.zip LICENSE README.md
+          cd static
+          7z a ../generated.zip ./*
+          cd -
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: generated
+          path: |
+            *.zip
+            static/*.ts
+
+      - name: GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            *.zip
+            static/*.ts
