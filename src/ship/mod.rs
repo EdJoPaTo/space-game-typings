@@ -56,6 +56,11 @@ impl Ship {
         let max = self.fitting.maximum_collateral(statics);
         self.collateral.calc_health(max)
     }
+
+    #[must_use]
+    pub fn free_cargo(&self, statics: &Statics) -> CargoAmounts {
+        self.cargo.free(statics, &self.fitting)
+    }
 }
 
 #[test]
