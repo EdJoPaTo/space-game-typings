@@ -5,7 +5,7 @@ static/*.graphviz
 static/*.json
 static/*.png
 static/*.svg
+static/*.ts
 
 # Typescript stuff
 /*.ts
-typescript/generated.ts

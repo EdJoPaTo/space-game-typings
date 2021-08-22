@@ -4,7 +4,7 @@ set -e
 rm ./*.ts 2> /dev/null || true
 cargo test --tests --features typescript
 
-targetfile='typescript/generated.ts'
+targetfile='static/typings.ts'
 cat typescript/manual.ts > $targetfile
 
 for file in ./*.ts ; do
