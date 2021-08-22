@@ -4,14 +4,13 @@ use crate::entity::Collateral;
 use crate::fixed::facility::Service;
 use crate::fixed::solarsystem::Solarsystem;
 use crate::fixed::Statics;
-use crate::persist::player::Player;
-use crate::persist::site::Site;
+use crate::player::Player;
 use crate::ship::Ship;
 
 use self::effect::apply_passives;
 
 use super::instruction::Instruction;
-use super::{Entity, Log};
+use super::{Entity, Log, Site};
 
 mod effect;
 mod module;

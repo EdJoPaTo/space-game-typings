@@ -8,13 +8,9 @@ pub mod entity;
 /// Static data which is read-only for everyone.
 /// It only changes on game-updates.
 pub mod fixed;
-/// Ships that can be found in sites, warping or docked.
+pub mod player;
 pub mod ship;
-/// Everything that happens within a site.
 pub mod site;
-
-/// Persistent data which is read/write by the backend.
-pub mod persist;
 
 /// Data which is available to read for the frontend.
 /// This data is exported from persistant data.

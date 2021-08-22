@@ -1,7 +1,12 @@
 use anyhow::anyhow;
 use serde::{Deserialize, Serialize};
 
-use crate::fixed::solarsystem::Solarsystem;
+mod general;
+pub mod location;
+mod station_assets;
+
+pub use general::General;
+pub use station_assets::StationAssets;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
@@ -10,31 +15,9 @@ pub enum Player {
     Telegram(i64),
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
-#[serde(rename_all = "camelCase", rename = "PlayerGeneral")]
-pub struct General {
-    pub home_solarsystem: Solarsystem,
-    pub home_station: u8,
-
-    /// Paperclips are the currency
-    pub paperclips: u64,
-}
-
-impl Default for General {
-    fn default() -> Self {
-        Self {
-            home_solarsystem: Solarsystem::default(),
-            home_station: 0,
-            paperclips: 2000,
-        }
-    }
-}
-
 #[cfg(feature = "typescript")]
 ts_rs::export! {
     Player => "player.ts",
-    General => "player-general.ts",
 }
 
 impl std::str::FromStr for Player {

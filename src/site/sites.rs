@@ -5,6 +5,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::fixed::solarsystem::Solarsystem;
 
+// TODO: move to crate::site
+
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", tag = "kind", content = "unique")]
@@ -17,6 +19,7 @@ pub enum Site {
     AsteroidField(u8),
 }
 
+#[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 pub struct SitesNearPlanet(BTreeMap<u8, Vec<Site>>);

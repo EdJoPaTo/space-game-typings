@@ -5,7 +5,7 @@ use crate::fixed::facility::Facility;
 use crate::fixed::lifeless::Lifeless;
 use crate::fixed::npc_faction::NpcFaction;
 use crate::fixed::LifelessThingies;
-use crate::persist::player::Player;
+use crate::player::Player;
 use crate::serde_helper::is_default;
 use crate::ship::Ship;
 

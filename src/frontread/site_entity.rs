@@ -45,7 +45,7 @@ pub struct Npc {
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityPlayer")]
 pub struct Player {
-    pub id: crate::persist::player::Player,
+    pub id: crate::player::Player,
     pub shiplayout: ShipLayout,
     #[serde(flatten)]
     pub health: Health,
@@ -121,7 +121,7 @@ fn can_parse_npc() {
 #[test]
 fn can_parse_player() {
     let data = SiteEntity::Player(Player {
-        id: crate::persist::player::Player::Telegram(666),
+        id: crate::player::Player::Telegram(666),
         shiplayout: ShipLayout::default(),
         health: Health {
             armor: 0.0,

@@ -1,9 +1,8 @@
 use std::collections::HashMap;
 
 use crate::fixed::solarsystem::Solarsystem;
-use crate::persist::site::Site;
 
-use super::{Entity, Log};
+use super::{Entity, Log, Site};
 
 pub fn warp_out(
     solarsystem: Solarsystem,

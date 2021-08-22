@@ -5,7 +5,7 @@ use crate::fixed::lifeless::Lifeless;
 use crate::fixed::module::targeted::Targeted;
 use crate::fixed::npc_faction::NpcFaction;
 use crate::fixed::shiplayout::ShipLayout;
-use crate::persist::player::Player;
+use crate::player::Player;
 
 use super::Entity;
 

@@ -3,8 +3,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::fixed::solarsystem::Solarsystem;
-
-use super::site::Site;
+use crate::site::Site;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]

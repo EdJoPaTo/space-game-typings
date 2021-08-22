@@ -3,7 +3,8 @@ use std::collections::HashMap;
 use serde::{Deserialize, Serialize};
 
 use crate::fixed::facility::Service;
-use crate::persist::site::Site;
+
+use super::Site;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
@@ -155,7 +156,7 @@ fn sort_works() {
     example.insert(
         1,
         vec![Instruction::Warp(Warp {
-            target: crate::persist::site::Site::Station(42),
+            target: Site::Station(42),
         })],
     );
     example.insert(
@@ -192,7 +193,7 @@ fn sort_works() {
         (
             1,
             Instruction::Warp(Warp {
-                target: crate::persist::site::Site::Station(42),
+                target: Site::Station(42),
             })
         )
     );
