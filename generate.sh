@@ -18,7 +18,7 @@ for file in ./*.ts ; do
     sed -E \
         -e "s#^import.+##g" \
         -e "s#^  (\w+:)#  readonly \1#g" \
-        -e "s#(\S+)\[\];\$#readonly \1[];#g" \
+        -e "s#: (.+)\[\];\$#: readonly \1[];#g" \
         -e "s#\{ \[key: (\S+)\]: (\S+) }#Readonly<Partial<Record<\1, \2>>>#g" \
         -e "s#: (\S+) \| null;#\?: \1;#g" \
         -e "/^$/d" \
