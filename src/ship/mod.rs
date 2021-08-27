@@ -2,6 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::entity::{Collateral, Health};
 use crate::fixed::Statics;
+use crate::serde_helper::is_default;
 use crate::storage::Storage;
 
 mod fitting;
@@ -14,6 +15,8 @@ pub use fitting::Fitting;
 pub struct Ship {
     pub fitting: Fitting,
     pub collateral: Collateral,
+
+    #[serde(default, skip_serializing_if = "is_default")]
     pub cargo: Storage,
 }
 
