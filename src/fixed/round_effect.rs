@@ -12,7 +12,7 @@ pub enum RoundEffect {
     StructureRepair(u16),
 
     Damage(u16),
-    Mine(u16),
+    Mine(u32),
     WarpDisruption,
 }
 

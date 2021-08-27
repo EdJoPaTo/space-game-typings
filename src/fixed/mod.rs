@@ -1,6 +1,7 @@
 use self::database::Database;
 
 pub mod facility;
+pub mod item;
 pub mod lifeless;
 pub mod module;
 pub mod npc_faction;

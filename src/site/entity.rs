@@ -2,12 +2,14 @@ use serde::{Deserialize, Serialize};
 
 use crate::entity::Collateral;
 use crate::fixed::facility::Facility;
+use crate::fixed::item::Item;
 use crate::fixed::lifeless::Lifeless;
 use crate::fixed::npc_faction::NpcFaction;
 use crate::fixed::LifelessThingies;
 use crate::player::Player;
 use crate::serde_helper::is_default;
 use crate::ship::Ship;
+use crate::storage::Storage;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -26,7 +28,7 @@ pub struct EntityLifeless {
     pub collateral: Collateral,
 
     #[serde(default, skip_serializing_if = "is_default")]
-    pub remaining_ore: u16,
+    pub minable: Storage,
 }
 
 impl EntityLifeless {
@@ -36,19 +38,19 @@ impl EntityLifeless {
         Self {
             id: lifeless,
             collateral: details.collateral,
-            remaining_ore: details.ore,
+            minable: Storage::single(Item::Ore, details.ore),
         }
     }
 
     /// States if the entity has no point anymore and can be removed.
     /// Asteroid has no ore anymore, Wreck has no loot, ...
     #[must_use]
-    pub const fn is_collapsed(&self) -> bool {
+    pub fn is_collapsed(&self) -> bool {
         if !self.collateral.is_alive() {
             return true;
         }
 
-        self.remaining_ore == 0
+        self.minable.is_empty()
     }
 }
 
@@ -67,7 +69,7 @@ fn can_parse_lifeless() {
             armor: 42,
             structure: 42,
         },
-        remaining_ore: 42,
+        minable: Storage::single(Item::Ore, 42),
     });
     crate::test_helper::can_serde_parse(&data);
 }

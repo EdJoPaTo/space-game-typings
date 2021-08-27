@@ -31,3 +31,11 @@ where
     dbg!(&parsed);
     assert_eq!(input, &parsed);
 }
+
+pub fn json_parsed<T>(input: &T) -> T
+where
+    T: serde::Serialize + serde::de::DeserializeOwned,
+{
+    let json = serde_json::to_string_pretty(&input).unwrap();
+    serde_json::from_str(&json).unwrap()
+}

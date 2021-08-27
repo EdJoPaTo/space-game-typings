@@ -11,6 +11,7 @@ pub mod fixed;
 pub mod player;
 pub mod ship;
 pub mod site;
+pub mod storage;
 
 /// Data which is available to read for the frontend.
 /// This data is exported from persistant data.

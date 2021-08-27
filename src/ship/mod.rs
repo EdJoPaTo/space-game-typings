@@ -2,11 +2,10 @@ use serde::{Deserialize, Serialize};
 
 use crate::entity::{Collateral, Health};
 use crate::fixed::Statics;
+use crate::storage::Storage;
 
-mod cargo;
 mod fitting;
 
-pub use cargo::{Cargo, CargoAmounts};
 pub use fitting::Fitting;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
@@ -15,13 +14,11 @@ pub use fitting::Fitting;
 pub struct Ship {
     pub fitting: Fitting,
     pub collateral: Collateral,
-    pub cargo: Cargo,
+    pub cargo: Storage,
 }
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    Cargo => "ship-cargo.ts",
-    CargoAmounts => "ship-cargo-amounts.ts",
     Fitting => "ship-fitting.ts",
     Ship => "ship.ts",
 }
@@ -35,7 +32,7 @@ impl Default for Ship {
                 armor: 30,
                 structure: 10,
             },
-            cargo: Cargo::default(),
+            cargo: Storage::default(),
         }
     }
 }
@@ -47,7 +44,7 @@ impl Ship {
         Self {
             fitting,
             collateral,
-            cargo: Cargo::default(),
+            cargo: Storage::default(),
         }
     }
 
@@ -58,8 +55,9 @@ impl Ship {
     }
 
     #[must_use]
-    pub fn free_cargo(&self, statics: &Statics) -> CargoAmounts {
-        self.cargo.free(statics, &self.fitting)
+    pub fn free_cargo(&self, statics: &Statics) -> u32 {
+        let details = statics.ship_layouts.get(&self.fitting.layout);
+        details.cargo_slots.saturating_sub(self.cargo.total_slots())
     }
 }
 
@@ -69,7 +67,7 @@ fn default_ship_is_exactly_from_statics() {
     let expected = Ship {
         fitting: Fitting::default(),
         collateral: Fitting::default().maximum_collateral(&statics),
-        cargo: Cargo::default(),
+        cargo: Storage::default(),
     };
 
     assert_eq!(Ship::default().fitting, Fitting::default());

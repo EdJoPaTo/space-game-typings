@@ -6,7 +6,7 @@ Paladin:
   slotsTargeted: 8
   slotsUntargeted: 0
   slotsPassive: 0
-  oreBay: 0
+  cargoSlots: 0
   structure: 1337
   armor: 1337
   capacitor: 1337
@@ -24,7 +24,7 @@ Abis:
   slotsTargeted: 2
   slotsUntargeted: 1
   slotsPassive: 1
-  oreBay: 20
+  cargoSlots: 20
   structure: 10
   armor: 20
   capacitor: 40
@@ -38,7 +38,7 @@ Hecate:
   slotsTargeted: 3
   slotsUntargeted: 2
   slotsPassive: 2
-  oreBay: 0
+  cargoSlots: 0
   structure: 15
   armor: 25
   capacitor: 100

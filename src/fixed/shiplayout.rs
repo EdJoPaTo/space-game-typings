@@ -40,7 +40,9 @@ pub struct Details {
     pub slots_untargeted: u8,
     pub slots_passive: u8,
 
-    pub ore_bay: u16,
+    /// Total slots that can be used for stored goods.
+    /// Will probably be replaced in the future with a `cargo_volume` or something like that.
+    pub cargo_slots: u32,
 
     #[serde(flatten)]
     pub collateral: Collateral,

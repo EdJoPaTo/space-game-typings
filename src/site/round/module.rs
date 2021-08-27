@@ -1,10 +1,10 @@
 use std::collections::HashMap;
 
 use crate::entity::Collateral;
+use crate::fixed::item::Item;
 use crate::fixed::module::targeted::Targeted;
 use crate::fixed::round_effect::RoundEffect;
 use crate::fixed::{module, Statics};
-use crate::ship::{Cargo, CargoAmounts};
 use crate::site::instruction::{UseModuleTargeted, UseModuleUntargeted};
 use crate::site::{Actor, Entity, Log};
 
@@ -48,7 +48,7 @@ fn apply_targeted_to_origin<'s>(
     statics: &'s Statics,
     entity: &mut Entity,
     instruction: UseModuleTargeted,
-) -> Option<(Actor, Targeted, &'s module::targeted::Details, CargoAmounts)> {
+) -> Option<(Actor, Targeted, &'s module::targeted::Details, u32)> {
     let ship = match entity {
         Entity::Facility(_) | Entity::Lifeless(_) => {
             unreachable!("Only ships can use modules {:?}", entity)
@@ -81,12 +81,12 @@ fn apply_targeted_to_origin<'s>(
 fn apply_targeted_to_target(
     entity: &mut Entity,
     module: &module::targeted::Details,
-    free_cargo: CargoAmounts,
-) -> Cargo {
+    free_cargo: u32,
+) -> Vec<(Item, u32)> {
     match entity {
         Entity::Facility(_) => {
             // immune
-            Cargo::default()
+            vec![]
         }
         Entity::Lifeless(entity) => {
             entity.collateral = apply_to_target(entity.collateral, &module.effects_target);
@@ -99,17 +99,22 @@ fn apply_targeted_to_target(
                 })
                 .map_or(0, |mining_strength| {
                     let amount = mining_strength
-                        .min(entity.remaining_ore)
-                        .min(free_cargo.ore);
-                    entity.remaining_ore -= amount;
-                    amount
+                        .min(entity.minable.amount(Item::Ore))
+                        .min(free_cargo);
+                    entity
+                        .minable
+                        .checked_sub(Item::Ore, amount)
+                        .map_or(0, |minable_left| {
+                            entity.minable = minable_left;
+                            amount
+                        })
                 });
 
-            Cargo { ore }
+            vec![(Item::Ore, ore)]
         }
         Entity::Npc((_, ship)) | Entity::Player((_, ship)) => {
             ship.collateral = apply_to_target(ship.collateral, &module.effects_target);
-            Cargo::default()
+            vec![]
         }
     }
 }
@@ -145,7 +150,9 @@ pub fn apply_targeted(
             Entity::Facility(_) | Entity::Lifeless(_) => None,
             Entity::Npc((_, ship)) | Entity::Player((_, ship)) => Some(&mut ship.cargo),
         }) {
-            *cargo = cargo.add(&loot);
+            for (item, amount) in loot {
+                *cargo = cargo.saturating_add(item, amount);
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ pub struct Details {
     pub collateral: Collateral,
 
     #[serde(default, skip_serializing_if = "is_default")]
-    pub ore: u16,
+    pub ore: u32,
     // TODO: lootable resources
     // TODO: hackable resources
 }
