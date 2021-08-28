@@ -2,7 +2,7 @@
 set -e
 
 rm ./*.ts 2> /dev/null || true
-cargo test --tests --features typescript
+cargo test --tests --all-features
 
 targetfile='static/typings.ts'
 cat typescript/manual.ts > $targetfile
