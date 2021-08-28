@@ -12,7 +12,7 @@ pub struct Storage(HashMap<Item, Amount>);
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    Storage => "storage.ts",
+    Storage => "typescript/generated-storage.ts"
 }
 
 impl Serialize for Storage {

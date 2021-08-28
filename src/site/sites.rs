@@ -24,12 +24,6 @@ pub enum Site {
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 pub struct SitesNearPlanet(BTreeMap<u8, Vec<Site>>);
 
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    Site => "site.ts",
-    SitesNearPlanet => "sites-near-planet.ts",
-}
-
 impl std::str::FromStr for Site {
     type Err = anyhow::Error;
     fn from_str(s: &str) -> Result<Self, Self::Err> {

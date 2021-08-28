@@ -15,11 +15,6 @@ pub struct StationAssets {
     pub storage: Storage,
 }
 
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    StationAssets => "player-station-assets.ts",
-}
-
 #[test]
 fn can_deserialize_empty() -> anyhow::Result<()> {
     let result = serde_json::from_str::<StationAssets>("{}")?;

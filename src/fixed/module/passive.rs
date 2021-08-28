@@ -23,6 +23,6 @@ pub struct Details {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    Passive => "module-passive.ts",
-    Details => "module-passive-details.ts",
+    Details,
+    Passive => "typescript/generated-module-passive.ts"
 }

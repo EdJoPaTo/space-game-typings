@@ -17,7 +17,9 @@ pub enum Player {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    Player => "player.ts",
+    StationAssets,
+    General,
+    Player => "typescript/generated-player.ts"
 }
 
 impl std::str::FromStr for Player {

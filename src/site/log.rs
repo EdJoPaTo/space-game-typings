@@ -41,12 +41,6 @@ pub enum Actor {
     Player((Player, ShipLayout)),
 }
 
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    Actor => "site-log-actor.ts",
-    Log => "site-log.ts",
-}
-
 impl From<&Entity> for Actor {
     fn from(entity: &Entity) -> Self {
         match entity {

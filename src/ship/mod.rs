@@ -22,8 +22,8 @@ pub struct Ship {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    Fitting => "ship-fitting.ts",
-    Ship => "ship.ts",
+    Fitting,
+    Ship => "typescript/generated-ship.ts"
 }
 
 impl Default for Ship {

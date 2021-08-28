@@ -22,8 +22,3 @@ impl Default for General {
         }
     }
 }
-
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    General => "player-general.ts",
-}

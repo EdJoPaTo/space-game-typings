@@ -18,5 +18,5 @@ pub enum RoundEffect {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    RoundEffect => "round-effect.ts",
+    RoundEffect => "typescript/generated-round-effect.ts"
 }

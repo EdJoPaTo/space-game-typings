@@ -54,11 +54,11 @@ pub struct Player {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    SiteEntity => "site-entity.ts",
-    Asteroid => "site-entity-asteroid.ts",
-    Facility => "site-entity-facility.ts",
-    Npc => "site-entity-npc.ts",
-    Player => "site-entity-player.ts",
+    Asteroid,
+    Facility,
+    Npc,
+    Player,
+    SiteEntity => "typescript/generated-site-entity.ts"
 }
 
 impl SiteEntity {

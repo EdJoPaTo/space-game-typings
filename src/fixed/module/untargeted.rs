@@ -23,6 +23,6 @@ pub struct Details {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    Untargeted => "module-untargeted.ts",
-    Details => "module-untargeted-details.ts",
+    Details,
+    Untargeted => "typescript/generated-module-untargeted.ts"
 }

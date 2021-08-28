@@ -28,7 +28,7 @@ pub struct Details {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    Service => "facility-service.ts",
-    Facility => "facility.ts",
-    Details => "facility-details.ts",
+    Service,
+    Details,
+    Facility => "typescript/generated-facility.ts"
 }

@@ -59,6 +59,6 @@ pub struct Details {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    Solarsystem => "solarsystem.ts",
-    Details => "solarsystem-details.ts",
+    Details,
+    Solarsystem => "typescript/generated-solarsystem.ts"
 }

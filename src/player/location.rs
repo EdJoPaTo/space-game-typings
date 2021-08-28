@@ -40,10 +40,10 @@ pub struct PlayerLocationWarp {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    PlayerLocation => "player-location.ts",
-    PlayerLocationSite => "player-location-site.ts",
-    PlayerLocationStation => "player-location-station.ts",
-    PlayerLocationWarp => "player-location-warp.ts",
+    PlayerLocationSite,
+    PlayerLocationStation,
+    PlayerLocationWarp,
+    PlayerLocation => "typescript/generated-player-location.ts"
 }
 
 impl Default for PlayerLocation {

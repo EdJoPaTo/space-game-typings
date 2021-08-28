@@ -10,5 +10,5 @@ pub enum NpcFaction {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    NpcFaction => "npc-faction.ts",
+    NpcFaction => "typescript/generated-npc-faction.ts"
 }

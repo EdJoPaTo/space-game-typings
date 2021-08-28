@@ -54,11 +54,11 @@ pub struct Warp {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    Instruction => "site-instruction.ts",
-    UseModuleUntargeted => "site-instruction-module-untargeted.ts",
-    UseModuleTargeted => "site-instruction-module-targeted.ts",
-    UseFacilityService => "site-instruction-facility.ts",
-    Warp => "site-instruction-warp.ts",
+    UseFacilityService,
+    UseModuleTargeted,
+    UseModuleUntargeted,
+    Warp,
+    Instruction => "typescript/generated-site-instruction.ts"
 }
 
 /// Filter instructions to be possible afterwards.

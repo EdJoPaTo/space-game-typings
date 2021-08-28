@@ -29,6 +29,6 @@ pub struct Details {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    Targeted => "module-targeted.ts",
-    Details => "module-targeted-details.ts",
+    Details,
+    Targeted => "typescript/generated-module-targeted.ts"
 }

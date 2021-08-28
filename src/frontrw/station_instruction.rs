@@ -11,7 +11,7 @@ pub enum StationInstruction {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    StationInstruction => "station-instruction.ts",
+    StationInstruction => "typescript/generated-station-instruction.ts"
 }
 
 #[test]

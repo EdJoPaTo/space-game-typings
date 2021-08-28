@@ -7,7 +7,7 @@ cargo test --tests --features typescript
 targetfile='static/typings.ts'
 cat typescript/manual.ts > $targetfile
 
-for file in ./*.ts ; do
+for file in typescript/generated-*.ts ; do
     printf "\n" >> $targetfile
     # 1: remove imports as everything is in the same file
     # 2: readonly properties

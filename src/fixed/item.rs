@@ -25,8 +25,8 @@ pub enum Ore {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    Item => "item.ts",
-    Ore => "item-ore.ts",
+    Ore,
+    Item => "typescript/generated-item.ts"
 }
 
 impl From<Ore> for Item {

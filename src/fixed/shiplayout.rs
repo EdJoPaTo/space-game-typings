@@ -53,9 +53,9 @@ pub struct Details {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    ShipClass => "ship-class.ts",
-    ShipLayout => "ship-layout.ts",
-    Details => "ship-layout-details.ts",
+    ShipClass,
+    Details,
+    ShipLayout => "typescript/generated-ship-layout.ts"
 }
 
 impl std::fmt::Display for ShipLayout {
