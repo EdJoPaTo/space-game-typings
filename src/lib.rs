@@ -8,6 +8,7 @@ pub mod entity;
 /// Static data which is read-only for everyone.
 /// It only changes on game-updates.
 pub mod fixed;
+pub mod market;
 pub mod player;
 pub mod ship;
 pub mod site;

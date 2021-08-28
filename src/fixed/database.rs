@@ -23,7 +23,7 @@ where
         })
     }
 
-    pub(crate) fn p(yaml_str: &str) -> Self {
+    pub(super) fn p(yaml_str: &str) -> Self {
         Self::parse_yaml(yaml_str).expect("failed to parse statics")
     }
 
