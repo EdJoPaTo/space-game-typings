@@ -90,27 +90,22 @@ fn apply_targeted_to_target(
         }
         Entity::Lifeless(entity) => {
             entity.collateral = apply_to_target(entity.collateral, &module.effects_target);
-            let ore = module
-                .effects_target
-                .iter()
-                .find_map(|o| match o {
-                    RoundEffect::Mine(amount) => Some(*amount),
-                    _ => None,
-                })
-                .map_or(0, |mining_strength| {
-                    let amount = mining_strength
-                        .min(entity.minable.amount(Item::Ore))
-                        .min(free_cargo);
-                    entity
-                        .minable
-                        .checked_sub(Item::Ore, amount)
-                        .map_or(0, |minable_left| {
-                            entity.minable = minable_left;
-                            amount
-                        })
-                });
-
-            vec![(Item::Ore, ore)]
+            let mut loot = Vec::new();
+            if let Some((ore, remaining)) = &mut entity.minable {
+                let amount_mined = module
+                    .effects_target
+                    .iter()
+                    .find_map(|o| match o {
+                        RoundEffect::Mine(amount) => Some(*amount),
+                        _ => None,
+                    })
+                    .unwrap_or_default()
+                    .min(free_cargo)
+                    .min(*remaining);
+                *remaining -= amount_mined;
+                loot.push((Item::Ore(*ore), amount_mined));
+            }
+            loot
         }
         Entity::Npc((_, ship)) | Entity::Player((_, ship)) => {
             ship.collateral = apply_to_target(ship.collateral, &module.effects_target);

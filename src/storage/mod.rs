@@ -126,27 +126,29 @@ impl Storage {
 
 #[test]
 fn can_parse_storage() {
+    use crate::fixed::item::Ore;
     use crate::fixed::module::targeted::Targeted;
     let data = Storage(vec![
         (Item::ModuleTargeted(Targeted::RookieLaser), 2),
-        (Item::Ore, 12),
+        (Item::Ore(Ore::Aromit), 12),
     ]);
     crate::test_helper::can_serde_parse(&data);
 }
 
 #[test]
 fn serializing_storage_simplifies_it() {
+    use crate::fixed::item::Ore;
     use crate::fixed::module::passive::Passive;
     use crate::fixed::module::targeted::Targeted;
     let data = Storage(vec![
-        (Item::Ore, 12),
+        (Item::Ore(Ore::Aromit), 12),
         (Item::ModulePassive(Passive::RookieArmorPlate), 0),
-        (Item::Ore, 8),
+        (Item::Ore(Ore::Aromit), 8),
         (Item::ModuleTargeted(Targeted::RookieLaser), 2),
     ]);
     let expected = Storage(vec![
         (Item::ModuleTargeted(Targeted::RookieLaser), 2),
-        (Item::Ore, 20),
+        (Item::Ore(Ore::Aromit), 20),
     ]);
     let parsed = crate::test_helper::json_parsed(&data);
     assert_eq!(parsed, expected);
@@ -154,32 +156,34 @@ fn serializing_storage_simplifies_it() {
 
 #[test]
 fn can_add() {
+    use crate::fixed::item::Ore;
     use crate::fixed::module::targeted::Targeted;
     let data = Storage(vec![
         (Item::ModuleTargeted(Targeted::RookieLaser), 2),
-        (Item::Ore, 12),
+        (Item::Ore(Ore::Aromit), 12),
     ]);
-    let result = data.saturating_add(Item::Ore, 8);
+    let result = data.saturating_add(Item::Ore(Ore::Aromit), 8);
     assert_eq!(
         result.amount(Item::ModuleTargeted(Targeted::RookieLaser)),
         2
     );
-    assert_eq!(result.amount(Item::Ore), 20);
+    assert_eq!(result.amount(Item::Ore(Ore::Aromit)), 20);
 }
 
 #[test]
 fn can_sub() {
+    use crate::fixed::item::Ore;
     use crate::fixed::module::targeted::Targeted;
     let data = Storage(vec![
         (Item::ModuleTargeted(Targeted::RookieLaser), 2),
-        (Item::Ore, 12),
+        (Item::Ore(Ore::Aromit), 12),
     ]);
-    if let Some(result) = data.checked_sub(Item::Ore, 2) {
+    if let Some(result) = data.checked_sub(Item::Ore(Ore::Aromit), 2) {
         assert_eq!(
             result.amount(Item::ModuleTargeted(Targeted::RookieLaser)),
             2
         );
-        assert_eq!(result.amount(Item::Ore), 10);
+        assert_eq!(result.amount(Item::Ore(Ore::Aromit)), 10);
     } else {
         panic!("should work");
     }
@@ -187,19 +191,21 @@ fn can_sub() {
 
 #[test]
 fn can_not_sub_when_not_there() {
+    use crate::fixed::item::Ore;
     use crate::fixed::module::targeted::Targeted;
     let data = Storage(vec![(Item::ModuleTargeted(Targeted::RookieLaser), 2)]);
-    let result = data.checked_sub(Item::Ore, 2);
+    let result = data.checked_sub(Item::Ore(Ore::Aromit), 2);
     assert!(result.is_none());
 }
 
 #[test]
 fn can_not_sub_when_not_enough() {
+    use crate::fixed::item::Ore;
     use crate::fixed::module::targeted::Targeted;
     let data = Storage(vec![
         (Item::ModuleTargeted(Targeted::RookieLaser), 2),
-        (Item::Ore, 2),
+        (Item::Ore(Ore::Aromit), 2),
     ]);
-    let result = data.checked_sub(Item::Ore, 10);
+    let result = data.checked_sub(Item::Ore(Ore::Aromit), 10);
     assert!(result.is_none());
 }

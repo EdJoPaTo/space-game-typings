@@ -1,7 +1,8 @@
 use serde::{Deserialize, Serialize};
 
 use crate::entity::Collateral;
-use crate::serde_helper::is_default;
+
+use super::item::Ore;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
@@ -18,8 +19,8 @@ pub struct Details {
     #[serde(flatten)]
     pub collateral: Collateral,
 
-    #[serde(default, skip_serializing_if = "is_default")]
-    pub ore: u32,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub minable: Option<(Ore, u32)>,
     // TODO: lootable resources
     // TODO: hackable resources
 }

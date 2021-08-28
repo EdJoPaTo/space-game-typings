@@ -2,14 +2,12 @@ use serde::{Deserialize, Serialize};
 
 use crate::entity::Collateral;
 use crate::fixed::facility::Facility;
-use crate::fixed::item::Item;
+use crate::fixed::item::Ore;
 use crate::fixed::lifeless::Lifeless;
 use crate::fixed::npc_faction::NpcFaction;
 use crate::fixed::LifelessThingies;
 use crate::player::Player;
-use crate::serde_helper::is_default;
 use crate::ship::Ship;
-use crate::storage::Storage;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[serde(rename_all = "camelCase")]
@@ -27,8 +25,8 @@ pub struct EntityLifeless {
     pub id: Lifeless,
     pub collateral: Collateral,
 
-    #[serde(default, skip_serializing_if = "is_default")]
-    pub minable: Storage,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub minable: Option<(Ore, u32)>,
 }
 
 impl EntityLifeless {
@@ -38,19 +36,22 @@ impl EntityLifeless {
         Self {
             id: lifeless,
             collateral: details.collateral,
-            minable: Storage::single(Item::Ore, details.ore),
+            minable: details.minable,
         }
     }
 
     /// States if the entity has no point anymore and can be removed.
     /// Asteroid has no ore anymore, Wreck has no loot, ...
+    #[allow(clippy::let_and_return)]
     #[must_use]
     pub fn is_collapsed(&self) -> bool {
         if !self.collateral.is_alive() {
             return true;
         }
 
-        self.minable.is_empty()
+        let is_minable = self.minable.map_or(false, |(_, amount)| amount > 0);
+
+        is_minable
     }
 }
 
@@ -69,7 +70,7 @@ fn can_parse_lifeless() {
             armor: 42,
             structure: 42,
         },
-        minable: Storage::single(Item::Ore, 42),
+        minable: Some((Ore::Aromit, 42)),
     });
     crate::test_helper::can_serde_parse(&data);
 }
