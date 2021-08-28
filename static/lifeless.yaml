@@ -1,8 +1,0 @@
----
-asteroid:
-  structure: 42
-  minable:
-    - Aromit
-    - 40
-smallWreck:
-  structure: 5

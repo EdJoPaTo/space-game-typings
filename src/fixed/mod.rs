@@ -2,7 +2,6 @@ use self::database::Database;
 
 pub mod facility;
 pub mod item;
-pub mod lifeless;
 pub mod module;
 pub mod npc_faction;
 pub mod round_effect;
@@ -15,7 +14,6 @@ mod database;
 mod do_data_export;
 
 pub type Facilites = Database<facility::Facility, facility::Details>;
-pub type LifelessThingies = Database<lifeless::Lifeless, lifeless::Details>;
 pub type ModulesPassive = Database<module::passive::Passive, module::passive::Details>;
 pub type ModulesUntargeted = Database<module::untargeted::Untargeted, module::untargeted::Details>;
 pub type ModulesTargeted = Database<module::targeted::Targeted, module::targeted::Details>;
@@ -24,7 +22,6 @@ pub type Solarsystems = Database<solarsystem::Solarsystem, solarsystem::Details>
 
 pub struct Statics {
     pub facilities: Facilites,
-    pub lifeless: LifelessThingies,
     pub modules_passive: ModulesPassive,
     pub modules_untargeted: ModulesUntargeted,
     pub modules_targeted: ModulesTargeted,
@@ -36,7 +33,6 @@ impl Default for Statics {
     fn default() -> Self {
         Self {
             facilities: Database::p(include_str!("../../static/facility.yaml")),
-            lifeless: Database::p(include_str!("../../static/lifeless.yaml")),
             modules_passive: Database::p(include_str!("../../static/module-passive.yaml")),
             modules_untargeted: Database::p(include_str!("../../static/module-untargeted.yaml")),
             modules_targeted: Database::p(include_str!("../../static/module-targeted.yaml")),

@@ -33,6 +33,17 @@ impl Collateral {
         structure: 0,
     };
 
+    /// New Collataral with only structure and nothing else.
+    /// Helpful for initializing lifeless dumb thingies like asteroids.
+    #[must_use]
+    pub fn new_structure(structure: u16) -> Self {
+        Self {
+            structure,
+            armor: 0,
+            capacitor: 0,
+        }
+    }
+
     /// Returns the minimum of two collaterals.
     /// Helpful when ensuring a collateral is still within the ships limits
     /// # Example
@@ -68,7 +79,7 @@ impl Collateral {
     }
 
     #[must_use]
-    fn calc_health_raw(self, max_armor: u16, max_structure: u16) -> Health {
+    pub fn calc_health_raw(self, max_armor: u16, max_structure: u16) -> Health {
         let armor = f32::from(self.armor) / f32::from(max_armor);
         let structure = f32::from(self.structure) / f32::from(max_structure);
         Health { armor, structure }

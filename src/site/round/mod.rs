@@ -127,10 +127,10 @@ fn finishup_entities(
             Entity::Facility(_) => {
                 remaining.push(entity.clone());
             }
-            Entity::Lifeless(l) => {
-                if !l.collateral.is_alive() {
+            Entity::Asteroid(a) => {
+                if !a.collateral.is_alive() {
                     log.push(Log::RapidUnscheduledDisassembly(entity.into()));
-                } else if l.is_collapsed() {
+                } else if a.is_collapsed() {
                     log.push(Log::Collapse(entity.into()));
                 } else {
                     remaining.push(entity.clone());

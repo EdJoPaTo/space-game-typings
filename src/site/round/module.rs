@@ -13,7 +13,7 @@ use super::effect::{apply_to_origin, apply_to_target};
 pub fn self_destruct(entity: &mut Entity) {
     let collateral = match entity {
         Entity::Facility(_) => unreachable!("a facility cant self destruct"),
-        Entity::Lifeless(info) => &mut info.collateral,
+        Entity::Asteroid(info) => &mut info.collateral,
         Entity::Npc((_, ship)) | Entity::Player((_, ship)) => &mut ship.collateral,
     };
     *collateral = Collateral::DEAD;
@@ -21,7 +21,7 @@ pub fn self_destruct(entity: &mut Entity) {
 
 pub fn apply_untargeted(statics: &Statics, entity: &mut Entity, instruction: UseModuleUntargeted) {
     let ship = match entity {
-        Entity::Facility(_) | Entity::Lifeless(_) => {
+        Entity::Facility(_) | Entity::Asteroid(_) => {
             unreachable!("Only ships can use modules {:?}", entity)
         }
         Entity::Npc((_, ship)) | Entity::Player((_, ship)) => ship,
@@ -50,7 +50,7 @@ fn apply_targeted_to_origin<'s>(
     instruction: UseModuleTargeted,
 ) -> Option<(Actor, Targeted, &'s module::targeted::Details, u32)> {
     let ship = match entity {
-        Entity::Facility(_) | Entity::Lifeless(_) => {
+        Entity::Facility(_) | Entity::Asteroid(_) => {
             unreachable!("Only ships can use modules {:?}", entity)
         }
         Entity::Npc((_, ship)) | Entity::Player((_, ship)) => ship,
@@ -88,23 +88,21 @@ fn apply_targeted_to_target(
             // immune
             vec![]
         }
-        Entity::Lifeless(entity) => {
+        Entity::Asteroid(entity) => {
             entity.collateral = apply_to_target(entity.collateral, &module.effects_target);
             let mut loot = Vec::new();
-            if let Some((ore, remaining)) = &mut entity.minable {
-                let amount_mined = module
-                    .effects_target
-                    .iter()
-                    .find_map(|o| match o {
-                        RoundEffect::Mine(amount) => Some(*amount),
-                        _ => None,
-                    })
-                    .unwrap_or_default()
-                    .min(free_cargo)
-                    .min(*remaining);
-                *remaining -= amount_mined;
-                loot.push((Item::Ore(*ore), amount_mined));
-            }
+            let amount_mined = module
+                .effects_target
+                .iter()
+                .find_map(|o| match o {
+                    RoundEffect::Mine(amount) => Some(*amount),
+                    _ => None,
+                })
+                .unwrap_or_default()
+                .min(free_cargo)
+                .min(entity.remaining_ore);
+            entity.remaining_ore -= amount_mined;
+            loot.push((Item::Ore(entity.ore), amount_mined));
             loot
         }
         Entity::Npc((_, ship)) | Entity::Player((_, ship)) => {
@@ -142,7 +140,7 @@ pub fn apply_targeted(
 
     if let Some(loot) = loot {
         if let Some(cargo) = entities.get_mut(&actor).and_then(|entity| match entity {
-            Entity::Facility(_) | Entity::Lifeless(_) => None,
+            Entity::Facility(_) | Entity::Asteroid(_) => None,
             Entity::Npc((_, ship)) | Entity::Player((_, ship)) => Some(&mut ship.cargo),
         }) {
             for (item, amount) in loot {

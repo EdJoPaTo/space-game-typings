@@ -14,7 +14,7 @@ pub fn warp_out(
 ) {
     let entity = entities.get(&actor).expect("only existing actors can warp");
     let ship = match entity {
-        Entity::Facility(_) | Entity::Lifeless(_) => {
+        Entity::Facility(_) | Entity::Asteroid(_) => {
             unreachable!("Only ships can warp {:?}", entity)
         }
         Entity::Npc((_, ship)) | Entity::Player((_, ship)) => ship,
@@ -38,7 +38,7 @@ pub fn jump(
 ) {
     if let Site::Stargate(target_solarsystem) = origin_site {
         let can_jump = entities.get(&actor).map_or(false, |entity| match entity {
-            Entity::Facility(_) | Entity::Lifeless(_) => {
+            Entity::Facility(_) | Entity::Asteroid(_) => {
                 unreachable!("Only ships can jump {:?}", entity)
             }
             Entity::Npc((_, ship)) | Entity::Player((_, ship)) => ship.collateral.is_alive(),
@@ -66,7 +66,7 @@ pub fn dock(
 ) {
     if let Site::Station(station) = site {
         let can_dock = entities.get(&actor).map_or(false, |entity| match entity {
-            Entity::Facility(_) | Entity::Lifeless(_) => {
+            Entity::Facility(_) | Entity::Asteroid(_) => {
                 unreachable!("Only ships can jump {:?}", entity)
             }
             Entity::Npc((_, ship)) | Entity::Player((_, ship)) => ship.collateral.is_alive(),

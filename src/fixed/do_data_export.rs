@@ -53,18 +53,6 @@ fn check_facility() -> anyhow::Result<()> {
 }
 
 #[test]
-fn check_lifeless() -> anyhow::Result<()> {
-    let all = Statics::default().lifeless;
-    assert!(!all.data.is_empty(), "is empty");
-
-    for (key, value) in &all.data {
-        assert!(value.collateral.is_alive(), "collateral {:?}", key);
-    }
-
-    export("lifeless", &all.data)
-}
-
-#[test]
 fn check_module_passive() -> anyhow::Result<()> {
     let all = Statics::default().modules_passive;
     assert!(!all.data.is_empty(), "is empty");

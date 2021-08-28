@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::fixed::facility::Facility;
-use crate::fixed::lifeless::Lifeless;
+use crate::fixed::item::Ore;
 use crate::fixed::module::targeted::Targeted;
 use crate::fixed::npc_faction::NpcFaction;
 use crate::fixed::shiplayout::ShipLayout;
@@ -35,8 +35,8 @@ pub enum Log {
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "SiteLogActor", untagged)]
 pub enum Actor {
+    Asteroid(Ore),
     Facility(Facility),
-    Lifeless(Lifeless),
     Npc((NpcFaction, ShipLayout)),
     Player((Player, ShipLayout)),
 }
@@ -51,7 +51,7 @@ impl From<&Entity> for Actor {
     fn from(entity: &Entity) -> Self {
         match entity {
             Entity::Facility(info) => Actor::Facility(*info),
-            Entity::Lifeless(info) => Actor::Lifeless(info.id),
+            Entity::Asteroid(info) => Actor::Asteroid(info.ore),
             Entity::Npc((f, s)) => Actor::Npc((*f, s.fitting.layout)),
             Entity::Player((p, s)) => Actor::Player((*p, s.fitting.layout)),
         }
@@ -59,14 +59,14 @@ impl From<&Entity> for Actor {
 }
 
 #[test]
-fn can_parse_facility() {
-    let data = Actor::Facility(Facility::Station);
+fn can_parse_asteroid() {
+    let data = Actor::Asteroid(Ore::Aromit);
     crate::test_helper::can_serde_parse(&data);
 }
 
 #[test]
-fn can_parse_lifeless() {
-    let data = Actor::Lifeless(Lifeless::Asteroid);
+fn can_parse_facility() {
+    let data = Actor::Facility(Facility::Station);
     crate::test_helper::can_serde_parse(&data);
 }
 
