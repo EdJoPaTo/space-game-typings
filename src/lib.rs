@@ -1,4 +1,4 @@
-#![deny(unsafe_code)]
+#![forbid(unsafe_code)]
 #![allow(clippy::implicit_hasher)]
 
 mod serde_helper;
