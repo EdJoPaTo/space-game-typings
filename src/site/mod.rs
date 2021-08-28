@@ -1,4 +1,5 @@
 mod entity;
+pub mod entity_frontread;
 pub mod instruction;
 mod log;
 mod round;

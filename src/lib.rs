@@ -13,10 +13,6 @@ pub mod ship;
 pub mod site;
 pub mod storage;
 
-/// Data which is available to read for the frontend.
-/// This data is exported from persistant data.
-pub mod frontread;
-
 /// Data the frontend reads ands writes.
 pub mod frontrw;
 
