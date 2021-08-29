@@ -114,6 +114,14 @@ impl Storage {
         }
     }
 
+    /// Moves all items from `other` to `self`.
+    pub fn append(&mut self, other: &mut Storage) {
+        for (item, amount) in &other.0 {
+            *self = self.saturating_add(*item, *amount);
+        }
+        other.0.clear();
+    }
+
     #[must_use]
     pub fn to_vec(&self) -> Vec<(Item, u32)> {
         self.0

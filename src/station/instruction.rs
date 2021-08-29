@@ -23,6 +23,7 @@ ts_rs::export! {
 )]
 pub enum Instruction {
     Repair,
+    ShipCargosToStation,
     Undock,
     Buy(PlaceOrder),
     Sell(PlaceOrder),
