@@ -58,6 +58,12 @@ impl Trade {
         let remaining_sell = sell.reduce_by(amount);
         Some((trade, remaining_buy, remaining_sell))
     }
+
+    #[must_use]
+    pub const fn total_paperclips(&self) -> u64 {
+        let amount = self.amount as u64;
+        self.paperclips.saturating_mul(amount)
+    }
 }
 
 #[test]
