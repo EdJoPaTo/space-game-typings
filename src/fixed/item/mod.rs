@@ -32,8 +32,16 @@ impl From<Ore> for Item {
 
 impl FromStr for Item {
     type Err = serde_json::Error;
+    /// Naively implemented via `serde_json`. Its a bit ugly but works for now.
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         serde_json::from_str(&format!(r#""{}""#, s))
+    }
+}
+impl ToString for Item {
+    /// Naively implemented via `serde_json`. Its a bit ugly but works for now.
+    fn to_string(&self) -> String {
+        let str = serde_json::to_string(self).unwrap();
+        str.trim_matches('"').to_string()
     }
 }
 
@@ -43,15 +51,27 @@ impl Item {
 }
 
 #[test]
-fn can_parse_module() {
+fn can_serde_parse_module() {
     let data = Item::ModulePassive(module::passive::Passive::RookieArmorPlate);
     crate::test_helper::can_serde_parse(&data);
 }
 
 #[test]
-fn can_parse_ore() {
+fn can_string_parse_module() {
+    let data = Item::ModulePassive(module::passive::Passive::RookieArmorPlate);
+    crate::test_helper::can_string_parse(&data);
+}
+
+#[test]
+fn can_serde_parse_ore() {
     let data = Item::Ore(Ore::Aromit);
     crate::test_helper::can_serde_parse(&data);
+}
+
+#[test]
+fn can_string_parse_ore() {
+    let data = Item::Ore(Ore::Aromit);
+    crate::test_helper::can_string_parse(&data);
 }
 
 #[test]
