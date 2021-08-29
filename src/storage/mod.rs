@@ -6,6 +6,8 @@ use crate::fixed::item::Item;
 
 type Amount = u32;
 
+// TODO: remove Clone in order to ensure Items only get moved?
+
 #[derive(Debug, Default, Clone, Deserialize, PartialEq, Eq)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 pub struct Storage(HashMap<Item, Amount>);

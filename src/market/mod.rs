@@ -16,7 +16,7 @@ ts_rs::export! {
 
 /// Keeps all orders for a market of a single item
 #[allow(clippy::module_name_repetitions)]
-#[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
+#[derive(Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 pub struct ItemMarket {
@@ -131,14 +131,17 @@ fn resolve_does_nothing_when_different_solarsystem() {
     buy.solarsystem = Solarsystem::Arama;
     let mut sell = Order::example_b();
     sell.solarsystem = Solarsystem::Iramil;
+    let expected = ItemMarket {
+        buy: vec![buy],
+        sell: vec![sell],
+    };
     let mut orders = ItemMarket {
         buy: vec![buy],
         sell: vec![sell],
     };
-    let before = orders.clone();
     let trades = orders.resolve();
     assert_eq!(trades, vec![]);
-    assert_eq!(orders, before);
+    assert_eq!(orders, expected);
 }
 
 #[test]

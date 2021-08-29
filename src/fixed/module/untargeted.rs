@@ -10,7 +10,7 @@ pub enum Untargeted {
     RookieArmorRepair,
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "ModuleUntargetedDetails")]
 pub struct Details {

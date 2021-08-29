@@ -9,6 +9,8 @@ mod fitting;
 
 pub use fitting::Fitting;
 
+// TODO: remove Clone in order to ensure Ships are unique and only get moved?
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]

@@ -18,7 +18,7 @@ pub struct Collateral {
 }
 
 /// In Percentages 0.0..=1.0
-#[derive(Debug, Clone, Copy, Default, Serialize, Deserialize, PartialEq)]
+#[derive(Debug, Default, Clone, Copy, Serialize, Deserialize, PartialEq)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase")]
 pub struct Health {
@@ -36,7 +36,7 @@ impl Collateral {
     /// New Collataral with only structure and nothing else.
     /// Helpful for initializing lifeless dumb thingies like asteroids.
     #[must_use]
-    pub fn new_structure(structure: u16) -> Self {
+    pub const fn new_structure(structure: u16) -> Self {
         Self {
             structure,
             armor: 0,
