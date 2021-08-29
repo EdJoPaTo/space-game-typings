@@ -11,13 +11,11 @@ pub mod fixed;
 pub mod player;
 pub mod ship;
 pub mod site;
+pub mod station;
 pub mod storage;
 
 #[cfg(feature = "market")]
 pub mod market;
-
-/// Data the frontend reads ands writes.
-pub mod frontrw;
 
 #[cfg(test)]
 mod test_helper;

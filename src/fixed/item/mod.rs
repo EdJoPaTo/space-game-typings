@@ -28,6 +28,11 @@ impl From<Ore> for Item {
     }
 }
 
+impl Item {
+    #[cfg(test)]
+    pub(crate) const EXAMPLE: Self = Self::Ore(Ore::Solmit);
+}
+
 #[test]
 fn can_parse_module() {
     let data = Item::ModulePassive(module::passive::Passive::RookieArmorPlate);
