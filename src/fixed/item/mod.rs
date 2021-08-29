@@ -2,6 +2,10 @@ use serde::{Deserialize, Serialize};
 
 use super::module;
 
+mod ore;
+
+pub use ore::Ore;
+
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", untagged)]
@@ -10,17 +14,6 @@ pub enum Item {
     ModuleTargeted(module::targeted::Targeted),
     ModuleUntargeted(module::untargeted::Untargeted),
     Ore(Ore),
-}
-
-/// Different types of ore.
-/// These are proper names so they are not in camelCase or something like that.
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
-pub enum Ore {
-    Aromit,
-    Solmit,
-    Tormit,
-    Vesmit,
 }
 
 #[cfg(feature = "typescript")]
