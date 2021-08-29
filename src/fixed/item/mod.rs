@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use serde::{Deserialize, Serialize};
 
 use super::module;
@@ -25,6 +27,13 @@ ts_rs::export! {
 impl From<Ore> for Item {
     fn from(ore: Ore) -> Self {
         Self::Ore(ore)
+    }
+}
+
+impl FromStr for Item {
+    type Err = serde_json::Error;
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        serde_json::from_str(&format!(r#""{}""#, s))
     }
 }
 
