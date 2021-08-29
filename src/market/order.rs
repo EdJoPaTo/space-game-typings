@@ -50,7 +50,6 @@ impl Order {
         amount: u32,
         paperclips: u64,
     ) -> Self {
-        debug_assert!(amount > 0);
         Self {
             date: Utc::now(),
             solarsystem,
@@ -110,6 +109,18 @@ impl Order {
     pub const fn total_paperclips(&self) -> u64 {
         let amount = self.amount as u64;
         self.paperclips.saturating_mul(amount)
+    }
+
+    #[must_use]
+    pub const fn is_valid(&self) -> bool {
+        if self.amount == 0 || self.paperclips == 0 {
+            return false;
+        }
+        let amount = self.amount as u64;
+        if amount.checked_mul(self.paperclips).is_none() {
+            return false;
+        }
+        true
     }
 
     #[cfg(test)]

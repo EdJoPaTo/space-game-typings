@@ -42,8 +42,8 @@ impl ItemMarket {
 
     /// Removes orders with amount 0
     pub fn cleanup(&mut self) {
-        self.buy = self.buy.iter().filter(|o| o.amount > 0).copied().collect();
-        self.sell = self.sell.iter().filter(|o| o.amount > 0).copied().collect();
+        self.buy = self.buy.iter().filter(|o| o.is_valid()).copied().collect();
+        self.sell = self.sell.iter().filter(|o| o.is_valid()).copied().collect();
     }
 
     pub fn resolve(&mut self) -> Vec<Trade> {
