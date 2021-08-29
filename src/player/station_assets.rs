@@ -24,9 +24,6 @@ fn can_deserialize_empty() -> anyhow::Result<()> {
 
 #[test]
 fn can_serde_parse_empty() {
-    let data = StationAssets {
-        ships: vec![],
-        storage: Storage::default(),
-    };
+    let data = StationAssets::default();
     crate::test_helper::can_serde_parse(&data);
 }

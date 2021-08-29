@@ -3,9 +3,11 @@ use serde::{Deserialize, Serialize};
 
 mod general;
 pub mod location;
+mod notifications;
 mod station_assets;
 
 pub use general::General;
+pub use notifications::Notifications;
 pub use station_assets::StationAssets;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
@@ -17,8 +19,9 @@ pub enum Player {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
-    StationAssets,
     General,
+    Notifications,
+    StationAssets,
     Player => "typescript/generated-player.ts"
 }
 
