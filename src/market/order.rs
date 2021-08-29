@@ -106,6 +106,12 @@ impl Order {
         }
     }
 
+    #[must_use]
+    pub const fn total_paperclips(&self) -> u64 {
+        let amount = self.amount as u64;
+        self.paperclips.saturating_mul(amount)
+    }
+
     #[cfg(test)]
     #[must_use]
     pub(super) fn example_a() -> Self {
