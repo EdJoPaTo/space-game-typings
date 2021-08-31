@@ -14,7 +14,7 @@ ts_rs::export! {
     Instruction => "typescript/generated-station-instruction.ts"
 }
 
-#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(
     rename_all = "camelCase",
