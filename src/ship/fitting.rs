@@ -21,8 +21,8 @@ pub struct Fitting {
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Error {
-    Cpu((u16, u16)),
-    Powergrid((u16, u16)),
+    Cpu { wants: u16, max: u16 },
+    Powergrid { wants: u16, max: u16 },
     StructureZero,
 
     TooManyPassiveModules,
@@ -89,10 +89,16 @@ impl Fitting {
 
         // Check cpu / powergrid
         if cpu > layout.cpu {
-            return Err(Error::Cpu((cpu, layout.cpu)));
+            return Err(Error::Cpu {
+                wants: cpu,
+                max: layout.cpu,
+            });
         }
         if powergrid > layout.powergrid {
-            return Err(Error::Powergrid((powergrid, layout.powergrid)));
+            return Err(Error::Powergrid {
+                wants: powergrid,
+                max: layout.powergrid,
+            });
         }
 
         // Dead on undock

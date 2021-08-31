@@ -39,6 +39,12 @@ impl Entity {
     }
 }
 
+impl From<EntityAsteroid> for Entity {
+    fn from(asteroid: EntityAsteroid) -> Self {
+        Self::Asteroid(asteroid)
+    }
+}
+
 impl EntityAsteroid {
     #[must_use]
     pub fn is_collapsed(&self) -> bool {

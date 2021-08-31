@@ -140,6 +140,18 @@ impl Order {
     }
 }
 
+impl From<Player> for Trader {
+    fn from(player: Player) -> Self {
+        Trader::Player(player)
+    }
+}
+
+impl From<NpcFaction> for Trader {
+    fn from(faction: NpcFaction) -> Self {
+        Trader::Npc(faction)
+    }
+}
+
 #[test]
 fn can_serde_parse_trader_npc() {
     let data = Trader::Npc(NpcFaction::Pirates);

@@ -46,14 +46,19 @@ pub fn advance(
 
     for (actor, instruction) in super::instruction::sort(instructions) {
         match instruction {
-            Instruction::ModuleUntargeted(instruction) => {
+            Instruction::ModuleUntargeted(i) => {
                 if let Some(entity) = entities.get_mut(&actor) {
-                    module::apply_untargeted(statics, entity, instruction);
+                    module::apply_untargeted(statics, entity, i.module_index);
                 }
             }
-            Instruction::ModuleTargeted(instruction) => {
-                module::apply_targeted(statics, &mut entities, actor, instruction, &mut log);
-            }
+            Instruction::ModuleTargeted(i) => module::apply_targeted(
+                statics,
+                &mut entities,
+                actor,
+                i.module_index,
+                i.target_index_in_site,
+                &mut log,
+            ),
             Instruction::SelfDestruct => {
                 if let Some(entity) = entities.get_mut(&actor) {
                     module::self_destruct(entity);
@@ -79,16 +84,14 @@ pub fn advance(
                     &mut log,
                 ),
             },
-            Instruction::Warp(instruction) => {
-                movement::warp_out(
-                    solarsystem,
-                    &mut entities,
-                    actor,
-                    instruction.target,
-                    &mut warping_out,
-                    &mut log,
-                );
-            }
+            Instruction::Warp(instruction) => movement::warp_out(
+                solarsystem,
+                &mut entities,
+                actor,
+                instruction.target,
+                &mut warping_out,
+                &mut log,
+            ),
         }
     }
 

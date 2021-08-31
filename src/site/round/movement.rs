@@ -8,7 +8,7 @@ pub fn warp_out(
     solarsystem: Solarsystem,
     entities: &mut HashMap<usize, Entity>,
     actor: usize,
-    towards: Site,
+    target: Site,
     warping_out: &mut Vec<(Solarsystem, Site, Entity)>,
     log: &mut Vec<Log>,
 ) {
@@ -23,7 +23,7 @@ pub fn warp_out(
         // TODO: capacitor cost
         if let Some(entity) = entities.remove(&actor) {
             log.push(Log::WarpOut((&entity).into()));
-            warping_out.push((solarsystem, towards, entity));
+            warping_out.push((solarsystem, target, entity));
         }
     }
 }
