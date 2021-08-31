@@ -41,6 +41,17 @@ impl Default for Fitting {
     }
 }
 
+impl From<ShipLayout> for Fitting {
+    fn from(layout: ShipLayout) -> Self {
+        Self {
+            layout,
+            slots_targeted: vec![],
+            slots_untargeted: vec![],
+            slots_passive: vec![],
+        }
+    }
+}
+
 impl Fitting {
     /// Check if the fitting is valid or not
     /// # Errors

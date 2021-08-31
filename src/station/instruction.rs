@@ -24,6 +24,8 @@ ts_rs::export! {
 pub enum Instruction {
     Repair,
     ShipCargosToStation,
+    /// Switches the `current_ship` with the selected one
+    SwitchShip(usize),
     Undock,
     Buy(PlaceOrder),
     Sell(PlaceOrder),
