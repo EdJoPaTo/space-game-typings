@@ -93,31 +93,39 @@ impl Storage {
         total
     }
 
-    #[must_use]
-    pub fn saturating_add(&self, item: Item, amount: Amount) -> Self {
-        let mut map = self.0.clone();
-        let entry = map.entry(item).or_default();
+    pub fn saturating_add(&mut self, item: Item, amount: Amount) {
+        let entry = self.0.entry(item).or_default();
         *entry = entry.saturating_add(amount);
-        Self(map)
     }
 
+    /// Takes the wanted items.
+    /// # Returns
+    /// Returns true when all wanted items were taken. Returns false when there are not enough items.
     #[must_use]
-    pub fn checked_sub(&self, item: Item, amount: Amount) -> Option<Self> {
-        let mut map = self.0.clone();
-        let entry = map.entry(item).or_default();
-        #[allow(clippy::option_if_let_else)]
-        if let Some(new_amount) = entry.checked_sub(amount) {
-            *entry = new_amount;
-            Some(Self(map))
-        } else {
-            None
+    pub fn take_exact(&mut self, item: Item, amount: Amount) -> bool {
+        let entry = self.0.entry(item).or_default();
+        let possible = *entry >= amount;
+        if possible {
+            *entry -= amount;
         }
+        possible
+    }
+
+    /// Takes as many items as possible.
+    /// # Returns
+    /// The amount of items that were taken.
+    #[must_use]
+    pub fn take_max(&mut self, item: Item, amount: Amount) -> Amount {
+        let entry = self.0.entry(item).or_default();
+        let possible = amount.min(*entry);
+        *entry -= possible;
+        possible
     }
 
     /// Moves all items from `other` to `self`.
     pub fn append(&mut self, other: &mut Storage) {
         for (item, amount) in &other.0 {
-            *self = self.saturating_add(*item, *amount);
+            self.saturating_add(*item, *amount);
         }
         other.0.clear();
     }
@@ -169,24 +177,25 @@ fn serializing_storage_simplifies_it() {
 fn can_add() {
     use crate::fixed::item::Ore;
     use crate::fixed::module::targeted::Targeted;
-    let data: Storage = vec![
+    let mut data: Storage = vec![
         (Item::ModuleTargeted(Targeted::RookieLaser), 2),
         (Item::Ore(Ore::Aromit), 12),
     ]
     .into();
-    let result = data.saturating_add(Item::Ore(Ore::Aromit), 8);
-    assert_eq!(
-        result.amount(Item::ModuleTargeted(Targeted::RookieLaser)),
-        2
-    );
-    assert_eq!(result.amount(Item::Ore(Ore::Aromit)), 20);
+    let expected: Storage = vec![
+        (Item::Ore(Ore::Aromit), 20),
+        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+    ]
+    .into();
+    data.saturating_add(Item::Ore(Ore::Aromit), 8);
+    assert_eq!(data, expected);
 }
 
 #[test]
-fn can_sub() {
+fn take_exact_works() {
     use crate::fixed::item::Ore;
     use crate::fixed::module::targeted::Targeted;
-    let data: Storage = vec![
+    let mut data: Storage = vec![
         (Item::ModuleTargeted(Targeted::RookieLaser), 2),
         (Item::Ore(Ore::Aromit), 12),
     ]
@@ -196,28 +205,102 @@ fn can_sub() {
         (Item::ModuleTargeted(Targeted::RookieLaser), 2),
     ]
     .into();
-    let result = data.checked_sub(Item::Ore(Ore::Aromit), 2).unwrap();
-    assert_eq!(result, expected);
+    let worked = data.take_exact(Ore::Aromit.into(), 2);
+    assert!(worked);
+    assert_eq!(data, expected);
 }
 
 #[test]
-fn can_not_sub_when_not_there() {
+fn takes_exact_takes_nothing_when_empty() {
     use crate::fixed::item::Ore;
     use crate::fixed::module::targeted::Targeted;
-    let data: Storage = vec![(Item::ModuleTargeted(Targeted::RookieLaser), 2)].into();
-    let result = data.checked_sub(Item::Ore(Ore::Aromit), 2);
-    assert!(result.is_none());
+    let mut data: Storage = vec![
+        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Item::Ore(Ore::Aromit), 0),
+    ]
+    .into();
+    let expected: Storage = vec![
+        (Item::Ore(Ore::Aromit), 0),
+        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+    ]
+    .into();
+    let worked = data.take_exact(Ore::Aromit.into(), 2);
+    assert!(!worked);
+    assert_eq!(data, expected);
 }
 
 #[test]
-fn can_not_sub_when_not_enough() {
+fn takes_exact_takes_nothing_when_not_enough() {
     use crate::fixed::item::Ore;
     use crate::fixed::module::targeted::Targeted;
-    let data: Storage = vec![
+    let mut data: Storage = vec![
         (Item::ModuleTargeted(Targeted::RookieLaser), 2),
         (Item::Ore(Ore::Aromit), 2),
     ]
     .into();
-    let result = data.checked_sub(Item::Ore(Ore::Aromit), 10);
-    assert!(result.is_none());
+    let expected: Storage = vec![
+        (Item::Ore(Ore::Aromit), 2),
+        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+    ]
+    .into();
+    let worked = data.take_exact(Ore::Aromit.into(), 10);
+    assert!(!worked);
+    assert_eq!(data, expected);
+}
+
+#[test]
+fn take_max_takes_all() {
+    use crate::fixed::item::Ore;
+    use crate::fixed::module::targeted::Targeted;
+    let mut data: Storage = vec![
+        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Item::Ore(Ore::Aromit), 12),
+    ]
+    .into();
+    let expected: Storage = vec![
+        (Item::Ore(Ore::Aromit), 10),
+        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+    ]
+    .into();
+    let took = data.take_max(Ore::Aromit.into(), 2);
+    assert_eq!(took, 2);
+    assert_eq!(data, expected);
+}
+
+#[test]
+fn takes_max_nothing_when_empty() {
+    use crate::fixed::item::Ore;
+    use crate::fixed::module::targeted::Targeted;
+    let mut data: Storage = vec![
+        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Item::Ore(Ore::Aromit), 0),
+    ]
+    .into();
+    let expected: Storage = vec![
+        (Item::Ore(Ore::Aromit), 0),
+        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+    ]
+    .into();
+    let took = data.take_max(Ore::Aromit.into(), 2);
+    assert_eq!(took, 0);
+    assert_eq!(data, expected);
+}
+
+#[test]
+fn takes_max_partial() {
+    use crate::fixed::item::Ore;
+    use crate::fixed::module::targeted::Targeted;
+    let mut data: Storage = vec![
+        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Item::Ore(Ore::Aromit), 2),
+    ]
+    .into();
+    let expected: Storage = vec![
+        (Item::Ore(Ore::Aromit), 0),
+        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+    ]
+    .into();
+    let took = data.take_max(Ore::Aromit.into(), 10);
+    assert_eq!(took, 2);
+    assert_eq!(data, expected);
 }

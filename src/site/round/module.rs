@@ -143,9 +143,7 @@ pub fn apply_targeted(
             Entity::Facility(_) | Entity::Asteroid(_) => None,
             Entity::Npc((_, ship)) | Entity::Player((_, ship)) => Some(&mut ship.cargo),
         }) {
-            for (item, amount) in loot {
-                *cargo = cargo.saturating_add(item, amount);
-            }
+            cargo.append(&mut loot.into());
         }
     }
 }
