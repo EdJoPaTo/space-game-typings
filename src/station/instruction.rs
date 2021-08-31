@@ -10,6 +10,7 @@ use crate::player::Player;
 #[cfg(feature = "typescript")]
 ts_rs::export! {
     PlaceOrder,
+    TransferItems,
     Instruction => "typescript/generated-station-instruction.ts"
 }
 
@@ -22,11 +23,17 @@ ts_rs::export! {
     content = "args"
 )]
 pub enum Instruction {
-    Repair,
-    ShipCargosToStation,
+    // Ships
     /// Switches the `current_ship` with the selected one
     SwitchShip(usize),
+
+    // Current ship
+    Repair,
     Undock,
+    LoadItemsIntoShip(TransferItems),
+    UnloadItemsFromShip(TransferItems),
+
+    // Unrelated from ships
     Buy(PlaceOrder),
     Sell(PlaceOrder),
 }
@@ -38,6 +45,14 @@ pub struct PlaceOrder {
     pub item: Item,
     pub amount: u32,
     pub paperclips: u64,
+}
+
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[serde(rename_all = "camelCase")]
+pub struct TransferItems {
+    pub item: Item,
+    pub amount: u32,
 }
 
 impl PlaceOrder {
@@ -63,6 +78,15 @@ fn can_parse_undock() {
 #[test]
 fn can_parse_repair() {
     let data = Instruction::Repair;
+    crate::test_helper::can_serde_parse(&data);
+}
+
+#[test]
+fn can_parse_load_ship_cargo() {
+    let data = Instruction::LoadItemsIntoShip(TransferItems {
+        item: Item::EXAMPLE,
+        amount: 42,
+    });
     crate::test_helper::can_serde_parse(&data);
 }
 
