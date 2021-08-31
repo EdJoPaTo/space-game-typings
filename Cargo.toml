@@ -10,9 +10,6 @@ edition = "2018"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [features]
-default = ["market", "site_round"]
-market = ["chrono"]
-site_round = []
 typescript = ["ts-rs"]
 
 [dependencies]
@@ -23,7 +20,6 @@ serde_yaml = "0.8"
 [dependencies.chrono]
 version = "0.4"
 features = ["serde"]
-optional = true
 
 [dependencies.serde]
 version = "1"
