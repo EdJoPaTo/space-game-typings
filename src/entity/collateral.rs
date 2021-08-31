@@ -44,6 +44,30 @@ impl Collateral {
         }
     }
 
+    /// Returns if it's still alive or not
+    /// # Example
+    /// ```
+    /// use space_game_typings::entity::Collateral;
+    /// assert!(Collateral {capacitor: 20, armor: 42, structure: 4}.is_alive());
+    /// assert!(Collateral {capacitor: 0, armor: 0, structure: 4}.is_alive());
+    /// assert!(!Collateral {capacitor: 20, armor: 42, structure: 0}.is_alive());
+    /// ```
+    #[must_use]
+    pub const fn is_alive(self) -> bool {
+        self.structure > 0
+    }
+
+    /// Applies the damage to the collateral and returns the result.
+    /// First armor is damaged and then structure.
+    #[must_use]
+    pub const fn apply_damage(&self, damage: u16) -> Self {
+        let mut result = *self;
+        let structure_dmg = damage.saturating_sub(result.armor);
+        result.armor = result.armor.saturating_sub(damage);
+        result.structure = result.structure.saturating_sub(structure_dmg);
+        result
+    }
+
     /// Returns the minimum of two collaterals.
     /// Helpful when ensuring a collateral is still within the ships limits
     /// # Example
@@ -65,19 +89,6 @@ impl Collateral {
         }
     }
 
-    /// Returns if it's still alive or not
-    /// # Example
-    /// ```
-    /// use space_game_typings::entity::Collateral;
-    /// assert!(Collateral {capacitor: 20, armor: 42, structure: 4}.is_alive());
-    /// assert!(Collateral {capacitor: 0, armor: 0, structure: 4}.is_alive());
-    /// assert!(!Collateral {capacitor: 20, armor: 42, structure: 0}.is_alive());
-    /// ```
-    #[must_use]
-    pub const fn is_alive(self) -> bool {
-        self.structure > 0
-    }
-
     #[must_use]
     pub fn calc_health_raw(self, max_armor: u16, max_structure: u16) -> Health {
         let armor = f32::from(self.armor) / f32::from(max_armor);
@@ -89,4 +100,72 @@ impl Collateral {
     pub fn calc_health(self, max: Collateral) -> Health {
         self.calc_health_raw(max.armor, max.structure)
     }
+}
+
+#[test]
+fn apply_damage_against_armor() {
+    let before = Collateral {
+        capacitor: 0,
+        armor: 42,
+        structure: 42,
+    };
+    assert_eq!(
+        before.apply_damage(10),
+        Collateral {
+            capacitor: 0,
+            armor: 32,
+            structure: 42,
+        }
+    );
+}
+
+#[test]
+fn apply_damage_against_structure() {
+    let before = Collateral {
+        capacitor: 0,
+        armor: 0,
+        structure: 42,
+    };
+    assert_eq!(
+        before.apply_damage(10),
+        Collateral {
+            capacitor: 0,
+            armor: 0,
+            structure: 32,
+        }
+    );
+}
+
+#[test]
+fn apply_damage_against_armor_and_structure() {
+    let before = Collateral {
+        capacitor: 0,
+        armor: 3,
+        structure: 42,
+    };
+    assert_eq!(
+        before.apply_damage(10),
+        Collateral {
+            capacitor: 0,
+            armor: 0,
+            structure: 35,
+        }
+    );
+}
+
+#[test]
+fn apply_damage_against_structure_min_zero() {
+    let before = Collateral {
+        capacitor: 0,
+        armor: 0,
+        structure: 2,
+    };
+    assert_eq!(
+        before.apply_damage(10),
+        Collateral {
+            capacitor: 0,
+            armor: 0,
+            structure: 0,
+        }
+    );
 }

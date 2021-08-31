@@ -1,13 +1,6 @@
 use crate::entity::Collateral;
 use crate::fixed::round_effect::RoundEffect;
 
-const fn apply_damage(mut collateral: Collateral, damage: u16) -> Collateral {
-    let structure_dmg = damage.saturating_sub(collateral.armor);
-    collateral.armor = collateral.armor.saturating_sub(damage);
-    collateral.structure = collateral.structure.saturating_sub(structure_dmg);
-    collateral
-}
-
 #[allow(clippy::cast_sign_loss)]
 const fn can_apply_to_origin(collateral: Collateral, effect: RoundEffect) -> bool {
     match effect {
@@ -40,7 +33,7 @@ const fn saturating_apply(mut collateral: Collateral, effect: RoundEffect) -> Co
             collateral.structure = collateral.structure.saturating_add(amount);
             collateral
         }
-        RoundEffect::Damage(damage) => apply_damage(collateral, damage),
+        RoundEffect::Damage(damage) => collateral.apply_damage(damage),
         RoundEffect::Mine(_) | RoundEffect::WarpDisruption => collateral,
     }
 }
@@ -80,74 +73,6 @@ pub fn apply_to_target(mut collateral: Collateral, effects: &[RoundEffect]) -> C
         collateral = saturating_apply(collateral, *effect);
     }
     collateral
-}
-
-#[test]
-fn damage_against_armor() {
-    let before = Collateral {
-        capacitor: 0,
-        armor: 42,
-        structure: 42,
-    };
-    assert_eq!(
-        apply_damage(before, 10),
-        Collateral {
-            capacitor: 0,
-            armor: 32,
-            structure: 42,
-        }
-    );
-}
-
-#[test]
-fn damage_against_structure() {
-    let before = Collateral {
-        capacitor: 0,
-        armor: 0,
-        structure: 42,
-    };
-    assert_eq!(
-        apply_damage(before, 10),
-        Collateral {
-            capacitor: 0,
-            armor: 0,
-            structure: 32,
-        }
-    );
-}
-
-#[test]
-fn damage_against_armor_and_structure() {
-    let before = Collateral {
-        capacitor: 0,
-        armor: 3,
-        structure: 42,
-    };
-    assert_eq!(
-        apply_damage(before, 10),
-        Collateral {
-            capacitor: 0,
-            armor: 0,
-            structure: 35,
-        }
-    );
-}
-
-#[test]
-fn damage_against_structure_min_zero() {
-    let before = Collateral {
-        capacitor: 0,
-        armor: 0,
-        structure: 2,
-    };
-    assert_eq!(
-        apply_damage(before, 10),
-        Collateral {
-            capacitor: 0,
-            armor: 0,
-            structure: 0,
-        }
-    );
 }
 
 #[test]
