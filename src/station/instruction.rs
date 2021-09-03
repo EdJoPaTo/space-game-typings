@@ -36,6 +36,10 @@ pub enum Instruction {
     // Unrelated from ships
     Buy(PlaceOrder),
     Sell(PlaceOrder),
+    Recycle {
+        item: Item,
+        amount: u32,
+    },
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
@@ -97,5 +101,14 @@ fn can_parse_buy() {
         amount: 42,
         paperclips: 666,
     });
+    crate::test_helper::can_serde_parse(&data);
+}
+
+#[test]
+fn can_parse_recycle() {
+    let data = Instruction::Recycle {
+        item: Item::EXAMPLE,
+        amount: 42,
+    };
     crate::test_helper::can_serde_parse(&data);
 }
