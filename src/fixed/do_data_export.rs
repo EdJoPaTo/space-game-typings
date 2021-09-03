@@ -2,7 +2,8 @@ use std::collections::HashMap;
 use std::fs;
 use std::path::Path;
 
-use crate::fixed::Statics;
+use super::item::Item;
+use super::{item, Statics};
 
 fn export<K, V>(filename: &str, value: &HashMap<K, V>) -> anyhow::Result<()>
 where
@@ -50,6 +51,44 @@ fn check_facility() -> anyhow::Result<()> {
     let all = Statics::default().facilities;
     assert!(!all.data.is_empty(), "is empty");
     export("facility", &all.data)
+}
+
+#[test]
+fn check_item() -> anyhow::Result<()> {
+    let statics = Statics::default();
+    let items = statics.items;
+
+    for i in statics.modules_passive.data.keys().copied() {
+        let details = items.get(&i.into());
+        assert_eq!(details.category, item::Category::Module);
+    }
+    for i in statics.modules_targeted.data.keys().copied() {
+        let details = items.get(&i.into());
+        assert_eq!(details.category, item::Category::Module);
+    }
+    for i in statics.modules_untargeted.data.keys().copied() {
+        let details = items.get(&i.into());
+        assert_eq!(details.category, item::Category::Module);
+    }
+
+    for (item, details) in &items.data {
+        let category = match item {
+            Item::Mineral(_) => item::Category::Mineral,
+            Item::ModulePassive(_) | Item::ModuleTargeted(_) | Item::ModuleUntargeted(_) => {
+                item::Category::Module
+            }
+            Item::Ore(_) => item::Category::Ore,
+        };
+
+        assert_eq!(category, details.category);
+        if category == item::Category::Mineral {
+            assert!(details.recycle.is_empty());
+        } else {
+            assert!(!details.recycle.is_empty());
+        }
+    }
+
+    export("item", &items.data)
 }
 
 #[test]

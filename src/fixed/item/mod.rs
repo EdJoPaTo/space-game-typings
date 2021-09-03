@@ -4,14 +4,19 @@ use serde::{Deserialize, Serialize};
 
 use super::module;
 
+mod details;
+mod mineral;
 mod ore;
 
+pub use details::{Category, Details};
+pub use mineral::Mineral;
 pub use ore::Ore;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", untagged)]
 pub enum Item {
+    Mineral(Mineral),
     ModulePassive(module::passive::Passive),
     ModuleTargeted(module::targeted::Targeted),
     ModuleUntargeted(module::untargeted::Untargeted),
@@ -20,8 +25,35 @@ pub enum Item {
 
 #[cfg(feature = "typescript")]
 ts_rs::export! {
+    Category,
+    Details,
+    Mineral,
     Ore,
     Item => "typescript/generated-item.ts"
+}
+
+impl From<Mineral> for Item {
+    fn from(mineral: Mineral) -> Self {
+        Self::Mineral(mineral)
+    }
+}
+
+impl From<module::passive::Passive> for Item {
+    fn from(i: module::passive::Passive) -> Self {
+        Self::ModulePassive(i)
+    }
+}
+
+impl From<module::targeted::Targeted> for Item {
+    fn from(i: module::targeted::Targeted) -> Self {
+        Self::ModuleTargeted(i)
+    }
+}
+
+impl From<module::untargeted::Untargeted> for Item {
+    fn from(i: module::untargeted::Untargeted) -> Self {
+        Self::ModuleUntargeted(i)
+    }
 }
 
 impl From<Ore> for Item {
@@ -48,6 +80,18 @@ impl ToString for Item {
 impl Item {
     #[cfg(test)]
     pub(crate) const EXAMPLE: Self = Self::Ore(Ore::Solmit);
+}
+
+#[test]
+fn can_serde_parse_mineral() {
+    let data = Item::Mineral(Mineral::Derite);
+    crate::test_helper::can_serde_parse(&data);
+}
+
+#[test]
+fn can_string_parse_mineral() {
+    let data = Item::Mineral(Mineral::Derite);
+    crate::test_helper::can_string_parse(&data);
 }
 
 #[test]
