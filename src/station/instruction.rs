@@ -3,6 +3,7 @@
 use serde::{Deserialize, Serialize};
 
 use crate::fixed::item::Item;
+use crate::fixed::module::Module;
 use crate::fixed::solarsystem::Solarsystem;
 use crate::market::{Order, Trader};
 use crate::player::Player;
@@ -30,6 +31,10 @@ pub enum Instruction {
     // Current ship
     Repair,
     Undock,
+    ModuleAdd(Module),
+    ModulePassiveRemove(u8),
+    ModuleTargetedRemove(u8),
+    ModuleUntargetedRemove(u8),
     ShipCargoLoad(TransferItems),
     ShipCargoUnload(TransferItems),
 
@@ -82,6 +87,19 @@ fn can_parse_undock() {
 #[test]
 fn can_parse_repair() {
     let data = Instruction::Repair;
+    crate::test_helper::can_serde_parse(&data);
+}
+
+#[test]
+fn can_parse_module_add() {
+    use crate::fixed::module::Untargeted;
+    let data = Instruction::ModuleAdd(Untargeted::RookieArmorRepair.into());
+    crate::test_helper::can_serde_parse(&data);
+}
+
+#[test]
+fn can_parse_module_remove() {
+    let data = Instruction::ModuleUntargetedRemove(42);
     crate::test_helper::can_serde_parse(&data);
 }
 
