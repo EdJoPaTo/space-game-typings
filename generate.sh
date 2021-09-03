@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-rm ./*.ts 2> /dev/null || true
+rm ./typescript/generated-*.ts 2> /dev/null || true
 cargo test --tests --all-features
 
 targetfile='static/typings.ts'
