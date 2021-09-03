@@ -55,9 +55,14 @@ impl From<Vec<Item>> for Storage {
 
 impl Storage {
     #[must_use]
-    pub fn new_single(item: Item, amount: u32) -> Self {
+    pub fn new_empty() -> Self {
+        Self(HashMap::new())
+    }
+
+    #[must_use]
+    pub fn new_single<I: Into<Item>>(item: I, amount: u32) -> Self {
         let mut result = HashMap::new();
-        result.insert(item, amount);
+        result.insert(item.into(), amount);
         Self(result)
     }
 
@@ -83,7 +88,8 @@ impl Storage {
     }
 
     #[must_use]
-    pub fn amount(&self, item: Item) -> Amount {
+    pub fn amount<I: Into<Item>>(&self, item: I) -> Amount {
+        let item = item.into();
         let mut total: Amount = 0;
         for (current_item, amount) in &self.0 {
             if current_item == &item {
@@ -93,8 +99,8 @@ impl Storage {
         total
     }
 
-    pub fn saturating_add(&mut self, item: Item, amount: Amount) {
-        let entry = self.0.entry(item).or_default();
+    pub fn saturating_add<I: Into<Item>>(&mut self, item: I, amount: Amount) {
+        let entry = self.0.entry(item.into()).or_default();
         *entry = entry.saturating_add(amount);
     }
 
@@ -102,8 +108,8 @@ impl Storage {
     /// # Returns
     /// Returns true when all wanted items were taken. Returns false when there are not enough items.
     #[must_use]
-    pub fn take_exact(&mut self, item: Item, amount: Amount) -> bool {
-        let entry = self.0.entry(item).or_default();
+    pub fn take_exact<I: Into<Item>>(&mut self, item: I, amount: Amount) -> bool {
+        let entry = self.0.entry(item.into()).or_default();
         let possible = *entry >= amount;
         if possible {
             *entry -= amount;
@@ -115,8 +121,8 @@ impl Storage {
     /// # Returns
     /// The amount of items that were taken.
     #[must_use]
-    pub fn take_max(&mut self, item: Item, amount: Amount) -> Amount {
-        let entry = self.0.entry(item).or_default();
+    pub fn take_max<I: Into<Item>>(&mut self, item: I, amount: Amount) -> Amount {
+        let entry = self.0.entry(item.into()).or_default();
         let possible = amount.min(*entry);
         *entry -= possible;
         possible
@@ -205,7 +211,7 @@ fn take_exact_works() {
         (Item::ModuleTargeted(Targeted::RookieLaser), 2),
     ]
     .into();
-    let worked = data.take_exact(Ore::Aromit.into(), 2);
+    let worked = data.take_exact(Ore::Aromit, 2);
     assert!(worked);
     assert_eq!(data, expected);
 }
@@ -224,7 +230,7 @@ fn takes_exact_takes_nothing_when_empty() {
         (Item::ModuleTargeted(Targeted::RookieLaser), 2),
     ]
     .into();
-    let worked = data.take_exact(Ore::Aromit.into(), 2);
+    let worked = data.take_exact(Ore::Aromit, 2);
     assert!(!worked);
     assert_eq!(data, expected);
 }
@@ -243,7 +249,7 @@ fn takes_exact_takes_nothing_when_not_enough() {
         (Item::ModuleTargeted(Targeted::RookieLaser), 2),
     ]
     .into();
-    let worked = data.take_exact(Ore::Aromit.into(), 10);
+    let worked = data.take_exact(Ore::Aromit, 10);
     assert!(!worked);
     assert_eq!(data, expected);
 }
@@ -262,7 +268,7 @@ fn take_max_takes_all() {
         (Item::ModuleTargeted(Targeted::RookieLaser), 2),
     ]
     .into();
-    let took = data.take_max(Ore::Aromit.into(), 2);
+    let took = data.take_max(Ore::Aromit, 2);
     assert_eq!(took, 2);
     assert_eq!(data, expected);
 }
@@ -281,7 +287,7 @@ fn takes_max_nothing_when_empty() {
         (Item::ModuleTargeted(Targeted::RookieLaser), 2),
     ]
     .into();
-    let took = data.take_max(Ore::Aromit.into(), 2);
+    let took = data.take_max(Ore::Aromit, 2);
     assert_eq!(took, 0);
     assert_eq!(data, expected);
 }
@@ -300,7 +306,7 @@ fn takes_max_partial() {
         (Item::ModuleTargeted(Targeted::RookieLaser), 2),
     ]
     .into();
-    let took = data.take_max(Ore::Aromit.into(), 10);
+    let took = data.take_max(Ore::Aromit, 10);
     assert_eq!(took, 2);
     assert_eq!(data, expected);
 }
