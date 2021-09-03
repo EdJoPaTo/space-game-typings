@@ -30,8 +30,8 @@ pub enum Instruction {
     // Current ship
     Repair,
     Undock,
-    LoadItemsIntoShip(TransferItems),
-    UnloadItemsFromShip(TransferItems),
+    ShipCargoLoad(TransferItems),
+    ShipCargoUnload(TransferItems),
 
     // Unrelated from ships
     Buy(PlaceOrder),
@@ -86,8 +86,8 @@ fn can_parse_repair() {
 }
 
 #[test]
-fn can_parse_load_ship_cargo() {
-    let data = Instruction::LoadItemsIntoShip(TransferItems {
+fn can_parse_ship_cargo_load() {
+    let data = Instruction::ShipCargoLoad(TransferItems {
         item: Item::EXAMPLE,
         amount: 42,
     });
