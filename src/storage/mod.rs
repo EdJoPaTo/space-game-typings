@@ -140,6 +140,7 @@ impl Storage {
     pub fn to_vec(&self) -> Vec<(Item, u32)> {
         self.0
             .iter()
+            .filter(|(_, amount)| amount > &&0)
             .map(|(item, amount)| (*item, *amount))
             .collect()
     }
