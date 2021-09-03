@@ -6,6 +6,10 @@ use crate::fixed::Statics;
 
 use super::Collateral;
 
+mod error;
+
+pub use error::Error;
+
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
 #[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
 #[serde(rename_all = "camelCase", rename = "ShipFitting")]
@@ -17,15 +21,16 @@ pub struct Fitting {
     pub slots_passive: Vec<Passive>,
 }
 
-#[derive(Debug, PartialEq, Eq)]
-pub enum Error {
-    Cpu { wants: u16, max: u16 },
-    Powergrid { wants: u16, max: u16 },
-    StructureZero,
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
+#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[serde(rename_all = "camelCase", rename = "ShipFittingInfrastructureUsage")]
+pub struct InfrastructureUsage {
+    pub cpu: u16,
+    pub powergrid: u16,
 
-    TooManyPassiveModules,
-    TooManyTargetedModules,
-    TooManyUntargetedModules,
+    pub slots_passive: usize,
+    pub slots_targeted: usize,
+    pub slots_untargeted: usize,
 }
 
 impl Default for Fitting {
@@ -51,22 +56,8 @@ impl From<ShipLayout> for Fitting {
 }
 
 impl Fitting {
-    /// Check if the fitting is valid or not
-    /// # Errors
-    /// When Fitting isnt valid the Error states why
-    pub fn is_valid(&self, statics: &Statics) -> Result<(), Error> {
-        let layout = statics.ship_layouts.get(&self.layout);
-        // More modules than layout offers
-        if self.slots_targeted.len() > layout.slots_targeted.into() {
-            return Err(Error::TooManyTargetedModules);
-        }
-        if self.slots_untargeted.len() > layout.slots_untargeted.into() {
-            return Err(Error::TooManyUntargetedModules);
-        }
-        if self.slots_passive.len() > layout.slots_passive.into() {
-            return Err(Error::TooManyPassiveModules);
-        }
-
+    #[must_use]
+    pub fn to_usage(&self, statics: &Statics) -> InfrastructureUsage {
         let mut cpu = 0;
         let mut powergrid = 0;
         for id in &self.slots_targeted {
@@ -85,16 +76,51 @@ impl Fitting {
             powergrid += m.required_powergrid;
         }
 
+        InfrastructureUsage {
+            cpu,
+            powergrid,
+            slots_targeted: self.slots_targeted.len(),
+            slots_untargeted: self.slots_untargeted.len(),
+            slots_passive: self.slots_passive.len(),
+        }
+    }
+
+    /// Check if the fitting is valid or not
+    /// # Errors
+    /// When Fitting isnt valid the Error states why
+    pub fn is_valid(&self, statics: &Statics) -> Result<(), Error> {
+        let usage = self.to_usage(statics);
+        let layout = statics.ship_layouts.get(&self.layout);
+        // More modules than layout offers
+        if usage.slots_targeted > layout.slots_targeted.into() {
+            return Err(Error::TooManyTargetedModules {
+                wants: usage.slots_targeted,
+                max: layout.slots_targeted,
+            });
+        }
+        if usage.slots_untargeted > layout.slots_untargeted.into() {
+            return Err(Error::TooManyUntargetedModules {
+                wants: usage.slots_untargeted,
+                max: layout.slots_untargeted,
+            });
+        }
+        if usage.slots_passive > layout.slots_passive.into() {
+            return Err(Error::TooManyPassiveModules {
+                wants: usage.slots_passive,
+                max: layout.slots_passive,
+            });
+        }
+
         // Check cpu / powergrid
-        if cpu > layout.cpu {
+        if usage.cpu > layout.cpu {
             return Err(Error::Cpu {
-                wants: cpu,
+                wants: usage.cpu,
                 max: layout.cpu,
             });
         }
-        if powergrid > layout.powergrid {
+        if usage.powergrid > layout.powergrid {
             return Err(Error::Powergrid {
-                wants: powergrid,
+                wants: usage.powergrid,
                 max: layout.powergrid,
             });
         }

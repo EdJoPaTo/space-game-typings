@@ -7,7 +7,9 @@ use crate::storage::Storage;
 
 mod fitting;
 
-pub use fitting::Fitting;
+pub use fitting::{
+    Error as FittingError, Fitting, InfrastructureUsage as FittingInfrastructureUsage,
+};
 
 // TODO: remove Clone in order to ensure Ships are unique and only get moved?
 
@@ -25,6 +27,7 @@ pub struct Ship {
 #[cfg(feature = "typescript")]
 ts_rs::export! {
     Fitting,
+    FittingInfrastructureUsage,
     Ship => "typescript/generated-ship.ts"
 }
 
