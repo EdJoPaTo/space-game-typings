@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 
 use crate::fixed::facility::Facility;
 use crate::fixed::item::Ore;
-use crate::fixed::module::targeted::Targeted;
+use crate::fixed::module::Targeted;
 use crate::fixed::npc_faction::NpcFaction;
 use crate::fixed::shiplayout::ShipLayout;
 use crate::player::Player;

@@ -54,7 +54,7 @@ fn check_facility() -> anyhow::Result<()> {
 }
 
 #[test]
-fn check_item() -> anyhow::Result<()> {
+fn check_item_has_every_module() {
     let statics = Statics::default();
     let items = statics.items;
 
@@ -70,13 +70,15 @@ fn check_item() -> anyhow::Result<()> {
         let details = items.get(&i.into());
         assert_eq!(details.category, item::Category::Module);
     }
+}
 
+#[test]
+fn check_item() -> anyhow::Result<()> {
+    let items = Statics::default().items;
     for (item, details) in &items.data {
         let category = match item {
             Item::Mineral(_) => item::Category::Mineral,
-            Item::ModulePassive(_) | Item::ModuleTargeted(_) | Item::ModuleUntargeted(_) => {
-                item::Category::Module
-            }
+            Item::Module(_) => item::Category::Module,
             Item::Ore(_) => item::Category::Ore,
         };
 
@@ -87,7 +89,6 @@ fn check_item() -> anyhow::Result<()> {
             assert!(!details.recycle.is_empty());
         }
     }
-
     export("item", &items.data)
 }
 

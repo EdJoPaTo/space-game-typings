@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use crate::entity::Collateral;
 use crate::fixed::item::Item;
-use crate::fixed::module::targeted::Targeted;
+use crate::fixed::module::Targeted;
 use crate::fixed::round_effect::RoundEffect;
 use crate::fixed::{module, Statics};
 use crate::site::{Actor, Entity, Log};
@@ -47,7 +47,7 @@ fn apply_targeted_to_origin<'s>(
     statics: &'s Statics,
     entity: &mut Entity,
     module_index: u8,
-) -> Option<(Actor, Targeted, &'s module::targeted::Details, u32)> {
+) -> Option<(Actor, Targeted, &'s module::TargetedDetails, u32)> {
     let ship = match entity {
         Entity::Facility(_) | Entity::Asteroid(_) => {
             unreachable!("Only ships can use modules {:?}", entity)
@@ -79,7 +79,7 @@ fn apply_targeted_to_origin<'s>(
 #[must_use]
 fn apply_targeted_to_target(
     entity: &mut Entity,
-    module: &module::targeted::Details,
+    module: &module::TargetedDetails,
     free_cargo: u32,
 ) -> Vec<(Item, u32)> {
     match entity {

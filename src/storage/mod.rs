@@ -149,9 +149,9 @@ impl Storage {
 #[test]
 fn can_parse_storage() {
     use crate::fixed::item::Ore;
-    use crate::fixed::module::targeted::Targeted;
+    use crate::fixed::module::Targeted;
     let data: Storage = vec![
-        Item::ModuleTargeted(Targeted::RookieLaser),
+        Targeted::RookieLaser.into(),
         Item::Ore(Ore::Aromit),
         Item::Ore(Ore::Aromit),
     ]
@@ -162,17 +162,16 @@ fn can_parse_storage() {
 #[test]
 fn serializing_storage_simplifies_it() {
     use crate::fixed::item::Ore;
-    use crate::fixed::module::passive::Passive;
-    use crate::fixed::module::targeted::Targeted;
+    use crate::fixed::module::{Passive, Targeted};
     let data: Storage = vec![
         (Item::Ore(Ore::Aromit), 12),
-        (Item::ModulePassive(Passive::RookieArmorPlate), 0),
+        (Passive::RookieArmorPlate.into(), 0),
         (Item::Ore(Ore::Aromit), 8),
-        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Targeted::RookieLaser.into(), 2),
     ]
     .into();
     let expected: Storage = vec![
-        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Targeted::RookieLaser.into(), 2),
         (Item::Ore(Ore::Aromit), 20),
     ]
     .into();
@@ -183,15 +182,15 @@ fn serializing_storage_simplifies_it() {
 #[test]
 fn can_add() {
     use crate::fixed::item::Ore;
-    use crate::fixed::module::targeted::Targeted;
+    use crate::fixed::module::Targeted;
     let mut data: Storage = vec![
-        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Targeted::RookieLaser.into(), 2),
         (Item::Ore(Ore::Aromit), 12),
     ]
     .into();
     let expected: Storage = vec![
         (Item::Ore(Ore::Aromit), 20),
-        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Targeted::RookieLaser.into(), 2),
     ]
     .into();
     data.saturating_add(Item::Ore(Ore::Aromit), 8);
@@ -201,15 +200,15 @@ fn can_add() {
 #[test]
 fn take_exact_works() {
     use crate::fixed::item::Ore;
-    use crate::fixed::module::targeted::Targeted;
+    use crate::fixed::module::Targeted;
     let mut data: Storage = vec![
-        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Targeted::RookieLaser.into(), 2),
         (Item::Ore(Ore::Aromit), 12),
     ]
     .into();
     let expected: Storage = vec![
         (Item::Ore(Ore::Aromit), 10),
-        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Targeted::RookieLaser.into(), 2),
     ]
     .into();
     let worked = data.take_exact(Ore::Aromit, 2);
@@ -220,15 +219,15 @@ fn take_exact_works() {
 #[test]
 fn takes_exact_takes_nothing_when_empty() {
     use crate::fixed::item::Ore;
-    use crate::fixed::module::targeted::Targeted;
+    use crate::fixed::module::Targeted;
     let mut data: Storage = vec![
-        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Targeted::RookieLaser.into(), 2),
         (Item::Ore(Ore::Aromit), 0),
     ]
     .into();
     let expected: Storage = vec![
         (Item::Ore(Ore::Aromit), 0),
-        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Targeted::RookieLaser.into(), 2),
     ]
     .into();
     let worked = data.take_exact(Ore::Aromit, 2);
@@ -239,15 +238,15 @@ fn takes_exact_takes_nothing_when_empty() {
 #[test]
 fn takes_exact_takes_nothing_when_not_enough() {
     use crate::fixed::item::Ore;
-    use crate::fixed::module::targeted::Targeted;
+    use crate::fixed::module::Targeted;
     let mut data: Storage = vec![
-        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Targeted::RookieLaser.into(), 2),
         (Item::Ore(Ore::Aromit), 2),
     ]
     .into();
     let expected: Storage = vec![
         (Item::Ore(Ore::Aromit), 2),
-        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Targeted::RookieLaser.into(), 2),
     ]
     .into();
     let worked = data.take_exact(Ore::Aromit, 10);
@@ -258,15 +257,15 @@ fn takes_exact_takes_nothing_when_not_enough() {
 #[test]
 fn take_max_takes_all() {
     use crate::fixed::item::Ore;
-    use crate::fixed::module::targeted::Targeted;
+    use crate::fixed::module::Targeted;
     let mut data: Storage = vec![
-        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Targeted::RookieLaser.into(), 2),
         (Item::Ore(Ore::Aromit), 12),
     ]
     .into();
     let expected: Storage = vec![
         (Item::Ore(Ore::Aromit), 10),
-        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Targeted::RookieLaser.into(), 2),
     ]
     .into();
     let took = data.take_max(Ore::Aromit, 2);
@@ -277,15 +276,15 @@ fn take_max_takes_all() {
 #[test]
 fn takes_max_nothing_when_empty() {
     use crate::fixed::item::Ore;
-    use crate::fixed::module::targeted::Targeted;
+    use crate::fixed::module::Targeted;
     let mut data: Storage = vec![
-        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Targeted::RookieLaser.into(), 2),
         (Item::Ore(Ore::Aromit), 0),
     ]
     .into();
     let expected: Storage = vec![
         (Item::Ore(Ore::Aromit), 0),
-        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Targeted::RookieLaser.into(), 2),
     ]
     .into();
     let took = data.take_max(Ore::Aromit, 2);
@@ -296,15 +295,15 @@ fn takes_max_nothing_when_empty() {
 #[test]
 fn takes_max_partial() {
     use crate::fixed::item::Ore;
-    use crate::fixed::module::targeted::Targeted;
+    use crate::fixed::module::Targeted;
     let mut data: Storage = vec![
-        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Targeted::RookieLaser.into(), 2),
         (Item::Ore(Ore::Aromit), 2),
     ]
     .into();
     let expected: Storage = vec![
         (Item::Ore(Ore::Aromit), 0),
-        (Item::ModuleTargeted(Targeted::RookieLaser), 2),
+        (Targeted::RookieLaser.into(), 2),
     ]
     .into();
     let took = data.take_max(Ore::Aromit, 10);

@@ -20,9 +20,3 @@ pub struct Details {
     #[serde(default, skip_serializing_if = "is_default")]
     pub hitpoints_armor: i16,
 }
-
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    Details,
-    Passive => "typescript/generated-module-passive.ts"
-}

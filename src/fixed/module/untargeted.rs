@@ -20,9 +20,3 @@ pub struct Details {
     #[serde(serialize_with = "ordered_vec")]
     pub effects: Vec<RoundEffect>,
 }
-
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    Details,
-    Untargeted => "typescript/generated-module-untargeted.ts"
-}

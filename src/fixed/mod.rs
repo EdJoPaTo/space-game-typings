@@ -15,9 +15,9 @@ mod do_data_export;
 
 pub type Facilites = Database<facility::Facility, facility::Details>;
 pub type Items = Database<item::Item, item::Details>;
-pub type ModulesPassive = Database<module::passive::Passive, module::passive::Details>;
-pub type ModulesTargeted = Database<module::targeted::Targeted, module::targeted::Details>;
-pub type ModulesUntargeted = Database<module::untargeted::Untargeted, module::untargeted::Details>;
+pub type ModulesPassive = Database<module::Passive, module::PassiveDetails>;
+pub type ModulesTargeted = Database<module::Targeted, module::TargetedDetails>;
+pub type ModulesUntargeted = Database<module::Untargeted, module::UntargetedDetails>;
 pub type ShipLayouts = Database<shiplayout::ShipLayout, shiplayout::Details>;
 pub type Solarsystems = Database<solarsystem::Solarsystem, solarsystem::Details>;
 

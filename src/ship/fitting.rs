@@ -1,8 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::fixed::module::passive::Passive;
-use crate::fixed::module::targeted::Targeted;
-use crate::fixed::module::untargeted::Untargeted;
+use crate::fixed::module::{Passive, Targeted, Untargeted};
 use crate::fixed::shiplayout::ShipLayout;
 use crate::fixed::Statics;
 

@@ -2,7 +2,7 @@ use std::str::FromStr;
 
 use serde::{Deserialize, Serialize};
 
-use super::module;
+use super::module::{self, Module};
 
 mod details;
 mod mineral;
@@ -17,9 +17,7 @@ pub use ore::Ore;
 #[serde(rename_all = "camelCase", untagged)]
 pub enum Item {
     Mineral(Mineral),
-    ModulePassive(module::passive::Passive),
-    ModuleTargeted(module::targeted::Targeted),
-    ModuleUntargeted(module::untargeted::Untargeted),
+    Module(Module),
     Ore(Ore),
 }
 
@@ -38,21 +36,27 @@ impl From<Mineral> for Item {
     }
 }
 
-impl From<module::passive::Passive> for Item {
-    fn from(i: module::passive::Passive) -> Self {
-        Self::ModulePassive(i)
+impl From<Module> for Item {
+    fn from(i: Module) -> Self {
+        Self::Module(i)
     }
 }
 
-impl From<module::targeted::Targeted> for Item {
-    fn from(i: module::targeted::Targeted) -> Self {
-        Self::ModuleTargeted(i)
+impl From<module::Passive> for Item {
+    fn from(i: module::Passive) -> Self {
+        Self::Module(Module::Passive(i))
     }
 }
 
-impl From<module::untargeted::Untargeted> for Item {
-    fn from(i: module::untargeted::Untargeted) -> Self {
-        Self::ModuleUntargeted(i)
+impl From<module::Targeted> for Item {
+    fn from(i: module::Targeted) -> Self {
+        Self::Module(Module::Targeted(i))
+    }
+}
+
+impl From<module::Untargeted> for Item {
+    fn from(i: module::Untargeted) -> Self {
+        Self::Module(Module::Untargeted(i))
     }
 }
 
@@ -96,13 +100,13 @@ fn can_string_parse_mineral() {
 
 #[test]
 fn can_serde_parse_module() {
-    let data = Item::ModulePassive(module::passive::Passive::RookieArmorPlate);
+    let data = Item::Module(super::module::Passive::RookieArmorPlate.into());
     crate::test_helper::can_serde_parse(&data);
 }
 
 #[test]
 fn can_string_parse_module() {
-    let data = Item::ModulePassive(module::passive::Passive::RookieArmorPlate);
+    let data = Item::Module(super::module::Passive::RookieArmorPlate.into());
     crate::test_helper::can_string_parse(&data);
 }
 
