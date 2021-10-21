@@ -5,6 +5,9 @@
  * https://github.com/EdJoPaTo/space-game-typings
  */
 
+export type SitesNearPlanet = Readonly<Partial<Record<number, Site[]>>>;
+export type Storage = Readonly<Partial<Record<Item, number>>>;
+
 export function isSiteEntityAsteroid(
   entity: SiteEntity,
 ): entity is SiteEntityAsteroid {
