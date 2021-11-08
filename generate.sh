@@ -14,6 +14,7 @@ for file in typescript/generated-*.ts ; do
     # 3: readonly array values
     # 4: Readonly<Partial<Record<K, V>>>
     # 5: bla | null -> bla | undefined
+    # 6: bigint -> number
     # last: remove empty lines
     sed -E \
         -e "s#^import.+##g" \
@@ -21,6 +22,7 @@ for file in typescript/generated-*.ts ; do
         -e "s#Array#ReadonlyArray#g" \
         -e "s#Record<([^>]+)>#Readonly<Partial<Record<\1>>>#g" \
         -e "s#: (\S+) \| null;#\?: \1;#g" \
+        -e "s#bigint#number#g" \
         -e "/^export type SitesNearPlanet/d" \
         -e "/^export type Storage/d" \
         -e "/^$/d" \
