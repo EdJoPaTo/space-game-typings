@@ -36,7 +36,7 @@ impl Trade {
     }
 
     #[must_use]
-    pub fn resolve(buy: Order, sell: Order) -> Option<(Trade, Order, Order)> {
+    pub fn resolve(buy: Order, sell: Order) -> Option<(Self, Order, Order)> {
         if buy.solarsystem != sell.solarsystem
             || buy.station != sell.station
             || buy.paperclips < sell.paperclips
@@ -46,7 +46,7 @@ impl Trade {
             return None;
         }
         let amount = buy.amount.min(sell.amount);
-        let trade = Trade {
+        let trade = Self {
             solarsystem: sell.solarsystem,
             station: sell.station,
             buyer: buy.trader,

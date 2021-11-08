@@ -34,9 +34,9 @@ impl std::str::FromStr for Site {
             return Err(anyhow!("can only contain exactly one dash (-)"));
         }
         match kind {
-            "station" => Ok(Site::Station(unique.parse()?)),
-            "stargate" => Ok(Site::Stargate(unique.parse()?)),
-            "asteroidField" => Ok(Site::AsteroidField(unique.parse()?)),
+            "station" => Ok(Self::Station(unique.parse()?)),
+            "stargate" => Ok(Self::Stargate(unique.parse()?)),
+            "asteroidField" => Ok(Self::AsteroidField(unique.parse()?)),
             _ => Err(anyhow!("unknown site kind {} {}", kind, s)),
         }
     }
@@ -45,9 +45,9 @@ impl std::str::FromStr for Site {
 impl ToString for Site {
     fn to_string(&self) -> String {
         match self {
-            Site::Station(index) => format!("station-{}", index),
-            Site::Stargate(target) => format!("stargate-{}", target.to_string()),
-            Site::AsteroidField(unique) => format!("asteroidField-{:03}", unique),
+            Self::Station(index) => format!("station-{}", index),
+            Self::Stargate(target) => format!("stargate-{}", target),
+            Self::AsteroidField(unique) => format!("asteroidField-{:03}", unique),
         }
     }
 }

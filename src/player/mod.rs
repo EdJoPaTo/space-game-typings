@@ -35,7 +35,7 @@ impl std::str::FromStr for Player {
             return Err(anyhow!("can only contain exactly one dash (-)"));
         }
         match platform {
-            "telegram" => Ok(Player::Telegram(id.parse::<i64>()?)),
+            "telegram" => Ok(Self::Telegram(id.parse::<i64>()?)),
             _ => Err(anyhow!("unknown player platform {} {}", platform, s)),
         }
     }
@@ -44,7 +44,7 @@ impl std::str::FromStr for Player {
 impl ToString for Player {
     fn to_string(&self) -> String {
         match self {
-            Player::Telegram(id) => format!("telegram-{}", id),
+            Self::Telegram(id) => format!("telegram-{}", id),
         }
     }
 }

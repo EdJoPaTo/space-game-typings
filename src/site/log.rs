@@ -44,10 +44,10 @@ pub enum Actor {
 impl From<&Entity> for Actor {
     fn from(entity: &Entity) -> Self {
         match entity {
-            Entity::Facility(info) => Actor::Facility(*info),
-            Entity::Asteroid(info) => Actor::Asteroid(info.ore),
-            Entity::Npc((f, s)) => Actor::Npc((*f, s.fitting.layout)),
-            Entity::Player((p, s)) => Actor::Player((*p, s.fitting.layout)),
+            Entity::Facility(info) => Self::Facility(*info),
+            Entity::Asteroid(info) => Self::Asteroid(info.ore),
+            Entity::Npc((f, s)) => Self::Npc((*f, s.fitting.layout)),
+            Entity::Player((p, s)) => Self::Player((*p, s.fitting.layout)),
         }
     }
 }

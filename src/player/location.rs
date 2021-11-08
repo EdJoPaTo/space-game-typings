@@ -56,9 +56,9 @@ impl PlayerLocation {
     #[must_use]
     pub const fn solarsystem(&self) -> Solarsystem {
         match self {
-            PlayerLocation::Site(o) => o.solarsystem,
-            PlayerLocation::Station(o) => o.solarsystem,
-            PlayerLocation::Warp(o) => o.solarsystem,
+            Self::Site(o) => o.solarsystem,
+            Self::Station(o) => o.solarsystem,
+            Self::Warp(o) => o.solarsystem,
         }
     }
 }

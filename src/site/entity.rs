@@ -28,7 +28,7 @@ pub struct EntityAsteroid {
 
 impl Entity {
     #[must_use]
-    pub fn new_asteroid(ore: Ore, remaining_ore: u32, structure: u16) -> Self {
+    pub const fn new_asteroid(ore: Ore, remaining_ore: u32, structure: u16) -> Self {
         let collateral = Collateral::new_structure(structure);
         Self::Asteroid(EntityAsteroid {
             collateral,
@@ -47,7 +47,7 @@ impl From<EntityAsteroid> for Entity {
 
 impl EntityAsteroid {
     #[must_use]
-    pub fn is_collapsed(&self) -> bool {
+    pub const fn is_collapsed(&self) -> bool {
         !self.collateral.is_alive() || self.remaining_ore == 0
     }
 }

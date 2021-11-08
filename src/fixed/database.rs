@@ -29,10 +29,8 @@ where
 
     #[must_use]
     pub fn get(&self, key: &K) -> &V {
-        if let Some(value) = self.data.get(key) {
-            value
-        } else {
+        self.data.get(key).unwrap_or_else(|| {
             unreachable!("statics has to contain every key. It is missing {:?}", key)
-        }
+        })
     }
 }

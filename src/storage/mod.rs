@@ -129,7 +129,7 @@ impl Storage {
     }
 
     /// Moves all items from `other` to `self`.
-    pub fn append(&mut self, other: &mut Storage) {
+    pub fn append(&mut self, other: &mut Self) {
         for (item, amount) in &other.0 {
             self.saturating_add(*item, *amount);
         }

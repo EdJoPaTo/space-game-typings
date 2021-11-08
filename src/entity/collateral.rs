@@ -27,7 +27,7 @@ pub struct Health {
 }
 
 impl Collateral {
-    pub const DEAD: Collateral = Collateral {
+    pub const DEAD: Self = Self {
         capacitor: 0,
         armor: 0,
         structure: 0,
@@ -97,7 +97,7 @@ impl Collateral {
     }
 
     #[must_use]
-    pub fn calc_health(self, max: Collateral) -> Health {
+    pub fn calc_health(self, max: Self) -> Health {
         self.calc_health_raw(max.armor, max.structure)
     }
 }

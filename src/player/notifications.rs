@@ -17,7 +17,7 @@ pub struct Notifications {
 
 impl From<Vec<site::Log>> for Notifications {
     fn from(log: Vec<site::Log>) -> Self {
-        Notifications {
+        Self {
             site_log: log,
             ..Self::default()
         }
@@ -26,7 +26,7 @@ impl From<Vec<site::Log>> for Notifications {
 
 impl From<(Item, Trade)> for Notifications {
     fn from(tuple: (Item, Trade)) -> Self {
-        Notifications {
+        Self {
             trades: vec![tuple],
             ..Self::default()
         }

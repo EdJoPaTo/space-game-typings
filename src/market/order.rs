@@ -142,13 +142,13 @@ impl Order {
 
 impl From<Player> for Trader {
     fn from(player: Player) -> Self {
-        Trader::Player(player)
+        Self::Player(player)
     }
 }
 
 impl From<NpcFaction> for Trader {
     fn from(faction: NpcFaction) -> Self {
-        Trader::Npc(faction)
+        Self::Npc(faction)
     }
 }
 
