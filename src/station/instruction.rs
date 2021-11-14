@@ -8,15 +8,8 @@ use crate::fixed::solarsystem::Solarsystem;
 use crate::market::{Order, Trader};
 use crate::player::Player;
 
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    PlaceOrder,
-    TransferItems,
-    Instruction => "typescript/generated-station-instruction.ts"
-}
-
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(
     rename_all = "camelCase",
     rename = "StationInstruction",
@@ -48,7 +41,7 @@ pub enum Instruction {
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase")]
 pub struct PlaceOrder {
     pub item: Item,
@@ -57,7 +50,7 @@ pub struct PlaceOrder {
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase")]
 pub struct TransferItems {
     pub item: Item,

@@ -6,18 +6,10 @@ mod trade;
 pub use order::{Order, Trader};
 pub use trade::Trade;
 
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    Order,
-    Trade,
-    Trader,
-    ItemMarket => "typescript/generated-market.ts"
-}
-
 /// Keeps all orders for a market of a single item
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase")]
 pub struct ItemMarket {
     /// Buy orders of buyers wanting to buy items.

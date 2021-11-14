@@ -7,7 +7,7 @@ use crate::serde_helper::ordered_map;
 use super::Mineral;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "ItemCategory")]
 pub enum Category {
     Mineral,
@@ -17,7 +17,7 @@ pub enum Category {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "ItemDetails")]
 pub struct Details {
     /// This is mainly added for TypeScript to get more easily what kind of item this is.

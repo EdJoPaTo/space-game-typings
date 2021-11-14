@@ -13,21 +13,12 @@ pub use mineral::Mineral;
 pub use ore::Ore;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", untagged)]
 pub enum Item {
     Mineral(Mineral),
     Module(Module),
     Ore(Ore),
-}
-
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    Category,
-    Details,
-    Mineral,
-    Ore,
-    Item => "typescript/generated-item.ts"
 }
 
 impl From<Mineral> for Item {

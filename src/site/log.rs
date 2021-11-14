@@ -10,7 +10,7 @@ use crate::player::Player;
 use super::Entity;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(
     rename_all = "camelCase",
     rename = "SiteLog",
@@ -32,7 +32,7 @@ pub enum Log {
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "SiteLogActor", untagged)]
 pub enum Actor {
     Asteroid(Ore),

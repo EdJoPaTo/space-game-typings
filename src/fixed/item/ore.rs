@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 /// These are proper names so they are not in camelCase or something like that.
 /// Naming scheme: ends with 'mit'.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 pub enum Ore {
     Aromit,
     Solmit,

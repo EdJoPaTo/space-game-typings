@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Copy, Serialize, Hash, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", tag = "type", content = "amount")]
 pub enum RoundEffect {
     CapacitorDrain(u16),
@@ -14,9 +14,4 @@ pub enum RoundEffect {
     Damage(u16),
     Mine(u32),
     WarpDisruption,
-}
-
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    RoundEffect => "typescript/generated-round-effect.ts"
 }

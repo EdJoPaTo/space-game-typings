@@ -14,7 +14,7 @@ pub use fitting::{
 // TODO: remove Clone in order to ensure Ships are unique and only get moved?
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase")]
 pub struct Ship {
     pub fitting: Fitting,
@@ -22,13 +22,6 @@ pub struct Ship {
 
     #[serde(default, skip_serializing_if = "is_default")]
     pub cargo: Storage,
-}
-
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    Fitting,
-    FittingInfrastructureUsage,
-    Ship => "typescript/generated-ship.ts"
 }
 
 impl Default for Ship {

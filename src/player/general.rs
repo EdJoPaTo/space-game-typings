@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::fixed::solarsystem::Solarsystem;
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "PlayerGeneral")]
 pub struct General {
     pub home_solarsystem: Solarsystem,

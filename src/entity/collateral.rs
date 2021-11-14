@@ -5,7 +5,7 @@ use crate::serde_helper::is_default;
 /// The current situation of the entity / ship.
 /// For the totals check the `ShipFitting`.
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase")]
 pub struct Collateral {
     pub structure: u16,
@@ -19,7 +19,7 @@ pub struct Collateral {
 
 /// In Percentages 0.0..=1.0
 #[derive(Debug, Default, Clone, Copy, Serialize, Deserialize, PartialEq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase")]
 pub struct Health {
     pub armor: f32,

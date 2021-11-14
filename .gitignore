@@ -7,4 +7,4 @@ static/*.png
 static/*.svg
 static/*.ts
 
-typescript/generated-*.ts
+bindings/

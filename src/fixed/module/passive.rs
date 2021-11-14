@@ -3,14 +3,14 @@ use serde::{Deserialize, Serialize};
 use crate::serde_helper::is_default;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "ModulePassive")]
 pub enum Passive {
     RookieArmorPlate,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "ModulePassiveDetails")]
 pub struct Details {
     pub required_cpu: u16,

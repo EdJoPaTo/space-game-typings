@@ -1,14 +1,13 @@
 #!/usr/bin/env bash
 set -e
 
-rm ./typescript/generated-*.ts 2> /dev/null || true
-cargo test --tests --all-features
+rm -rf bindings/ 2> /dev/null || true
+cargo test --tests --features=ts-rs
 
 targetfile='static/typings.ts'
 cat typescript/manual.ts > $targetfile
 
-for file in typescript/generated-*.ts ; do
-    printf "\n" >> $targetfile
+for file in bindings/*.ts ; do
     # 1: remove imports as everything is in the same file
     # 2: readonly properties
     # 3: readonly array values
@@ -23,11 +22,8 @@ for file in typescript/generated-*.ts ; do
         -e "s#Record<([^>]+)>#Readonly<Partial<Record<\1>>>#g" \
         -e "s#: (\S+) \| null;#\?: \1;#g" \
         -e "s#bigint#number#g" \
-        -e "/^export type SitesNearPlanet/d" \
-        -e "/^export type Storage/d" \
         -e "/^$/d" \
         "$file" >> $targetfile
-    rm "$file"
 done
 
 # Add final newline

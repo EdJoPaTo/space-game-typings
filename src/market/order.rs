@@ -6,7 +6,7 @@ use crate::fixed::solarsystem::Solarsystem;
 use crate::player::Player;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", untagged)]
 pub enum Trader {
     Npc(NpcFaction),
@@ -14,12 +14,12 @@ pub enum Trader {
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase")]
 pub struct Order {
     /// Time when the order was placed. Older orders with the same price are always handled first.
     #[cfg_attr(
-        feature = "typescript",
+        feature = "ts-rs",
         ts(type = "`${number}-${number}-${number}T${number}:${number}:${number}${string}Z`")
     )]
     pub date: DateTime<Utc>,

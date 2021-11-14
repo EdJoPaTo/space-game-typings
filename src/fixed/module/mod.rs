@@ -12,7 +12,7 @@ pub use untargeted::Details as UntargetedDetails;
 pub use untargeted::Untargeted;
 
 #[derive(Debug, Hash, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", untagged)]
 pub enum Module {
     Passive(Passive),
@@ -36,15 +36,4 @@ impl From<Untargeted> for Module {
     fn from(m: Untargeted) -> Self {
         Self::Untargeted(m)
     }
-}
-
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    Passive,
-    PassiveDetails,
-    Targeted,
-    TargetedDetails,
-    Untargeted,
-    UntargetedDetails,
-    Module => "typescript/generated-module.ts"
 }

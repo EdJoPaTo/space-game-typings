@@ -11,7 +11,7 @@ mod error;
 pub use error::Error;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "ShipFitting")]
 pub struct Fitting {
     pub layout: ShipLayout,
@@ -22,7 +22,7 @@ pub struct Fitting {
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "ShipFittingInfrastructureUsage")]
 pub struct InfrastructureUsage {
     pub cpu: u16,

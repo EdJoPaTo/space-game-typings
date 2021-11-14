@@ -6,7 +6,7 @@ use crate::site;
 
 /// Stuff which happened in a game round.
 #[derive(Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "PlayerNotifications")]
 pub struct Notifications {
     #[serde(default, skip_serializing_if = "Vec::is_empty")]

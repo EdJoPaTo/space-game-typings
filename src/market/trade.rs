@@ -5,7 +5,7 @@ use crate::fixed::solarsystem::Solarsystem;
 use super::{Order, Trader};
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename = "Trade")]
 pub struct Trade {
     pub solarsystem: Solarsystem,

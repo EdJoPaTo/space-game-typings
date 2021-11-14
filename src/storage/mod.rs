@@ -9,13 +9,8 @@ type Amount = u32;
 // TODO: remove Clone in order to ensure Items only get moved?
 
 #[derive(Debug, Default, Clone, Deserialize, PartialEq, Eq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 pub struct Storage(HashMap<Item, Amount>);
-
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    Storage => "typescript/generated-storage.ts"
-}
 
 impl Serialize for Storage {
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>

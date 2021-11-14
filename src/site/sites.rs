@@ -8,7 +8,7 @@ use crate::fixed::solarsystem::Solarsystem;
 // TODO: move to crate::site
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", tag = "kind", content = "unique")]
 pub enum Site {
     /// Zero-based index of station. Station I is 0, station IV is 3.
@@ -21,7 +21,7 @@ pub enum Site {
 
 #[allow(clippy::module_name_repetitions)]
 #[derive(Debug, Default, Clone, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 pub struct SitesNearPlanet(BTreeMap<u8, Vec<Site>>);
 
 impl std::str::FromStr for Site {

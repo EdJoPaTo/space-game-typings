@@ -7,7 +7,7 @@ use crate::fixed::facility::Service;
 use super::Site;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(
     rename_all = "camelCase",
     rename = "SiteInstruction",
@@ -23,14 +23,14 @@ pub enum Instruction {
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "SiteInstructionModuleUntargeted")]
 pub struct UseModuleUntargeted {
     pub module_index: u8,
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "SiteInstructionModuleTargeted")]
 pub struct UseModuleTargeted {
     pub target_index_in_site: u8,
@@ -38,7 +38,7 @@ pub struct UseModuleTargeted {
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "SiteInstructionFacility")]
 pub struct UseFacilityService {
     pub target_index_in_site: u8,
@@ -46,19 +46,10 @@ pub struct UseFacilityService {
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "SiteInstructionWarp")]
 pub struct Warp {
     pub target: Site,
-}
-
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    UseFacilityService,
-    UseModuleTargeted,
-    UseModuleUntargeted,
-    Warp,
-    Instruction => "typescript/generated-site-instruction.ts"
 }
 
 /// Filter instructions to be possible afterwards.

@@ -11,18 +11,10 @@ pub use notifications::Notifications;
 pub use station_assets::StationAssets;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", tag = "platform", content = "id")]
 pub enum Player {
     Telegram(i64),
-}
-
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    General,
-    Notifications,
-    StationAssets,
-    Player => "typescript/generated-player.ts"
 }
 
 impl std::str::FromStr for Player {

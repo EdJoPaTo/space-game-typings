@@ -7,7 +7,7 @@ use crate::fixed::shiplayout::ShipLayout;
 use crate::fixed::{facility, Statics};
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", untagged)]
 pub enum SiteEntity {
     Asteroid(Asteroid),
@@ -17,7 +17,7 @@ pub enum SiteEntity {
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityAsteroid")]
 pub struct Asteroid {
     pub ore: Ore,
@@ -26,14 +26,14 @@ pub struct Asteroid {
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityFacility")]
 pub struct Facility {
     pub facility: facility::Facility,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityNpc")]
 pub struct Npc {
     pub faction: NpcFaction,
@@ -43,22 +43,13 @@ pub struct Npc {
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "SiteEntityPlayer")]
 pub struct Player {
     pub player: crate::player::Player,
     pub shiplayout: ShipLayout,
     #[serde(flatten)]
     pub health: Health,
-}
-
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    Asteroid,
-    Facility,
-    Npc,
-    Player,
-    SiteEntity => "typescript/generated-site-entity.ts"
 }
 
 impl SiteEntity {

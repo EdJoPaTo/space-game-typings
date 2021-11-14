@@ -5,7 +5,7 @@ use crate::ship::Ship;
 use crate::storage::Storage;
 
 #[derive(Debug, Default, Serialize, Deserialize, PartialEq, Eq)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "PlayerStationAssets")]
 pub struct StationAssets {
     /// When the player is docked this ship is the ship the player sits in.

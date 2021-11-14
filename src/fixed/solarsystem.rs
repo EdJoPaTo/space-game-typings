@@ -6,7 +6,7 @@ use serde::{Deserialize, Serialize};
 use crate::serde_helper::ordered_map;
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, Hash, PartialEq, Eq, PartialOrd, Ord)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 pub enum Solarsystem {
     /// The home system for new players
     Wabinihwa,
@@ -38,7 +38,7 @@ impl FromStr for Solarsystem {
 }
 
 #[derive(Debug, Serialize, Deserialize)]
-#[cfg_attr(feature = "typescript", derive(ts_rs::TS))]
+#[cfg_attr(feature = "ts-rs", derive(ts_rs::TS), ts(export))]
 #[serde(rename_all = "camelCase", rename = "SolarsystemDetails")]
 pub struct Details {
     /// Percentage
@@ -53,12 +53,6 @@ pub struct Details {
     pub stargates: HashMap<Solarsystem, u8>,
 
     /// Stations and at which planet they are.
-    /// Example: [1,3] -> Station 1 is at Planet 1, Station 2 is at Planet 3
+    /// Example: `[1,3]` -> Station 1 is at Planet 1, Station 2 is at Planet 3
     pub stations: Vec<u8>,
-}
-
-#[cfg(feature = "typescript")]
-ts_rs::export! {
-    Details,
-    Solarsystem => "typescript/generated-solarsystem.ts"
 }
